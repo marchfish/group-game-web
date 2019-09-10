@@ -1,0 +1,39 @@
+{
+  "private": true,
+  "scripts": {
+    "watch:a": "node_modules/.bin/gulp --color --gulpfile=gulpfile.js watchAdmin",
+    "dev:a": "node_modules/.bin/gulp --color --gulpfile=gulpfile.js buildAdmin",
+    "prod:a": "node_modules/.bin/gulp --color --env=prod --gulpfile=gulpfile.js buildAdmin"
+  },
+  "dependencies": {
+    "admin-lte": "2.3.8",
+    "blueimp-tmpl": "^3.12.0",
+    "bootstrap": "~3",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "font-awesome": "~4",
+    "jquery": "~2",
+    "lodash": "~4",
+    "moment": "^2.24.0",
+    "pace-progress": "^1.0.2",
+    "qs": "^6.7.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.6.1",
+    "babel-minify-webpack-plugin": "^0.3.1",
+    "cssnano": "^4.1.10",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-if-else": "^1.0.3",
+    "gulp-plumber": "^1.2.1",
+    "gulp-postcss": "^8.0.0",
+    "imports-loader": "^0.8.0",
+    "minimist": "^1.2.0",
+    "moment-locales-webpack-plugin": "^1.0.7",
+    "webpack": "^4.38.0",
+    "webpack-stream": "^5.2.1"
+  },
+  "browserslist": [
+    "last 4 versions",
+    "ie 8"
+  ]
+}

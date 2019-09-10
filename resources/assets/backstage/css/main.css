@@ -1,0 +1,38 @@
+.alert-message-box {
+  position: fixed;
+  z-index: 1024;
+  top: 100px;
+  left: 50%;
+
+  transform: translateX(-50%);
+}
+
+textarea {
+  resize: none;
+}
+
+.row.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.row.no-gutters>[class*='col-'] {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.table.vertical-align-middle>tbody>tr>td {
+  vertical-align: middle;
+}
+
+tr.text-left td {
+  text-align: left;
+}
+
+tr.text-center td {
+  text-align: center;
+}
+
+tr.text-right td {
+  text-align: right;
+}
