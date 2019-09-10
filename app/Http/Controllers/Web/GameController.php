@@ -51,7 +51,7 @@ class GameController extends Controller
 
             $data .= 'npc=' . $row->npc . '<br>';
 
-            $data .= '怪物=' . $row->enemy . '<br>';
+            $data .= '怪物=' . $row->enemy . '<br> ';
 
             return Response::json([
                 'code'    => 200,
