@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Models\Map;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
@@ -29,7 +30,12 @@ class GameController extends Controller
                     'm.name AS name',
                     DB::raw('IFNULL(`n`.`name`, "") AS `npc_name`'),
                     DB::raw('IFNULL(`e`.`name`, "") AS `enemy_name`'),
-                    DB::raw('IFNULL(`map1`.`name`, "") AS `left_name`'),
+                    DB::raw('IFNULL(`mforward`.`name`, "") AS `forward_name`'),
+                    DB::raw('IFNULL(`mbehind`.`name`, "") AS `behind_name`'),
+                    DB::raw('IFNULL(`mup`.`name`, "") AS `up_name`'),
+                    DB::raw('IFNULL(`mdown`.`name`, "") AS `down_name`'),
+                    DB::raw('IFNULL(`mleft`.`name`, "") AS `left_name`'),
+                    DB::raw('IFNULL(`mright`.`name`, "") AS `right_name`'),
                 ])
                 ->from('map AS m')
                 ->join('user_role AS ur', function ($join) {
@@ -47,9 +53,34 @@ class GameController extends Controller
                         ->on('e.id', '=', 'm.enemy_id')
                     ;
                 })
-                ->leftJoin('map AS map1', function ($join) {
+                ->leftJoin('map AS mforward', function ($join) {
                     $join
-                        ->on('map1.id', '=', 'm.left')
+                        ->on('mforward.id', '=', 'm.forward')
+                    ;
+                })
+                ->leftJoin('map AS mbehind', function ($join) {
+                    $join
+                        ->on('mbehind.id', '=', 'm.behind')
+                    ;
+                })
+                ->leftJoin('map AS mup', function ($join) {
+                    $join
+                        ->on('mup.id', '=', 'm.up')
+                    ;
+                })
+                ->leftJoin('map AS mdown', function ($join) {
+                    $join
+                        ->on('mdown.id', '=', 'm.down')
+                    ;
+                })
+                ->leftJoin('map AS mleft', function ($join) {
+                    $join
+                        ->on('mleft.id', '=', 'm.left')
+                    ;
+                })
+                ->leftJoin('map AS mright', function ($join) {
+                    $join
+                        ->on('mright.id', '=', 'm.right')
                     ;
                 })
                 ->where('ur.user_id', '=', $user_id)
@@ -57,15 +88,7 @@ class GameController extends Controller
                 ->first()
             ;
 
-            $data = '[当前位置]<br>' . $row->name . '<br>';
-
-            if ($row->npc_name && $row->npc_name != '') {
-                $data .= 'npc=' . $row->npc_name . '<br>';
-            }
-
-            if ($row->enemy_name && $row->enemy_name != '') {
-                $data .= '怪物=' . $row->enemy_name . '<br> ';
-            }
+            $data = Map::location($row);
 
             return Response::json([
                 'code'    => 200,
@@ -79,21 +102,4 @@ class GameController extends Controller
         }
     }
 
-    // 上
-    public function up()
-    {
-        return Response::json([
-            'code'    => 200,
-            'message' => '上',
-        ]);
-    }
-
-    // 下
-    public function down()
-    {
-        return Response::json([
-            'code'    => 200,
-            'message' => '下',
-        ]);
-    }
 }

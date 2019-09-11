@@ -28,7 +28,14 @@
 <body>
 <div class="row" style="height: 100%">
     <div class="xianshiquyu">
-        欢迎来到开荒之路~
+        欢迎来到开荒之路~<br>
+        感谢开发者的共同努力:<br>
+        marchfish<br>
+        明天老子不上班<br>
+        青酥<br>
+        若伊<br>
+        冤有头债有主<br>
+        Lumina<br>
     </div>
     <p>　　<input type="button" class="action" data-url="{!! URL::to('game/up') !!}" value="上" />　　　　　<input type="button" value="攻击">　<input type="button" value="背包">　<input type="button" value="任务">　<input type="button" value="拍卖行"></p>
     <p> <input type="button" value="左" /> 　　<input type="button" value="右" /> </p>
