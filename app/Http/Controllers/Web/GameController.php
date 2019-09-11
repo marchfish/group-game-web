@@ -88,11 +88,11 @@ class GameController extends Controller
                 ->first()
             ;
 
-            $data = Map::location($row);
+            $res = Map::getLocationToMessage($row);
 
             return Response::json([
                 'code'    => 200,
-                'message' => $data,
+                'message' => $res,
             ]);
         } catch (InvalidArgumentException $e) {
             return Response::json([

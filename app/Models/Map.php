@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class Map
 {
-    public static function location($row)
+    public static function getLocationToMessage($row)
     {
         $data = '[当前位置]<br>' . $row->name . '<br>';
 

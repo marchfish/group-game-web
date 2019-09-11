@@ -23,7 +23,7 @@ class EmailManager
         $this->mail->CharSet = "UTF-8"; //字符集
         $this->mail->Encoding = "base64"; //编码方式
         $this->mail->Username = '15736515576@163.com';  //你的邮箱
-        $this->mail->Password = 'yulei199581';  //你的密码
+        $this->mail->Password = '';  //你的密码
         $this->mail->Subject = $data['title']; //邮件标题
         $this->mail->From = '15736515576@163.com';  //发件人地址（也就是你的邮箱）
         $this->mail->FromName = $data['name'];  //发件人姓名
