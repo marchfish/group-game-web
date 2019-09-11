@@ -27,14 +27,24 @@ class GameController extends Controller
             $row = DB::query()
                 ->select([
                     'm.name AS name',
-                    'm.npc AS npc',
-                    'm.enemy AS enemy',
+                    DB::raw('IFNULL(`n`.`name`, "") AS `npc_name`'),
+                    DB::raw('IFNULL(`e`.`name`, "") AS `enemy_name`'),
                     DB::raw('IFNULL(`map1`.`name`, "") AS `left_name`'),
                 ])
                 ->from('map AS m')
                 ->join('user_role AS ur', function ($join) {
                     $join
                         ->on('ur.map_id', '=', 'm.id')
+                    ;
+                })
+                ->leftJoin('npc AS n', function ($join) {
+                    $join
+                        ->on('n.id', '=', 'm.npc_id')
+                    ;
+                })
+                ->leftJoin('enemy AS e', function ($join) {
+                    $join
+                        ->on('e.id', '=', 'm.enemy_id')
                     ;
                 })
                 ->leftJoin('map AS map1', function ($join) {
@@ -49,9 +59,13 @@ class GameController extends Controller
 
             $data = '[当前位置]<br>' . $row->name . '<br>';
 
-            $data .= 'npc=' . $row->npc . '<br>';
+            if ($row->npc_name && $row->npc_name != '') {
+                $data .= 'npc=' . $row->npc_name . '<br>';
+            }
 
-            $data .= '怪物=' . $row->enemy . '<br> ';
+            if ($row->enemy_name && $row->enemy_name != '') {
+                $data .= '怪物=' . $row->enemy_name . '<br> ';
+            }
 
             return Response::json([
                 'code'    => 200,
