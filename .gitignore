@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /storage/logs/*.log
+/app/Services/Mail/EmailManager.php
 .vscode
 .idea
 .svn
