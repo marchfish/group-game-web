@@ -11,12 +11,19 @@ class User
 {
     public static function getByName(string $username)
     {
-        $userRow = DB::table('user')
+        $userRow = DB::query()
             ->select([
-                '*',
+                'u.*',
+                'ur.id AS user_role_id',
             ])
-            ->where('username', '=', $username)
-            ->where('status', '=', 200)
+            ->from('user AS u')
+            ->join('user_role AS ur', function ($join) {
+                $join
+                    ->on('ur.user_id', '=', 'u.id')
+                ;
+            })
+            ->where('u.username', '=', $username)
+            ->where('u.status', '=', 200)
             ->take(1)
             ->get()
             ->first()
