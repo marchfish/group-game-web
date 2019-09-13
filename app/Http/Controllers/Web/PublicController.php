@@ -77,6 +77,7 @@ class PublicController extends Controller
      */
     public function loginShow()
     {
+
         if (Session::has('user.account')) {
             return Response::redirectTo('index');
         } else {

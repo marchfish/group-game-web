@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class Map
 {
@@ -11,7 +12,13 @@ class Map
         $data = '[当前位置]<br>' . $row->name . '<br>';
 
         if ($row->npc_name && $row->npc_name != '') {
-            $data .= 'npc=' . $row->npc_name . '<br>';
+            $data .= 'npc=' . $row->npc_name;
+
+            if ($row->mission_id > 0) {
+                $data .= '<input type="button" class="action" data-url="' . URL::to('game/mission') . '?mission_id=' . $row->mission_id . '" value="任务" />';
+            }
+
+            $data .= '<br>';
         }
 
         if ($row->enemy_name && $row->enemy_name != '') {

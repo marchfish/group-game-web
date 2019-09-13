@@ -38,5 +38,10 @@ Route::namespace('Web')->group(function () {
             // 移动
             Route::get('move', 'GameController@move');
         });
+        // 任务
+        Route::prefix('mission')->group(function () {
+            //显示任务
+            Route::get('', 'MissionController@show');
+        });
     });
 });
