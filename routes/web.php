@@ -40,8 +40,10 @@ Route::namespace('Web')->group(function () {
         });
         // 任务
         Route::prefix('mission')->group(function () {
-            //显示任务
+            // 显示任务
             Route::get('', 'MissionController@show');
+            // 接受任务
+            Route::get('accept', 'MissionController@accept');
         });
     });
 });
