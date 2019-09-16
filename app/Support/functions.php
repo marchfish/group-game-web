@@ -61,17 +61,6 @@ function get_gender(string $id_card): int
     }
 }
 
-function gene_no(): string
-{
-    $s1 = date('ymd');
-
-    $s2 = mt_rand(1000, 9999);
-
-    $s3 = str_pad(time() - strtotime('midnight'), 5, '0', STR_PAD_LEFT);
-
-    return $s1 . $s2 . $s3;
-}
-
 function calc_share(int $i, int $rate): int
 {
     return (int) bcmul($i, bcdiv($rate, 100, 2), 0);
@@ -80,47 +69,6 @@ function calc_share(int $i, int $rate): int
 function rmb(?int $number): string
 {
     return isset($number) ? bcdiv($number, 100, 2) : '';
-}
-
-function get_distance($lng1, $lat1, $lng2, $lat2)
-{
-    $earthRadius = 6367000;
-
-    $lat1 = ($lat1 * pi()) / 180;
-    $lng1 = ($lng1 * pi()) / 180;
-
-    $lat2 = ($lat2 * pi()) / 180;
-    $lng2 = ($lng2 * pi()) / 180;
-
-    $calcLongitude      = $lng2 - $lng1;
-    $calcLatitude       = $lat2 - $lat1;
-    $stepOne            = pow(sin($calcLatitude / 2), 2) + cos($lat1) * cos($lat2) * pow(sin($calcLongitude / 2), 2);
-    $stepTwo            = 2                                           * asin(min(1, sqrt($stepOne)));
-    $calculatedDistance = $earthRadius                                * $stepTwo;
-
-    return round($calculatedDistance); // 米
-}
-
-function get_km(int $user_id, string $start_at, string $end_at): int
-{
-    $dt = Carbon::parse($start_at);
-    // 结束时间 - 开始时间 > 1 天，按 1 天算
-    $end_at = ($dt->diffInSeconds($end_at) > 86400) ? $dt->addSeconds(86400)->format('Y-m-d H:i:s') : $end_at;
-
-    $row = DB::query()
-        ->select([
-            DB::raw('IFNULL(SUM(`distance`), 0) AS distance'),
-        ])
-        ->from('pp_location')
-        ->where('user_id', '=', $user_id)
-        ->where('created_at', '>=', $start_at)
-        ->where('created_at', '<', $end_at)
-        ->limit(1)
-        ->get()
-        ->first()
-    ;
-
-    return (int) bcdiv($row->distance, 1000, 0);
 }
 
 function beauty_date($timestamp)
@@ -175,6 +123,14 @@ function beauty_date($timestamp)
     }
 
     return $return;
+}
+
+// 判断是否成功
+function is_success(int $probability_num)
+{
+    $rand_num = mt_rand(0, 100);
+
+    return $probability_num > $rand_num ? true : false;
 }
 
 // 百分比(分子, 分母, 百分号)
