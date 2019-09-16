@@ -45,7 +45,7 @@
 <script>
     $(function () {
         // 动作
-        $(".action").on('click', function(e){
+        $(document).on('click', '.action', function(e){
             e.preventDefault();
             $.ajax({
                 type:"get",
