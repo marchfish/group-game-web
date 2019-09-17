@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use App\Events\UserCreated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Event;
+use InvalidArgumentException;
+use App\Models\Enemy;
 
 class UserRole
 {
@@ -33,9 +34,11 @@ class UserRole
 
         $enemy->hp -= $user_hurt;
         if ($enemy->hp <= 0) {
-
+            return $enemy->name . '被您击败了';
         }
 
-        return 0;
+        $res = Enemy::attackToUserRole($user_Role, $enemy);
+
+        return $enemy->name . '-' . $user_hurt . '血量：' . $enemy->hp . '<br>' . $res;
     }
 }

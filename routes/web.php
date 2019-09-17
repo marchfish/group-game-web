@@ -37,6 +37,8 @@ Route::namespace('Web')->group(function () {
             Route::get('location', 'GameController@location');
             // 移动
             Route::get('move', 'GameController@move');
+            // 攻击
+            Route::get('attack', 'GameController@attack');
         });
         // 任务
         Route::prefix('mission')->group(function () {
