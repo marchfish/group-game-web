@@ -54,6 +54,9 @@
                     action : $(this).val(),
                 },
                 success:function(res){
+                    if (res.message == "") {
+                        return ;
+                    }
                     $(".xianshiquyu").html(res.message);
                 },
                 error:function(jqXHR){
