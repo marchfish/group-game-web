@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\Item;
+use App\Models\UserKnapsack;
 use App\Http\Controllers\Controller;
+use App\Models\UserRole;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
@@ -167,6 +169,96 @@ class MissionController extends Controller
             return Response::json([
                 'code'    => 200,
                 'message' => '成功接受任务 [' . $row->name . ']',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 提交任务
+    public function submit()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'mission_id' => ['required'],
+            ], [
+                'mission_id.required' => '任务id不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $user_role_id = Session::get('user.account.user_role_id');
+
+            // 判断任务是否存在
+            $row = DB::query()
+                ->select([
+                    'm.*',
+                ])
+                ->from('mission_history AS mh')
+                ->join('mission AS m', function ($join) {
+                    $join
+                        ->on('m.id', '=', 'mh.mission_id')
+                    ;
+                })
+                ->where('mh.user_role_id', '=', $user_role_id)
+                ->where('mh.mission_id', '=', $query['mission_id'])
+                ->where('mh.status', '=', 150)
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('您没有在进行的该任务', 400);
+            }
+
+            // 判断是否有足够的物品数量
+            $requirements = json_decode($row->requirements);
+            $reward = json_decode($row->reward);
+
+            $res_bool = UserKnapsack::isHaveItems($requirements);
+
+            if (!$res_bool) {
+                throw new InvalidArgumentException('没有任务所需的物品数量', 400);
+            }
+
+            DB::beginTransaction();
+
+            UserRole::setExpAndCoin($row);
+
+            UserKnapsack::useItems($requirements);
+
+            $reward_items = UserKnapsack::addItems($reward);
+
+            DB::table('mission_history')
+                ->where('id', '=', $row->id)
+                ->update([
+                    'status' => 200,
+                ])
+            ;
+
+            DB::commit();
+
+            $res = '恭喜您！完成任务：' . $row->name . '<br>';
+
+            // 获得金币
+            $res .= '奖励金币=' . $row->coin . '<br>';
+
+            // 获得经验
+            $res .= '奖励经验=' . $row->exp . '<br>';
+
+            // 获得物品奖励
+            $res .='奖励物品:' . $reward_items . '<br>';
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
             ]);
         } catch (InvalidArgumentException $e) {
             return Response::json([

@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         'wechat.auth_userinfo'   => \App\Http\Middleware\Wechat\AuthUserinfo::class,
         'web.api_token'          => \App\Http\Middleware\Web\ApiToken::class,
         'web.check_login'        => \App\Http\Middleware\Web\CheckLogin::class,
+        'web.check_hp'           => \App\Http\Middleware\Web\CheckHP::class,
         'admin.check_login'      => \App\Http\Middleware\Admin\CheckLogin::class,
         'admin.check_permission' => \App\Http\Middleware\Admin\CheckPermission::class,
     ];
