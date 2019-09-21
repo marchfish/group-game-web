@@ -48,6 +48,8 @@ Route::namespace('Web')->group(function () {
             Route::get('accept', 'MissionController@accept');
             // 提交任务
             Route::get('submit', 'MissionController@submit');
+            // 显示玩家当前任务
+            Route::get('user', 'MissionController@userMissionShow');
         });
         // 背包
         Route::prefix('user-knapsack')->group(function () {

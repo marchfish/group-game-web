@@ -20,6 +20,18 @@ class MissionController extends Controller
     public function show()
     {
         try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'mission_id' => ['required'],
+            ], [
+                'mission_id.required' => '任务id不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
             $user_role_id = Session::get('user.account.user_role_id');
 
             $row = DB::query()
@@ -27,22 +39,7 @@ class MissionController extends Controller
                     'm.*',
                 ])
                 ->from('mission AS m')
-                ->join('npc AS n', function ($join) {
-                    $join
-                        ->on('n.mission_id', '=', 'm.id')
-                    ;
-                })
-                ->join('map AS mp', function ($join) {
-                    $join
-                        ->on('mp.npc_id', '=', 'n.id')
-                    ;
-                })
-                ->join('user_role AS ur', function ($join) {
-                    $join
-                        ->on('ur.map_id', '=', 'mp.id')
-                    ;
-                })
-                ->where('ur.id', '=', $user_role_id)
+                ->where('m.id', '=', $query['mission_id'])
                 ->get()
                 ->first()
             ;
@@ -97,7 +94,25 @@ class MissionController extends Controller
 
             $res = rtrim($res, "，") . '<br>';
 
-            $res .= '<input type="button" class="action" data-url="' . URL::to('mission/accept') . '" value="接受任务" />';
+            // 查询是否接受过该任务
+            $row1 = DB::query()
+                ->select([
+                    'mh.*',
+                ])
+                ->from('mission_history AS mh')
+                ->where('mh.mission_id', '=', $query['mission_id'])
+                ->where('mh.user_role_id', '=', $user_role_id)
+                ->get()
+                ->first()
+            ;
+
+            if (!$row1) {
+                $res .= '<input type="button" class="action" data-url="' . URL::to('mission/accept') . '" value="接受任务" />';
+            }elseif($row1->status == 150) {
+                $res .= '<input type="button" class="action" data-url="' . URL::to('mission/submit') . "?mission_id=" . $query['mission_id'] . '" value="提交任务" />';
+            }else {
+                $res .= '（已完成）';
+            }
 
             return Response::json([
                 'code'    => 200,
@@ -255,6 +270,51 @@ class MissionController extends Controller
 
             // 获得物品奖励
             $res .='奖励物品:' . $reward_items . '<br>';
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 显示已接任务
+    public function userMissionShow()
+    {
+        try {
+            $user_role_id = Session::get('user.account.user_role_id');
+
+            $rows = DB::query()
+                ->select([
+                    'mh.*',
+                    'm.name AS name',
+                ])
+                ->from('mission_history AS mh')
+                ->join('mission AS m', function ($join) {
+                    $join
+                        ->on('m.id', '=', 'mh.mission_id')
+                    ;
+                })
+                ->where('mh.user_role_id', '=', $user_role_id)
+                ->where('mh.status', '=', 150)
+                ->get()
+            ;
+
+            $res = '';
+
+            foreach ($rows as $row) {
+                $res .= $row->name . '-----进行中 ' . '<input type="button" class="action" data-url="' . URL::to('mission') . "?mission_id=" . $row->mission_id . '" value="查看任务" />';
+                $res .= '<input type="button" class="action" data-url="' . URL::to('mission/submit') . "?mission_id=" . $row->mission_id . '" value="提交任务" />' . '<br>';
+            }
+
+            if ($res == '') {
+                $res = '您当前没有再进行中的任务！';
+            }
 
             return Response::json([
                 'code'    => 200,
