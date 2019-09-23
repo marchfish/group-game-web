@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\User;
+use App\Models\UserRole;
 use App\Http\Controllers\Controller;
 use App\Support\Facades\Captcha;
 use Illuminate\Support\Facades\Request;
@@ -134,6 +135,10 @@ class PublicController extends Controller
             Session::put('user', [
                 'account' => obj2arr($account),
             ]);
+
+            $user_role = UserRole::getUserRole();
+
+            Session::put('userRole', obj2arr($user_role));
 
             return Response::json([
                 'redirect_url' => URL::to('index'),

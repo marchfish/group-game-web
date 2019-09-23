@@ -13,6 +13,24 @@ use App\Models\UserKnapsack;
 
 class UserRole
 {
+    public static function getUserRole()
+    {
+        $user_role_id = Session::get('user.account.user_role_id');
+
+        $row = DB::query()
+            ->select([
+                '*',
+            ])
+            ->from('user_role AS ur')
+            ->where('ur.id', '=', $user_role_id)
+            ->limit(1)
+            ->get()
+            ->first()
+        ;
+
+        return $row;
+    }
+
     public static function attackToEnemy($user_Role, $enemy)
     {
         $user_role_id = Session::get('user.account.user_role_id');
