@@ -18,7 +18,7 @@ class Equip
             ->select([
                 'e.*',
             ])
-            ->from('equip AS e')
+            ->from('user_equip AS e')
             ->where('e.user_role_id', '=', $user_role_id)
             ->get()
             ->first()

@@ -34,7 +34,7 @@ class EquipController extends Controller
                     DB::raw('IFNULL(`shoes`.`name`, "无") AS `shoes_name`'),
                     DB::raw('IFNULL(`magic`.`name`, "无") AS `magic_weapon_name`'),
                 ])
-                ->from('equip AS e')
+                ->from('user_equip AS e')
                 ->leftJoin('item AS weapon', function ($join) {
                     $join
                         ->on('weapon.id', '=', 'e.weapon')
@@ -164,7 +164,7 @@ class EquipController extends Controller
                 ->select([
                     'e.*',
                 ])
-                ->from('equip AS e')
+                ->from('user_equip AS e')
                 ->where('e.user_role_id', '=', $user_role_id)
                 ->get()
                 ->first()
