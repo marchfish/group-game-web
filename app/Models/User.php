@@ -48,9 +48,13 @@ class User
 
         $id = DB::table('user')->insertGetId($data);
 
-        DB::table('user_role')->insert([
+        $user_role_id = DB::table('user_role')->insertGetId([
             'user_id' => $id,
             'name' => $query['nickname'] ?? ''
+        ]);
+
+        DB::table('equip')->insert([
+            'user_role_id' => $user_role_id,
         ]);
 
         DB::commit();

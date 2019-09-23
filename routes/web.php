@@ -56,5 +56,17 @@ Route::namespace('Web')->group(function () {
             // 显示物品
             Route::get('', 'UserKnapsackController@show');
         });
+        // 物品
+        Route::middleware(['web.check_hp'])->prefix('item')->group(function () {
+            // 显示物品
+            Route::get('use', 'ItemController@useItem');
+        });
+        // 装备
+        Route::prefix('equip')->group(function () {
+            // 显示物品
+            Route::get('', 'EquipController@show');
+            // 装备
+            Route::post('', 'EquipController@equip');
+        });
     });
 });

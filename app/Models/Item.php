@@ -40,13 +40,16 @@ class Item
         $row->hp += $item->hp ?? 0;
         $row->mp += $item->mp ?? 0;
 
+        $row->hp = $row->hp > $row->max_hp ? $row->max_hp : $row->hp;
+        $row->mp = $row->mp > $row->max_mp ? $row->max_mp : $row->mp;
+
         DB::beginTransaction();
 
         DB::table('user_role')
             ->where('id', '=', $user_role_id)
             ->update([
-                'hp' => $row->hp > $row->max_hp ? $row->max_hp : $row->hp,
-                'mp' => $row->mp > $row->max_mp ? $row->max_mp : $row->mp,
+                'hp' => $row->hp,
+                'mp' => $row->mp,
             ])
         ;
 
@@ -60,6 +63,6 @@ class Item
 
         DB::commit();
 
-        return '使用成功，血量 +' . $row->hp . '<br>' . '蓝量 +' . $row->mp;
+        return '使用成功，当前血量：' . $row->hp . '<br>' . '当前蓝量：' . $row->mp;
     }
 }
