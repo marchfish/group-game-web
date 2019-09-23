@@ -213,7 +213,7 @@ class EquipController extends Controller
                 Equip::unEquip($equip);
             }
 
-            DB::table('equip')
+            DB::table('user_equip')
                 ->where('user_role_id', '=', $user_role_id)
                 ->update([
                     'weapon' => $item->type == 'weapon' ?  $query['item_id'] : $row1->weapon,
