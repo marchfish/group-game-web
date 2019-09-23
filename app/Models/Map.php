@@ -15,7 +15,7 @@ class Map
             $data .= 'npc=' . $row->npc_name;
 
             if ($row->mission_id > 0) {
-                $data .= '<input type="button" class="action" data-url="' . URL::to('mission') . '" value="任务" />';
+                $data .= '<input type="button" class="action" data-url="' . URL::to('mission') . "?mission_id=" . $row->mission_id . '" value="任务" />';
             }
 
             $data .= '<br>';

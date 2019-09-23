@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\Map;
+use App\Models\UserRole;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
@@ -231,6 +232,57 @@ class GameController extends Controller
                     'map_id' => $move_id,
                 ])
             ;
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 攻击
+    public function attack()
+    {
+        try {
+            $user_role_id = Session::get('user.account.user_role_id');
+
+            // 获取角色信息
+            $user_Role = DB::query()
+                ->select([
+                    'ur.*',
+                ])
+                ->from('user_role AS ur')
+                ->where('ur.id', '=', $user_role_id)
+                ->get()
+                ->first()
+            ;
+
+            // 获取怪物信息
+            $enemy = DB::query()
+                ->select([
+                    'e.*',
+                ])
+                ->from('enemy AS e')
+                ->join('map AS m', function ($join) {
+                    $join
+                        ->on('m.enemy_id', '=', 'e.id')
+                    ;
+                })
+                ->where('m.id', '=', $user_Role->map_id)
+                ->get()
+                ->first()
+            ;
+
+            if (!$enemy) {
+                throw new InvalidArgumentException('当前位置并没有怪物！', 400);
+            }
+
+            $res =  UserRole::attackToEnemy($user_Role, $enemy);
 
             return Response::json([
                 'code'    => 200,

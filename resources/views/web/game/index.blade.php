@@ -37,16 +37,23 @@
         冤有头债有主<br>
         Lumina<br>
     </div>
-    <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="上" />　　　　　<input type="button" value="攻击">　<input type="button" value="背包">　<input type="button" value="任务">　<input type="button" value="拍卖行"></p>
+    <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="上" />　　　　　<input type="button" class="action" data-url="{!! URL::to('game/attack') !!}" value="攻击">　<input type="button" class="action" data-url="{!! URL::to('user-knapsack') !!}" value="背包">　<input type="button" class="action" data-url="{!! URL::to('mission/user') !!}" value="任务">　<input type="button" value="拍卖行"></p>
     <p> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="左" /> 　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="右" /> </p>
     <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="下" />　　　　　<input type="button" value="状态">　<input type="button" class="action" data-url="{!! URL::to('game/location') !!}" value="位置">　<input type="button" value="挂机1">　<input type="button" value="挂机2"></p>
 </div>
 </body>
 <script>
     $(function () {
+        var timestamp = Date.parse(new Date());
         // 动作
         $(document).on('click', '.action', function(e){
             e.preventDefault();
+            var now_timestamp = Date.parse(new Date());
+
+            if (now_timestamp - timestamp < 1000) {
+                return ;
+            };
+
             $.ajax({
                 type:"get",
                 url:$(this).data('url'),
@@ -54,7 +61,11 @@
                     action : $(this).val(),
                 },
                 success:function(res){
+                    if (res.message == "") {
+                        return ;
+                    }
                     $(".xianshiquyu").html(res.message);
+                    timestamp = Date.parse(new Date());
                 },
                 error:function(jqXHR){
                     layer.close(layer_div);
@@ -62,7 +73,6 @@
                 }
             });
         });
-
     });
 </script>
 </html>
