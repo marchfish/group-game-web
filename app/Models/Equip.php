@@ -59,7 +59,7 @@ class Equip
             ])
         ;
 
-        DB::table('equip')
+        DB::table('user_equip')
             ->where('user_role_id', '=', $user_role_id)
             ->update([
                 'weapon' => $item->type == 'weapon' ?  0 : $equip->weapon,

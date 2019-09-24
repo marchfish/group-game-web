@@ -271,6 +271,12 @@ class MissionController extends Controller
             // 获得物品奖励
             $res .='奖励物品:' . $reward_items . '<br>';
 
+            $is_up = UserRole::is_upgrade();
+
+            if ($is_up != 0) {
+                $res .='恭喜您！等级提升至：' . $is_up . '<br>';
+            }
+
             return Response::json([
                 'code'    => 200,
                 'message' => $res,

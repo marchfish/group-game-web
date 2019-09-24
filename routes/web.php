@@ -68,5 +68,13 @@ Route::namespace('Web')->group(function () {
             // 装备
             Route::post('', 'EquipController@equip');
         });
+        // 用户
+        Route::prefix('user')->group(function () {
+            // 角色
+            Route::prefix('role')->group(function () {
+                // 状态
+                Route::get('', 'UserRoleController@userRoleStatus');
+            });
+        });
     });
 });
