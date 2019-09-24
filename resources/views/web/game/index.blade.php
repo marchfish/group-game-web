@@ -40,7 +40,7 @@
     <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="上" />　　　　　<input type="button" class="action" data-url="{!! URL::to('game/attack') !!}" value="攻击">　<input type="button" class="action" data-url="{!! URL::to('user-knapsack') !!}" value="背包">　<input type="button" class="action" data-url="{!! URL::to('mission/user') !!}" value="任务">　<input type="button" class="action" data-url="{!! URL::to('equip') !!}" value="装备"></p>
     <p> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="左" /> 　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="右" /> </p>
     <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="下" />　　　　　<input type="button" class="action" data-url="{!! URL::to('user/role') !!}" value="状态">　<input type="button" class="action" data-url="{!! URL::to('game/location') !!}" value="位置">　<input type="button" value="挂机1">　<input type="button" value="挂机2"></p>
-    {{--<p> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="下" /></p>--}}
+    <p> <input type="button" class="action" data-url="{!! URL::to('item/recycle-show') !!}" value="回收" /></p>
 </div>
 </body>
 <script>

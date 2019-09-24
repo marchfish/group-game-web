@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -60,6 +61,52 @@ class ItemController extends Controller
 
             if ($row->type == 1) {
                 $res .= Item::useDrug($item);
+            }
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 显示可回收物品
+    public function recycleItemShow()
+    {
+        try {
+            $user_role_id = Session::get('user.account.user_role_id');
+
+            $rows = DB::query()
+                ->select([
+                    'uk.*',
+                    'i.name AS item_name',
+                    'i.type AS item_type',
+                ])
+                ->from('user_knapsack AS uk')
+                ->join('item AS i', function ($join) {
+                    $join
+                        ->on('i.id', '=', 'uk.item_id')
+                        ->where('i.recycle_coin', '>', 0)
+                    ;
+                })
+                ->where('uk.user_role_id', '=', $user_role_id)
+                ->where('uk.item_num', '>', 0)
+                ->get()
+            ;
+
+            $res = '';
+
+            foreach ($rows as $row) {
+                $res .= $row->item_name . '：' . $row->item_num;
+
+                $res .=' ------- 回收数量 1' . '<input type="button" class="action" data-url="' . URL::to('item/use') . '?item_id=' . $row->item_id . '" value="回收" />';
+
+                $res .= '<br>';
             }
 
             return Response::json([

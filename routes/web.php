@@ -58,8 +58,10 @@ Route::namespace('Web')->group(function () {
         });
         // 物品
         Route::middleware(['web.check_hp'])->prefix('item')->group(function () {
-            // 显示物品
+            // 使用物品
             Route::get('use', 'ItemController@useItem');
+            // 显示物品
+            Route::get('recycle-show', 'ItemController@recycleItemShow');
         });
         // 装备
         Route::prefix('equip')->group(function () {
@@ -73,7 +75,7 @@ Route::namespace('Web')->group(function () {
             // 角色
             Route::prefix('role')->group(function () {
                 // 状态
-                Route::get('', 'UserRoleController@userRoleStatus');
+                Route::get('', 'GameController@userRoleStatus');
             });
         });
     });
