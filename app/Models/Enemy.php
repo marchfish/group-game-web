@@ -20,7 +20,7 @@ class Enemy
 
         $enemy_hurt = $enemy->attack - $user_Role->defense;
         if ($enemy_hurt <= 0) {
-            return '无法破防';
+            return '怪物无法破防';
         }
 
         $hurt_wave = mt_rand(0, round($enemy_hurt * 0.5));

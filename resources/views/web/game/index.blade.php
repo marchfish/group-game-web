@@ -51,8 +51,9 @@
         $(document).on('click', '.action', function(e){
             e.preventDefault();
             var now_timestamp = Date.parse(new Date());
+            var actionName = $(this).val();
 
-            if (now_timestamp - timestamp < 1000) {
+            if (now_timestamp - timestamp < 1000 && actionName == "攻击") {
                 return ;
             };
 
