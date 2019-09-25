@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\Item;
+use App\Models\UserRole;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
@@ -35,7 +36,9 @@ class UserKnapsackController extends Controller
                 ->get()
             ;
 
-            $res = '';
+            $userRole = UserRole::getUserRole();
+
+            $res = '金币：' . $userRole->coin . '<br>';
 
             foreach ($rows as $row) {
                 $res .= $row->item_name . '：' . $row->item_num;

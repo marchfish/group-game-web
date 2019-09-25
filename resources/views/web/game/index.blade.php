@@ -107,6 +107,35 @@
             });
         });
     });
+
+    $(function(){
+        // 数量加减
+        $(document).on('click', '#add', function(e){
+            var t = $("#js-num");
+            t.val(parseInt(t.val())+1);
+            setTotal(t);
+        })
+
+        $(document).on('click', '#min', function(e){
+            var t = $("#js-num");
+            t.val(parseInt(t.val())-1);
+            setTotal(t);
+        })
+
+        function setTotal(t){
+            var tt = $("#js-num").val();
+            var  pbinfoid=$("#pbinfoid").val();
+            if(tt<=0){
+                t.val(parseInt(t.val())+1)
+            }
+        }
+
+        // 输入框限制
+        var $numInput = $('#js-num');
+        $numInput.on('input', function (ev) {
+            $numInput.val($numInput.val().replace('+86', '').replace(/[^0-9]/g, '').substring(0, 11));
+        });
+    })
 </script>
 </html>
 {{--var token ="{!! csrf_token() !!}";--}}

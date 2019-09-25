@@ -104,7 +104,14 @@ class ItemController extends Controller
             foreach ($rows as $row) {
                 $res .= $row->item_name . '：' . $row->item_num;
 
-                $res .=' ------- 回收数量 1' . '<input type="button" class="action" data-url="' . URL::to('item/use') . '?item_id=' . $row->item_id . '" value="回收" />';
+                $res .=' ------- 回收数量↓'
+                    .'<div>'
+                    .'<input id="min" name="" type="button" value="-" />'
+                    .'<input id="js-num" name="goodnum" type="tel" value="1"/>'
+                    .'<input id="add" name="" type="button" value="+" />'
+                    . '<input type="button" class="action" data-url="' . URL::to('item/use') . '?item_id=' . $row->item_id . '" value="回收" />'
+                    .'</div>'
+                ;
 
                 $res .= '<br>';
             }

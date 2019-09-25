@@ -75,7 +75,7 @@ Route::namespace('Web')->group(function () {
             // 角色
             Route::prefix('role')->group(function () {
                 // 状态
-                Route::get('', 'GameController@userRoleStatus');
+                Route::get('', 'UserRoleController@userRoleStatus');
             });
         });
     });
