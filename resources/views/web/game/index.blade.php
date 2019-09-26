@@ -52,16 +52,25 @@
             e.preventDefault();
             var now_timestamp = Date.parse(new Date());
             var actionName = $(this).val();
+            var var_data = null;
 
             if (now_timestamp - timestamp < 1000 && actionName == "攻击") {
                 return ;
             };
+
+            if(actionName == "回收") {
+                var_data = $(this).parent().find(".js-num").val();
+                if(var_data < 1) {
+                    var_data = 1;
+                }
+            }
 
             $.ajax({
                 type:"get",
                 url:$(this).data('url'),
                 data:{
                     action : $(this).val(),
+                    var_data : var_data,
                 },
                 success:function(res){
                     if (res.message == "") {
@@ -110,25 +119,22 @@
 
     $(function(){
         // 数量加减
-        $(document).on('click', '#add', function(e){
-            var t = $("#js-num");
+        $(document).on('click', '.add', function(e){
+            var t = $(this).parent().find(".js-num");
             t.val(parseInt(t.val())+1);
             setTotal(t);
-        })
-
-        $(document).on('click', '#min', function(e){
-            var t = $("#js-num");
+        });
+        $(document).on('click', '.minus', function(e){
+            var t = $(this).parent().find(".js-num");
             t.val(parseInt(t.val())-1);
             setTotal(t);
-        })
-
+        });
         function setTotal(t){
-            var tt = $("#js-num").val();
-            var  pbinfoid=$("#pbinfoid").val();
+            var tt = t.val();
             if(tt<=0){
                 t.val(parseInt(t.val())+1)
             }
-        }
+        };
 
         // 输入框限制
         var $numInput = $('#js-num');

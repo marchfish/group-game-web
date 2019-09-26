@@ -106,15 +106,92 @@ class ItemController extends Controller
 
                 $res .=' ------- 回收数量↓'
                     .'<div>'
-                    .'<input id="min" name="" type="button" value="-" />'
-                    .'<input id="js-num" name="goodnum" type="tel" value="1"/>'
-                    .'<input id="add" name="" type="button" value="+" />'
-                    . '<input type="button" class="action" data-url="' . URL::to('item/use') . '?item_id=' . $row->item_id . '" value="回收" />'
+                    .'<input class="minus" name="" type="button" value="-" />'
+                    .'<input class="js-num" name="goodnum" type="tel" value="1"/>'
+                    .'<input class="add" name="" type="button" value="+" />'
+                    . '<input type="button" class="action" data-url="' . URL::to('item/recycle') . '?item_id=' . $row->item_id . '" value="回收" />'
                     .'</div>'
                 ;
 
                 $res .= '<br>';
             }
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 回收物品
+    public function recycle()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'item_id' => ['required'],
+                'var_data' => ['required'],
+            ], [
+                'item_id.required' => '物品id不能为空',
+                'var_data.required' => 'var_data不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $user_role_id = Session::get('user.account.user_role_id');
+
+            // 判断是否存在物品
+            $row = DB::query()
+                ->select([
+                    'i.*',
+                ])
+                ->from('user_knapsack AS uk')
+                ->join('item AS i', function ($join) {
+                    $join
+                        ->on('i.id', '=', 'uk.item_id')
+                    ;
+                })
+                ->where('uk.user_role_id', '=', $user_role_id)
+                ->where('uk.item_id', '=', $query['item_id'])
+                ->where('uk.item_num', '>=', $query['var_data'])
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('没有足够的物品数量', 400);
+            }
+
+            $recycle_coin = $row->recycle_coin * $query['var_data'];
+
+            $res = '回收：' . $row->name . '' . $query['var_data'] . '个' . '获得金币：' . $recycle_coin;
+
+            DB::beginTransaction();
+
+            DB::table('user_role')
+                ->where('id', '=', $user_role_id)
+                ->update([
+                    'coin' => DB::raw('`coin` + ' . $recycle_coin),
+                ])
+            ;
+
+            DB::table('user_knapsack')
+                ->where('user_role_id', '=', $user_role_id)
+                ->where('item_id', '=', $row->id)
+                ->update([
+                    'item_num' => DB::raw('`item_num` - ' . $query['var_data']),
+                ])
+            ;
+
+            DB::commit();
 
             return Response::json([
                 'code'    => 200,

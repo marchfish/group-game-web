@@ -62,6 +62,8 @@ Route::namespace('Web')->group(function () {
             Route::get('use', 'ItemController@useItem');
             // 显示物品
             Route::get('recycle-show', 'ItemController@recycleItemShow');
+            // 回收
+            Route::get('recycle', 'ItemController@recycle');
         });
         // 装备
         Route::prefix('equip')->group(function () {
