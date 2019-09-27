@@ -146,6 +146,17 @@ class UserRole
                 $res .='恭喜您！等级提升至：' . $is_up . '<br>';
             }
 
+            if ($enemy->move_map_id != 0) {
+                DB::table('user_role')
+                    ->where('id', '=', $user_role_id)
+                    ->update([
+                        'map_id' => $enemy->move_map_id,
+                    ])
+                ;
+
+                $res .='您已被传送出该位置<br>';
+            }
+
             return $res;
         }
 

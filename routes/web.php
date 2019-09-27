@@ -80,5 +80,10 @@ Route::namespace('Web')->group(function () {
                 Route::get('', 'UserRoleController@userRoleStatus');
             });
         });
+        // 地图
+        Route::prefix('map')->group(function () {
+            // 传送
+            Route::get('transfer', 'MapController@transfer');
+        });
     });
 });

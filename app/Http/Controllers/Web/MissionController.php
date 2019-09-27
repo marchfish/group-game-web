@@ -252,11 +252,20 @@ class MissionController extends Controller
             $reward_items = UserKnapsack::addItems($reward);
 
             DB::table('mission_history')
-                ->where('id', '=', $row->id)
+                ->where('user_role_id', '=', $user_role_id)
                 ->update([
                     'status' => 200,
                 ])
             ;
+
+            if ($row->move_map_id != 0) {
+                DB::table('user_role')
+                    ->where('id', '=', $user_role_id)
+                    ->update([
+                        'map_id' => $row->move_map_id,
+                    ])
+                ;
+            }
 
             DB::commit();
 
