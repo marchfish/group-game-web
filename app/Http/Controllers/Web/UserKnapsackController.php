@@ -51,7 +51,7 @@ class UserKnapsackController extends Controller
                     $res .=' ----- ' . '<input type="button" class="action" data-url="' . URL::to('map/transfer') . '?item_id=' . $row->item_id . '" value="传送" />';
                 }
 
-                $res .= '<br>';
+                $res .= ' ----- ' . '<input type="button" class="action" data-url="' . URL::to('item/check') . '?item_id=' . $row->item_id . '" value="查看" /><br>';
             }
 
             return Response::json([

@@ -64,6 +64,8 @@ Route::namespace('Web')->group(function () {
             Route::get('recycle-show', 'ItemController@recycleItemShow');
             // 回收
             Route::get('recycle', 'ItemController@recycle');
+            // 查看物品
+            Route::get('check', 'ItemController@check');
         });
         // 装备
         Route::prefix('equip')->group(function () {
@@ -85,5 +87,6 @@ Route::namespace('Web')->group(function () {
             // 传送
             Route::get('transfer', 'MapController@transfer');
         });
+
     });
 });

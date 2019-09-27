@@ -65,4 +65,29 @@ class Item
 
         return '使用成功，当前血量：' . $row->hp . '<br>' . '当前蓝量：' . $row->mp;
     }
+
+    // 名词转换
+    public static function englishToChinese($name)
+    {
+        switch ($name){
+            case 'clothes':
+                return '衣服';
+            case 'weapon':
+                return '武器';
+            case 'max_hp':
+                return '血量上限';
+            case 'max_mp':
+                return '蓝量上限';
+            case 'attack':
+                return '攻击力';
+            case 'magic':
+                return '魔力';
+            case 'crit':
+                return '暴击';
+            case 'dodge':
+                return '闪避';
+            case 'defense':
+                return '防御力';
+        }
+    }
 }

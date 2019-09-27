@@ -204,4 +204,61 @@ class ItemController extends Controller
             ]);
         }
     }
+
+    // 查看物品
+    public function check()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'item_id' => ['required'],
+            ], [
+                'item_id.required' => '物品id不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            // 判断是否存在物品
+            $row = DB::query()
+                ->select([
+                    'i.*',
+                ])
+                ->from('item AS i')
+                ->where('i.id', '=', $query['item_id'])
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('没有找到该物品', 400);
+            }
+
+            $info = json_decode($row->content)[0];
+
+            $res = '[' . $row->name . ']' . '<br>' . $row->description . '<br>';
+
+            if ($info) {
+                foreach ($info as $k => $v) {
+                    if ($k == 'type'){
+                        $res .= '装备方式：' . Item::englishToChinese($v) . '<br>';
+                    }else {
+                        $res .= Item::englishToChinese($k) . '：' . $v . '<br>';
+                    }
+                }
+            }
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res ?? '',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }
