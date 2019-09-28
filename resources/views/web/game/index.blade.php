@@ -49,6 +49,10 @@
     <div class="row">
         <p> <input type="button" class="action" data-url="{!! URL::to('item/recycle-show') !!}" value="回收" /></p>
     </div>
+    <div class="row">
+      会员功能：
+      <p> <input type="button" class="action" data-url="{!! URL::to('shop-mall') !!}" value="商城" /></p>
+    </div>
 </div>
 </body>
 <script>
@@ -66,7 +70,7 @@
                 return ;
             };
 
-            if(actionName == "回收") {
+            if(actionName == "回收" || actionName == "购买") {
                 var_data = $(this).parent().find(".js-num").val();
                 if(var_data < 1) {
                     var_data = 1;

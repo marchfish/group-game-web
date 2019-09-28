@@ -87,6 +87,12 @@ Route::namespace('Web')->group(function () {
             // 传送
             Route::get('transfer', 'MapController@transfer');
         });
-
+        // 商城
+        Route::prefix('shop-mall')->group(function () {
+            // 显示
+            Route::get('', 'ShopMallController@show');
+            // 购买物品
+            Route::get('buy', 'ShopMallController@buy');
+        });
     });
 });
