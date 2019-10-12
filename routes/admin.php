@@ -13,3 +13,9 @@ Route::middleware(['admin.check_login', 'admin.check_permission'])->group(functi
     // 首页
     Route::get('', 'IndexController@index');
 });
+
+// 设置level
+//Route::get('level', 'PublicController@level');
+
+// 设置装备
+Route::get('equip', 'PublicController@equip');

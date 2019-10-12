@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
 {
@@ -114,5 +115,123 @@ class PublicController extends Controller
         Session::remove('admin');
 
         return Response::redirectTo('admin/login');
+    }
+
+    // 设置level
+    public function level()
+    {
+        DB::beginTransaction();
+
+        $count = 1700000;
+
+        for ($i = 31; $i <= 60; $i++) {
+            DB::table('sys_level')->insert([
+                'level'   => $i,
+                'exp'     => $count,
+                'attack'  => 2,
+                'defense' => 2,
+                'fame_id' => 3,
+            ]);
+            $count += 100000;
+        }
+
+        DB::commit();
+
+        echo '完成';
+    }
+
+    // 插入装备数据
+    public function equip()
+    {
+        $equips = [
+            [
+                'name' => '青铜剑',
+                'content' => [
+                    [
+                       'type' => 'weapon',
+                       'attack' => 15
+                    ]
+                ],
+            ],
+            [
+                'name' => '青铜头盔',
+                'content' => [
+                    [
+                        'type' => 'helmet',
+                        'attack' => 10,
+                        'defense' => 10
+                    ]
+                ],
+            ],
+            [
+                'name' => '青铜甲',
+                'content' => [
+                    [
+                        'type' => 'clothes',
+                        'defense' => 15
+                    ]
+                ],
+            ],
+            [
+                'name' => '青铜耳环',
+                'content' => [
+                    [
+                        'type' => 'earring',
+                        'attack' => 10
+                    ]
+                ],
+            ],
+            [
+                'name' => '青铜项链',
+                'content' => [
+                    [
+                        'type' => 'necklace',
+                        'attack' => 10,
+                        'defense' => 10
+                    ]
+                ],
+            ],
+            [
+                'name' => '青铜手镯',
+                'content' => [
+                    [
+                        'type' => 'bracelet',
+                        'attack' => 10
+                    ]
+                ],
+            ],
+            [
+                'name' => '青铜戒指',
+                'content' => [
+                    [
+                        'type' => 'ring',
+                        'attack' => 10
+                    ]
+                ],
+            ],
+            [
+                'name' => '青铜鞋',
+                'content' => [
+                    [
+                        'type' => 'shoes',
+                        'attack' => 10,
+                        'defense' => 10
+                    ]
+                ],
+            ],
+        ];
+
+        foreach ($equips as $equip) {
+            DB::table('item')->insert([
+                'name'         => $equip['name'],
+                'description'  => '新手装备',
+                'type'         => 10,
+                'level'        => 5,
+                'content'      => json_encode($equip['content']),
+                'recycle_coin' => 5,
+            ]);
+        }
+
+        dd('完成：' . date('Y-m-d H:i:s', time()));
     }
 }

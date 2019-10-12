@@ -23,6 +23,9 @@
         border-width: 1px;
         border-color: pink;
         border-style: solid;
+        overflow-y: auto;
+        padding: 10px 10px;
+        margin-bottom: 15px;
     }
 </style>
 <body>
@@ -38,20 +41,21 @@
         Lumina<br>
     </div>
     <div class="row">
-        <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="上" />　　　　　<input type="button" class="action" data-url="{!! URL::to('game/attack') !!}" value="攻击">　<input type="button" class="action" data-url="{!! URL::to('user-knapsack') !!}" value="背包">　<input type="button" class="action" data-url="{!! URL::to('mission/user') !!}" value="任务">　<input type="button" class="action" data-url="{!! URL::to('equip') !!}" value="装备"></p>
+        <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="上" />　　<input type="button" class="action" data-url="{!! URL::to('game/attack') !!}" value="攻击">　<input type="button" class="action" data-url="{!! URL::to('user-knapsack') !!}" value="背包">　<input type="button" class="action" data-url="{!! URL::to('mission/user') !!}" value="任务">　<input type="button" class="action" data-url="{!! URL::to('equip') !!}" value="装备"></p>
     </div>
     <div class="row">
         <p> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="左" /> 　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="右" /> </p>
     </div>
     <div class="row">
-        <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="下" />　　　　　<input type="button" class="action" data-url="{!! URL::to('user/role') !!}" value="状态">　<input type="button" class="action" data-url="{!! URL::to('game/location') !!}" value="位置">　<input type="button" value="挂机1">　<input type="button" value="挂机2"></p>
-    </div>
-    <div class="row">
-        <p> <input type="button" class="action" data-url="{!! URL::to('item/recycle-show') !!}" value="回收" /></p>
+        <p><input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="前" /> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="下" /> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="后" />　 <input type="button" class="action" data-url="{!! URL::to('user/role') !!}" value="状态">　<input type="button" class="action" data-url="{!! URL::to('game/location') !!}" value="位置">　<input type="button" class="action" data-url="{!! URL::to('item/recycle-show') !!}" value="回收" /></p>
     </div>
     <div class="row">
       会员功能：
-      <p> <input type="button" class="action" data-url="{!! URL::to('shop-mall') !!}" value="商城" /></p>
+      <p>
+          <input type="button" class="action" data-url="{!! URL::to('shop-mall') !!}" value="商城"/>
+          <input type="button" class="action" data-url="{!! URL::to('vip/on-hook') !!}" value="挂机经验"/>　
+          <input type="button" class="action" data-url="{!! URL::to('vip/on-hook') !!}" value="挂机金币"/>
+      </p>
     </div>
 </div>
 </body>

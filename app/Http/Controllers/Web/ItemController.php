@@ -172,7 +172,7 @@ class ItemController extends Controller
 
             $recycle_coin = $row->recycle_coin * $query['var_data'];
 
-            $res = '回收：' . $row->name . '' . $query['var_data'] . '个' . '获得金币：' . $recycle_coin;
+            $res = '回收：' . $row->name . '' . $query['var_data'] . '个' . '<br>获得金币：' . $recycle_coin;
 
             DB::beginTransaction();
 

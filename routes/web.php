@@ -87,6 +87,12 @@ Route::namespace('Web')->group(function () {
             // 传送
             Route::get('transfer', 'MapController@transfer');
         });
+        // 会员功能
+        Route::prefix('vip')->group(function () {
+            // 挂机
+            Route::get('on-hook', 'UserVipController@onHook');
+        });
+
         // 商城
         Route::prefix('shop-mall')->group(function () {
             // 显示

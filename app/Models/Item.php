@@ -63,21 +63,39 @@ class Item
 
         DB::commit();
 
-        return '使用成功，当前血量：' . $row->hp . '<br>' . '当前蓝量：' . $row->mp;
+        return '使用成功 <br>当前血量：' . $row->hp . '<br>' . '当前蓝量：' . $row->mp;
     }
 
     // 名词转换
     public static function englishToChinese($name)
     {
         switch ($name){
-            case 'clothes':
-                return '衣服';
-            case 'weapon':
-                return '武器';
+            case 'hp':
+                return '血量';
+            case 'mp':
+                return '蓝量';
             case 'max_hp':
                 return '血量上限';
             case 'max_mp':
                 return '蓝量上限';
+            case 'weapon':
+                return '武器';
+            case 'helmet':
+                return '头盔';
+            case 'clothes':
+                return '衣服';
+            case 'earring':
+                return '耳环';
+            case 'necklace':
+                return '项链';
+            case 'bracelet':
+                return '手镯';
+            case 'ring':
+                return '戒指';
+            case 'shoes':
+                return '鞋子';
+            case 'magic_weapon':
+                return '法宝';
             case 'attack':
                 return '攻击力';
             case 'magic':

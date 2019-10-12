@@ -5,7 +5,6 @@
 a {
     text-decoration: none;
 }
-ul,li{ padding:0;margin:0;list-style:none}
 /*********/
 .wr-top-5 {
     margin-top: 5px;
@@ -181,23 +180,106 @@ ul,li{ padding:0;margin:0;list-style:none}
 .wr-padding-05 {
     padding: 0 5%;
 }
-/* 字体 */
-.wr-font-10pt {
-    font-size: 10pt;
+/* 字体 px*/
+.wr-font-9px {
+    font-size: 9px;
+}
+.wr-font-10px {
+    font-size: 10px;
 }
 .wr-font-14px {
     font-size: 14px;
 }
+.wr-font-11px {
+    font-size: 11px;
+}
+.wr-font-13px {
+    font-size: 13px;
+}
+.wr-font-15px {
+    font-size: 15px;
+}
+.wr-font-25px {
+    font-size: 25px;
+}
+.wr-font-26px {
+    font-size: 26px;
+}
+/* 字体 pt*/
+.wr-font-9pt {
+    font-size: 9pt;
+}
+.wr-font-10pt {
+    font-size: 10pt;
+}
+.wr-font-14pt {
+    font-size: 14pt;
+}
+.wr-font-11pt {
+    font-size: 11pt;
+}
+.wr-font-12pt {
+    font-size: 12pt;
+}
+.wr-font-13pt {
+    font-size: 13pt;
+}
+.wr-font-15pt {
+    font-size: 15pt;
+}
+.wr-font-16pt {
+    font-size: 16pt;
+}
+.wr-font-20pt {
+    font-size: 20pt;
+}
+.wr-font-25pt {
+    font-size: 25pt;
+}
+.wr-font-26pt {
+    font-size: 26pt;
+}
+.wr-font-30pt {
+    font-size: 30pt;
+}
 /* 颜色 */
+.wr-color-FFF {
+    color: #FFFFFF;
+}
+.wr-color-333 {
+    color: #333333;
+}
+.wr-color-666 {
+    color: #666666;
+}
+.wr-color-999 {
+    color: #999999;
+}
 .wr-color-a9a {
     color: #A9A9A9;
 }
-
+.wr-color-1490F7 {
+    color: #1490F7;
+}
+.wr-color-E53E27 {
+    color: #E53E27;
+}
+/*加粗*/
+.wr-font-bold {
+    font-weight: bold;
+}
+.wr-font-normal {
+    font-weight: normal;
+}
 /* 圆角 */
 .wr-border-radius-15 {
     border-radius: 15px;
 }
 
+/*取消内边距*/
+.wr-padding-0{
+    padding: 0 !important;
+}
 
 /* 一些好玩的 */
 .wr-line {
@@ -244,4 +326,66 @@ ul,li{ padding:0;margin:0;list-style:none}
 .wr-indent{
     text-indent: 2em;
     text-align:justify;
+}
+.wr-item-center {
+    display: flex;
+    align-items:center;
+}
+.wr-nowrap{
+    white-space:nowrap;
+}
+/*下对齐问题*/
+.wr-span-font-justify{
+    display: inline-block;
+    transform: translate(0,-4%);
+}
+/*超出...*/
+.wr-clamp-1{
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+}
+
+/*阴影*/
+.wr-shadow{
+    -moz-box-shadow:0px 2px 10px rgba(0,0,0,.2);
+    -webkit-box-shadow:0px 2px 10px rgba(0,0,0,.2);
+    box-shadow:0px 2px 10px rgba(0,0,0,.2);
+}
+
+/*渐变*/
+.wr-gradual-bg {
+    background: -webkit-radial-gradient(#6C75A9, #445083); /* Safari 5.1 - 6.0 */
+    background: -o-radial-gradient(#6C75A9, #445083); /* Opera 11.6 - 12.0 */
+    background: -moz-radial-gradient(#6C75A9, #445083); /* Firefox 3.6 - 15 */
+    background: radial-gradient(#6C75A9, #445083); /* 标准的语法（必须放在最后） */
+
+    background: -webkit-linear-gradient(left, #1490F7, #5AC7FC); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(left, #1490F7, #5AC7FC); /* Opera 11.6 - 12.0 */
+    background: -moz-linear-gradient(left, #1490F7, #5AC7FC); /* Firefox 3.6 - 15 */
+    background: linear-gradient(left, #1490F7, #5AC7FC); /* 标准的语法（必须放在最后） */
+}
+
+.wr-bubble {
+    z-index: 1;
+    top: -93px;
+    right: -33px;
+    height: 45px;
+    width: 78px;
+    background: #F9808A;
+    position: absolute;
+    border-radius: 5px;
+    font-size: 9pt;
+}
+.wr-caret {
+    margin-top: -15px;
+    margin-left: -12px;
+    border-top: 8px dashed;
+    border-right: 2px solid transparent;
+    border-left: 8px solid transparent;
+    color: #F9808A;
 }
