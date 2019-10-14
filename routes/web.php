@@ -58,8 +58,14 @@ Route::namespace('Web')->group(function () {
         });
         // 物品
         Route::middleware(['web.check_hp'])->prefix('item')->group(function () {
-            // 显示物品
+            // 使用物品
             Route::get('use', 'ItemController@useItem');
+            // 显示物品
+            Route::get('recycle-show', 'ItemController@recycleItemShow');
+            // 回收
+            Route::get('recycle', 'ItemController@recycle');
+            // 查看物品
+            Route::get('check', 'ItemController@check');
         });
         // 装备
         Route::prefix('equip')->group(function () {
@@ -75,6 +81,24 @@ Route::namespace('Web')->group(function () {
                 // 状态
                 Route::get('', 'UserRoleController@userRoleStatus');
             });
+        });
+        // 地图
+        Route::prefix('map')->group(function () {
+            // 传送
+            Route::get('transfer', 'MapController@transfer');
+        });
+        // 会员功能
+        Route::prefix('vip')->group(function () {
+            // 挂机
+            Route::get('on-hook', 'UserVipController@onHook');
+        });
+
+        // 商城
+        Route::prefix('shop-mall')->group(function () {
+            // 显示
+            Route::get('', 'ShopMallController@show');
+            // 购买物品
+            Route::get('buy', 'ShopMallController@buy');
         });
     });
 });

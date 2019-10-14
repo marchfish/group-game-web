@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Models\Item;
+use App\Models\UserRole;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
@@ -35,7 +36,9 @@ class UserKnapsackController extends Controller
                 ->get()
             ;
 
-            $res = '';
+            $userRole = UserRole::getUserRole();
+
+            $res = '金币：' . $userRole->coin . '<br>';
 
             foreach ($rows as $row) {
                 $res .= $row->item_name . '：' . $row->item_num;
@@ -44,9 +47,11 @@ class UserKnapsackController extends Controller
                     $res .=' ----- ' . '<input type="button" class="action" data-url="' . URL::to('item/use') . '?item_id=' . $row->item_id . '" value="使用" />';
                 }elseif ($row->item_type == 10) {
                     $res .=' ----- ' . '<input type="button" class="action-post" data-url="' . URL::to('equip') . '?item_id=' . $row->item_id . '" value="装备" />';
+                }elseif ($row->item_type == 30) {
+                    $res .=' ----- ' . '<input type="button" class="action" data-url="' . URL::to('map/transfer') . '?item_id=' . $row->item_id . '" value="传送" />';
                 }
 
-                $res .= '<br>';
+                $res .= ' ----- ' . '<input type="button" class="action" data-url="' . URL::to('item/check') . '?item_id=' . $row->item_id . '" value="查看" /><br>';
             }
 
             return Response::json([

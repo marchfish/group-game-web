@@ -53,16 +53,24 @@ class User
             'name' => $query['nickname'] ?? ''
         ]);
 
-        DB::table('equip')->insert([
+        DB::table('user_equip')->insert([
             'user_role_id' => $user_role_id,
         ]);
 
         DB::commit();
 
         $userRow = DB::query()
-            ->select(['*'])
-            ->from('user')
-            ->where('id', '=', $id)
+            ->select([
+                'u.*',
+                'ur.id AS user_role_id',
+            ])
+            ->from('user AS u')
+            ->join('user_role AS ur', function ($join) {
+                $join
+                    ->on('ur.user_id', '=', 'u.id')
+                ;
+            })
+            ->where('u.id', '=', $id)
             ->limit(1)
             ->get()
             ->first()

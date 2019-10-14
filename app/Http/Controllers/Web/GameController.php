@@ -29,6 +29,7 @@ class GameController extends Controller
             $row = DB::query()
                 ->select([
                     'm.name AS name',
+                    'm.description AS description',
                     DB::raw('IFNULL(`n`.`name`, "") AS `npc_name`'),
                     DB::raw('IFNULL(`e`.`name`, "") AS `enemy_name`'),
                     DB::raw('IFNULL(`mforward`.`name`, "") AS `forward_name`'),
@@ -167,6 +168,7 @@ class GameController extends Controller
             $row1 = DB::query()
                 ->select([
                     'm.name AS name',
+                    'm.description AS description',
                     DB::raw('IFNULL(`n`.`name`, "") AS `npc_name`'),
                     DB::raw('IFNULL(`e`.`name`, "") AS `enemy_name`'),
                     DB::raw('IFNULL(`mforward`.`name`, "") AS `forward_name`'),

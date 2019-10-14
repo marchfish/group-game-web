@@ -13,3 +13,16 @@ Route::middleware(['admin.check_login', 'admin.check_permission'])->group(functi
     // 首页
     Route::get('', 'IndexController@index');
 });
+
+// 设置level
+//Route::get('level', 'PublicController@level');
+
+// 设置装备
+//Route::get('equip', 'PublicController@equip');
+//Route::get('equip', 'SystemController@equip');
+
+// 设置法宝
+//Route::get('magic-weapon', 'SystemController@magicWeapon');
+
+// 设置怪物
+Route::get('enemy', 'SystemController@enemy');

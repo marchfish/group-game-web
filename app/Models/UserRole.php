@@ -138,12 +138,25 @@ class UserRole
                 $certain_items = $result;
             }
 
-            $res .='获得物品:' . UserKnapsack::addItems($certain_items) . '<br>';
+            if (is_array($certain_items)){
+                $res .='获得物品:' . UserKnapsack::addItems($certain_items) . '<br>';
+            }
 
             $is_up = self::is_upgrade();
 
             if ($is_up != 0) {
                 $res .='恭喜您！等级提升至：' . $is_up . '<br>';
+            }
+
+            if ($enemy->move_map_id != 0) {
+                DB::table('user_role')
+                    ->where('id', '=', $user_role_id)
+                    ->update([
+                        'map_id' => $enemy->move_map_id,
+                    ])
+                ;
+
+                $res .='您已被传送出该位置<br>';
             }
 
             return $res;
@@ -222,6 +235,8 @@ class UserRole
                 ;
 
                 $row->new_level = $row1->level;
+
+
             }
 
         } while ($row->exp > $row1->exp);
