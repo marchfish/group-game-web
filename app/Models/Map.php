@@ -9,7 +9,7 @@ class Map
 {
     public static function getLocationToMessage($row)
     {
-        $data = '[当前位置]<br><span class="wr-color-E53E27">' . $row->name . '</span><br>';
+        $data = '[当前位置]<br><span class="wr-color-999">' . $row->name . '</span><br>';
 
         if ($row->npc_name && $row->npc_name != '') {
             $data .= 'npc=' . $row->npc_name;
@@ -22,7 +22,7 @@ class Map
         }
 
         if ($row->enemy_name && $row->enemy_name != '') {
-            $data .= '怪物=' . $row->enemy_name . '<br> ';
+            $data .= '<span class="wr-color-E53E27">怪物=' . $row->enemy_name . '</span><br> ';
         }
 
         if ($row->description && $row->description != '') {

@@ -104,10 +104,9 @@ class ItemController extends Controller
             foreach ($rows as $row) {
                 $res .= $row->item_name . '：' . $row->item_num;
 
-                $res .=' ------- 回收数量↓'
-                    .'<div>'
+                $res .='<div>'
                     .'<input class="minus" name="" type="button" value="-" />'
-                    .'<input class="js-num" name="goodnum" type="tel" value="1"/>'
+                    .'<input class="js-num" name="goodnum" type="tel" style="width: 50px" value="1"/>'
                     .'<input class="add" name="" type="button" value="+" />'
                     . '<input type="button" class="action" data-url="' . URL::to('item/recycle') . '?item_id=' . $row->item_id . '" value="回收" />'
                     .'</div>'

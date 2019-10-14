@@ -5,6 +5,9 @@
 a {
     text-decoration: none;
 }
+ul,li {
+    list-style-type:none;
+}
 /*********/
 .wr-top-5 {
     margin-top: 5px;
@@ -263,6 +266,9 @@ a {
 }
 .wr-color-E53E27 {
     color: #E53E27;
+}
+.wr-color-515884 {
+    color: #515884;
 }
 /*加粗*/
 .wr-font-bold {

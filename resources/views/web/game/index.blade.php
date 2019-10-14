@@ -41,7 +41,7 @@
         Lumina<br>
     </div>
     <div class="row">
-        <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="上" />　　<input type="button" class="action" data-url="{!! URL::to('game/attack') !!}" value="攻击">　<input type="button" class="action" data-url="{!! URL::to('user-knapsack') !!}" value="背包">　<input type="button" class="action" data-url="{!! URL::to('mission/user') !!}" value="任务">　<input type="button" class="action" data-url="{!! URL::to('equip') !!}" value="装备"></p>
+        <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="上" />　　<input type="button" id="attack" class="action" data-url="{!! URL::to('game/attack') !!}" value="攻击">　<input type="button" class="action" data-url="{!! URL::to('user-knapsack') !!}" value="背包">　<input type="button" class="action" data-url="{!! URL::to('mission/user') !!}" value="任务">　<input type="button" class="action" data-url="{!! URL::to('equip') !!}" value="装备"></p>
     </div>
     <div class="row">
         <p> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="左" /> 　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="右" /> </p>
@@ -53,6 +53,7 @@
       会员功能：
       <p>
           <input type="button" class="action" data-url="{!! URL::to('shop-mall') !!}" value="商城"/>
+          <input type="button" class="auto-attack" value="自动攻击"/>
           <input type="button" class="action" data-url="{!! URL::to('vip/on-hook') !!}" value="挂机经验"/>　
           <input type="button" class="action" data-url="{!! URL::to('vip/on-hook') !!}" value="挂机金币"/>
       </p>
@@ -63,9 +64,14 @@
     $(function () {
         var timestamp = Date.parse(new Date());
         var token = "{!! csrf_token() !!}";
+        var autoAtt = null;
         // 动作
         $(document).on('click', '.action', function(e){
             e.preventDefault();
+            if (autoAtt && $(this).val() != "攻击") {
+                $(".xianshiquyu").html("请先结束自动攻击");
+                return;
+            }
             var now_timestamp = Date.parse(new Date());
             var actionName = $(this).val();
             var var_data = null;
@@ -96,7 +102,6 @@
                     timestamp = Date.parse(new Date());
                 },
                 error:function(jqXHR){
-                    layer.close(layer_div);
                     console.log("Error: "+jqXHR.status);
                 }
             });
@@ -105,6 +110,10 @@
         // post
         $(document).on('click', '.action-post', function(e){
             e.preventDefault();
+            if (autoAtt) {
+                $(".xianshiquyu").html("请先结束自动攻击");
+                return;
+            }
             var now_timestamp = Date.parse(new Date());
 
             if (now_timestamp - timestamp < 1000) {
@@ -126,11 +135,28 @@
                     timestamp = Date.parse(new Date());
                 },
                 error:function(jqXHR){
-                    layer.close(layer_div);
                     console.log("Error: "+jqXHR.status);
                 }
             });
         });
+
+        // 自动攻击
+        $('.auto-attack').on('click', function (e) {
+            e.preventDefault();
+            if ($(this).val() === "自动攻击") {
+                $(".xianshiquyu").html("自动攻击已开启...");
+                $(this).val("结束自动攻击");
+                autoAtt = setInterval(autoAttack, 2000);
+            }else {
+                $(".xianshiquyu").html("自动攻击关闭");
+                $(this).val("自动攻击");
+                clearInterval(autoAtt);
+                autoAtt = null;
+            }
+        })
+        function autoAttack() {
+            $('#attack').click();
+        }
     });
 
     $(function(){

@@ -138,7 +138,9 @@ class UserRole
                 $certain_items = $result;
             }
 
-            $res .='获得物品:' . UserKnapsack::addItems($certain_items) . '<br>';
+            if (is_array($certain_items)){
+                $res .='获得物品:' . UserKnapsack::addItems($certain_items) . '<br>';
+            }
 
             $is_up = self::is_upgrade();
 
@@ -233,6 +235,8 @@ class UserRole
                 ;
 
                 $row->new_level = $row1->level;
+
+
             }
 
         } while ($row->exp > $row1->exp);

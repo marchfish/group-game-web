@@ -133,11 +133,17 @@ class EquipController extends Controller
             $row = DB::query()
                 ->select([
                     'i.*',
+                    'ur.level AS user_role_level',
                 ])
                 ->from('user_knapsack AS uk')
                 ->join('item AS i', function ($join) {
                     $join
                         ->on('i.id', '=', 'uk.item_id')
+                    ;
+                })
+                ->join('user_role AS ur', function ($join) {
+                    $join
+                        ->on('ur.id', '=', 'uk.user_role_id')
                     ;
                 })
                 ->where('uk.user_role_id', '=', $user_role_id)
@@ -155,7 +161,7 @@ class EquipController extends Controller
                 throw new InvalidArgumentException('该物品不属于装备', 400);
             }
 
-            if (Session::get('userRole.level') < $row->level) {
+            if ($row->user_role_level < $row->level) {
                 throw new InvalidArgumentException('装备失败：等级不足' . $row->level, 400);
             }
 

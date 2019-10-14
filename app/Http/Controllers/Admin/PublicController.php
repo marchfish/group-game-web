@@ -34,7 +34,7 @@ class PublicController extends Controller
      */
     public function captcha()
     {
-        Captcha::build(100, 34);
+        Captcha::build(110, 34);
 
         Session::put('admin.captcha', Captcha::getPhrase());
 
@@ -122,9 +122,9 @@ class PublicController extends Controller
     {
         DB::beginTransaction();
 
-        $count = 1700000;
+        $count = 0000000;
 
-        for ($i = 31; $i <= 60; $i++) {
+        for ($i = 31; $i <= 6|0; $i++) {
             DB::table('sys_level')->insert([
                 'level'   => $i,
                 'exp'     => $count,
@@ -132,7 +132,7 @@ class PublicController extends Controller
                 'defense' => 2,
                 'fame_id' => 3,
             ]);
-            $count += 100000;
+            $count += 000000;
         }
 
         DB::commit();
@@ -145,77 +145,77 @@ class PublicController extends Controller
     {
         $equips = [
             [
-                'name' => '青铜剑',
+                'name' => '冰魄战剑',
                 'content' => [
                     [
                        'type' => 'weapon',
-                       'attack' => 15
+                       'attack' => 110
                     ]
                 ],
             ],
             [
-                'name' => '青铜头盔',
+                'name' => '冰魄头盔',
                 'content' => [
                     [
                         'type' => 'helmet',
-                        'attack' => 10,
-                        'defense' => 10
+                        'attack' => 100,
+                        'defense' => 100
                     ]
                 ],
             ],
             [
-                'name' => '青铜甲',
+                'name' => '冰魄战甲',
                 'content' => [
                     [
                         'type' => 'clothes',
-                        'defense' => 15
+                        'defense' => 110
                     ]
                 ],
             ],
             [
-                'name' => '青铜耳环',
+                'name' => '冰魄耳环',
                 'content' => [
                     [
                         'type' => 'earring',
-                        'attack' => 10
+                        'attack' => 100
                     ]
                 ],
             ],
             [
-                'name' => '青铜项链',
+                'name' => '冰魄项链',
                 'content' => [
                     [
                         'type' => 'necklace',
-                        'attack' => 10,
-                        'defense' => 10
+                        'attack' => 100,
+                        'defense' => 100
                     ]
                 ],
             ],
             [
-                'name' => '青铜手镯',
+                'name' => '冰魄手镯',
                 'content' => [
                     [
                         'type' => 'bracelet',
-                        'attack' => 10
+                        'attack' => 100
                     ]
                 ],
             ],
             [
-                'name' => '青铜戒指',
+                'name' => '冰魄戒指',
                 'content' => [
                     [
                         'type' => 'ring',
-                        'attack' => 10
+                        'attack' => 100
                     ]
                 ],
             ],
             [
-                'name' => '青铜鞋',
+                'name' => '冰魄战靴',
                 'content' => [
                     [
                         'type' => 'shoes',
-                        'attack' => 10,
-                        'defense' => 10
+                        'attack' => 100,
+                        'defense' => 100
                     ]
                 ],
             ],
@@ -224,11 +224,11 @@ class PublicController extends Controller
         foreach ($equips as $equip) {
             DB::table('item')->insert([
                 'name'         => $equip['name'],
-                'description'  => '新手装备',
+                'description'  => '初级装备',
                 'type'         => 10,
-                'level'        => 5,
+                'level'        => 30,
                 'content'      => json_encode($equip['content']),
-                'recycle_coin' => 5,
+                'recycle_coin' => 450,
             ]);
         }
 
