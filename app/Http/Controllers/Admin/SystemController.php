@@ -154,7 +154,7 @@ class SystemController extends Controller
 //            'name' => '藤蔓怪人',
             'items' => [
                 [
-                    'id'   => 122,
+                    'id'   => 145,
                     'num'  => 1,
                 ],
                 [
@@ -170,7 +170,7 @@ class SystemController extends Controller
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 71,
+                    'id'   => 98,
                     'num'  => 1,
                 ],
                 [
@@ -182,7 +182,7 @@ class SystemController extends Controller
                     'num'  => 5,
                 ],
                 [
-                    'id'   => 64,
+                    'id'   => 87,
                     'num'  => 1,
                 ],
                 [
@@ -190,7 +190,7 @@ class SystemController extends Controller
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 70,
+                    'id'   => 126,
                     'num'  => 1,
                 ],
                 [
@@ -198,12 +198,12 @@ class SystemController extends Controller
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 86,
+                    'id'   => 104,
                     'num'  => 1,
                 ],
                 [
                     'id'   => 128,
-                    'num'  => 2,
+                    'num'  => 1,
                 ]
             ],
             'certain_items' => [
@@ -215,13 +215,13 @@ class SystemController extends Controller
         ];
 
         DB::table('enemy')->insert([
-            'name'          => '厚壳鬼',
-            'hp'            => 300,
-            'attack'        => 405,
-            'defense'       => 395,
-            'level'         => 21,
-            'exp'           => 21,
-            'coin'          => 21,
+            'name'          => '冰封绿蜥',
+            'hp'            => 360,
+            'attack'        => 630,
+            'defense'       => 620,
+            'level'         => 24,
+            'exp'           => 24,
+            'coin'          => 24,
             'items'         => json_encode($date['items']),
 //            'certain_items' => json_encode($date['certain_items']),
             'probability'   => 10,
