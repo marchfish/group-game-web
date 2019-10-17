@@ -151,40 +151,60 @@ class SystemController extends Controller
     public function enemy()
     {
         $date =  [
-            'name' => '石头怪',
+//            'name' => '藤蔓怪人',
             'items' => [
                 [
-                    'id'   => 122,
+                    'id'   => 145,
                     'num'  => 1,
+                ],
+                [
+                    'id'   => 122,
+                    'num'  => 2,
                 ],
                 [
                     'id'   => 127,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 48,
+                    'id'   => 128,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 49,
+                    'id'   => 98,
                     'num'  => 1,
                 ],
-//                [
-//                    'id'   => 35,
-//                    'num'  => 1,
-//                ],
-//                [
-//                    'id'   => 36,
-//                    'num'  => 1,
-//                ],
-//                [
-//                    'id'   => 37,
-//                    'num'  => 1,
-//                ],
-//                [
-//                    'id'   => 38,
-//                    'num'  => 1,
-//                ]
+                [
+                    'id'   => 122,
+                    'num'  => 3,
+                ],
+                [
+                    'id'   => 122,
+                    'num'  => 5,
+                ],
+                [
+                    'id'   => 87,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 137,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 126,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 129,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 104,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 128,
+                    'num'  => 1,
+                ]
             ],
             'certain_items' => [
                 [
@@ -195,13 +215,13 @@ class SystemController extends Controller
         ];
 
         DB::table('enemy')->insert([
-            'name'          => $date['name'],
-            'hp'            => 170,
-            'attack'        => 185,
-            'defense'       => 150,
-            'level'         => 13,
-            'exp'           => 13,
-            'coin'          => 50,
+            'name'          => '冰封绿蜥',
+            'hp'            => 360,
+            'attack'        => 630,
+            'defense'       => 620,
+            'level'         => 24,
+            'exp'           => 24,
+            'coin'          => 24,
             'items'         => json_encode($date['items']),
 //            'certain_items' => json_encode($date['certain_items']),
             'probability'   => 10,
@@ -217,7 +237,7 @@ class SystemController extends Controller
     public function mission()
     {
         $date =  [
-            'name' => '火之鸡',
+            'name' => '',
             'items' => [
                 [
                     'id'   => 29,

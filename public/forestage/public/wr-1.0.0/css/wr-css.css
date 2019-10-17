@@ -337,8 +337,13 @@ ul,li {
     display: flex;
     align-items:center;
 }
+/*文字不换行*/
 .wr-nowrap{
     white-space:nowrap;
+}
+/*文字强制换行*/
+.wr-wrap{
+    word-wrap:break-word;
 }
 /*下对齐问题*/
 .wr-span-font-justify{
@@ -394,4 +399,38 @@ ul,li {
     border-right: 2px solid transparent;
     border-left: 8px solid transparent;
     color: #F9808A;
+}
+
+/*圆角框 wr-spec*/
+.wr-spec-box {
+    max-width: 95%;
+    overflow: hidden;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-wrap: break-word;
+    max-height: 24px;
+    border-radius: 100px;
+}
+.wr-spec {
+    background: #f8f8f8;
+    font-size: 9pt;
+    color: #949494;
+    padding: 2px 8px;
+    border-radius: 100px;
+    max-height: 24px;
+    overflow: hidden;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    /*white-space:nowrap;*/
+    word-wrap: break-word;
+    max-width: 100%;
+    display: inline;
 }
