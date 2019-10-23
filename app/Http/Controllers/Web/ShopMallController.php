@@ -40,7 +40,7 @@ class ShopMallController extends Controller
                 $res .= $row->item_name . '：￥' . $row->coin . ' 金币';
                 $res .='<div>'
                     .'<input class="minus" name="" type="button" value="-" />'
-                    .'<input style="width: 100px" class="js-num" name="goodnum" type="tel" value="1"/>'
+                    .'<input style="width: 100px" onkeyup="value=value.replace(/[^\d]/g,\'\')" class="js-num" name="goodnum" type="tel" value="1"/>'
                     .'<input class="add" name="" type="button" value="+" />'
                     . '<input type="button" class="action" data-url="' . URL::to('shop-mall/buy') . '?item_id=' . $row->item_id . '" value="购买" />'
                     .'</div>'

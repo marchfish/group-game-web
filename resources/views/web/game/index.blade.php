@@ -27,6 +27,9 @@
         padding: 10px 10px;
         margin-bottom: 15px;
     }
+    input {
+        margin-bottom: 5px;
+    }
 </style>
 <body>
 <div class="row" style="height: 100%">
@@ -41,7 +44,7 @@
         Lumina<br>
     </div>
     <div class="row">
-        <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="上" />　　<input type="button" id="attack" class="action" data-url="{!! URL::to('game/attack') !!}" value="攻击">　<input type="button" class="action" data-url="{!! URL::to('user-knapsack') !!}" value="背包">　<input type="button" class="action" data-url="{!! URL::to('mission/user') !!}" value="任务">　<input type="button" class="action" data-url="{!! URL::to('equip') !!}" value="装备"></p>
+        <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="上" />　　<input type="button" class="action" data-url="{!! URL::to('game/attack') !!}" value="攻击">　<input type="button" class="action" data-url="{!! URL::to('user-knapsack') !!}" value="背包">　<input type="button" class="action" data-url="{!! URL::to('mission/user') !!}" value="任务">　<input type="button" class="action" data-url="{!! URL::to('equip') !!}" value="装备"></p>
     </div>
     <div class="row">
         <p> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="左" /> 　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="右" /> </p>
@@ -52,11 +55,19 @@
     <div class="row">
       会员功能：
       <p>
+          <input type="button" class="action" data-url="{!! URL::to('vip-show') !!}" value="会员"/>
           <input type="button" class="action" data-url="{!! URL::to('shop-mall') !!}" value="商城"/>
+          <input type="hidden" id="auto-attack" class="action" data-url="{!! URL::to('vip/auto-attack') !!}" value="攻击">
           <input type="button" class="auto-attack" value="自动攻击"/>
           <input type="button" class="action" data-url="{!! URL::to('vip/on-hook') !!}" value="挂机经验"/>　
           <input type="button" class="action" data-url="{!! URL::to('vip/on-hook') !!}" value="挂机金币"/>
+          <input type="button" class="action" data-url="{!! URL::to('end-hook') !!}" value="结束挂机"/>
+          <input type="button" class="action" data-url="{!! URL::to('warehouse') !!}" value="仓库"/>
+          <input type="button" class="action" data-url="{!! URL::to('warehouse/user-knapsack-show') !!}" value="存入仓库"/>
       </p>
+    </div>
+    <div class="row">
+        <a class="btn btn-default" href="{!! URL::to('logout') !!}">退出</a>
     </div>
 </div>
 </body>
@@ -80,7 +91,7 @@
                 return ;
             };
 
-            if(actionName == "回收" || actionName == "购买") {
+            if(actionName == "回收" || actionName == "购买" || actionName == "存入" || actionName == "取出") {
                 var_data = $(this).parent().find(".js-num").val();
                 if(var_data < 1) {
                     var_data = 1;
@@ -155,7 +166,7 @@
             }
         })
         function autoAttack() {
-            $('#attack').click();
+            $('#auto-attack').click();
         }
     });
 
@@ -181,7 +192,7 @@
         // 输入框限制
         var $numInput = $('#js-num');
         $numInput.on('input', function (ev) {
-            $numInput.val($numInput.val().replace('+86', '').replace(/[^0-9]/g, '').substring(0, 11));
+            $numInput.val($numInput.val().replace('+86', '').replace('-', '').replace(/[^0-9]/g, '').substring(0, 11));
         });
     })
 </script>

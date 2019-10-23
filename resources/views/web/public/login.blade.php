@@ -18,7 +18,7 @@
             <li>账户：<input type="text" name="username" required="required" placeholder="请输入账号"></li>
             <li>密码：<input type="password" name="password" placeholder="请输入密码"></li>
             <li>
-                验证码：<input type="text" name="captcha" placeholder="请输入验证码">
+                验证码：<input type="text" autocomplete="off" name="captcha" placeholder="请输入验证码">
             </li>
             <li>
                 <img id="js-img" style="cursor: pointer;" data-src="{!! URL::to('captcha') !!}">

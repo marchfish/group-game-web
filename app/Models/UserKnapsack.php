@@ -80,6 +80,12 @@ class UserKnapsack
             ;
         }
 
+        DB::table('user_knapsack')
+            ->where('user_role_id', '=', $user_role_id)
+            ->where('item_num', '<=', 0)
+            ->delete()
+        ;
+
         DB::commit();
     }
 
@@ -106,5 +112,17 @@ class UserKnapsack
         }
 
         return true;
+    }
+
+    // 整理物品
+    public static function clearKnapsack()
+    {
+        $user_role_id = Session::get('user.account.user_role_id');
+
+        DB::table('user_knapsack')
+            ->where('user_role_id', '=', $user_role_id)
+            ->where('item_num', '<=', 0)
+            ->delete()
+        ;
     }
 }

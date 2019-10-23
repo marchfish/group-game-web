@@ -225,6 +225,19 @@ class PublicController extends Controller
                 throw new InvalidArgumentException('该昵称已存在', 400);
             }
 
+            $row2 = DB::query()
+                ->select(['id'])
+                ->from('user')
+                ->where('username', '=', $query['username'])
+                ->limit(1)
+                ->get()
+                ->first()
+            ;
+
+            if ($row2) {
+                throw new InvalidArgumentException('该账号已存在', 400);
+            }
+
             $userRow = User::createByQuery($query);
 
             Session::put('user', [
@@ -250,6 +263,8 @@ class PublicController extends Controller
     public function logout()
     {
         Session::remove('user');
+
+        Session::remove('userRole');
 
         return Response::redirectTo('');
     }

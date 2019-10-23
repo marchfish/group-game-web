@@ -72,6 +72,8 @@ class Kernel extends HttpKernel
         'web.api_token'          => \App\Http\Middleware\Web\ApiToken::class,
         'web.check_login'        => \App\Http\Middleware\Web\CheckLogin::class,
         'web.check_hp'           => \App\Http\Middleware\Web\CheckHP::class,
+        'web.check_on_hook'      => \App\Http\Middleware\Web\CheckOnHook::class,
+        'web.check_vip'          => \App\Http\Middleware\Web\CheckVip::class,
         'admin.check_login'      => \App\Http\Middleware\Admin\CheckLogin::class,
         'admin.check_permission' => \App\Http\Middleware\Admin\CheckPermission::class,
     ];
