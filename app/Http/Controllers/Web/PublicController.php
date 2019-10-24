@@ -154,6 +154,62 @@ class PublicController extends Controller
     }
 
     /**
+     *修改密码
+     */
+    public function passwordUpdate()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'password'    => ['required'],
+                'password1'   => ['required'],
+                'email'       => ['required'],
+                'verify_code' => ['required'],
+            ], [
+                'password.required'    => '密码不能为空',
+                'password1.required'   => '确认密码不能为空',
+                'email.required'       => '邮箱不能为空',
+                'verify_code.required' => '验证码不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            if ($query['password'] != $query['password1']) {
+                throw new InvalidArgumentException('两次密码不一致', 400);
+            }
+
+            $query['password'] = Hash::make($query['password']);
+
+            Email::checkVerifyCode($query['email'], $query['verify_code']);
+
+            DB::table('user')
+                ->where('email', '=', $query['email'])
+                ->update([
+                    'password' => $query['password'],
+                ])
+            ;
+
+            Session::remove('user');
+
+            Session::remove('userRole');
+
+            return Response::json([
+                'redirect_url' => URL::to('index'),
+                'code'    => 200,
+                'message' => '修改密码成功',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
      *显示注册
      */
     public function registerShow()
@@ -225,6 +281,19 @@ class PublicController extends Controller
                 throw new InvalidArgumentException('该昵称已存在', 400);
             }
 
+            $row2 = DB::query()
+                ->select(['id'])
+                ->from('user')
+                ->where('username', '=', $query['username'])
+                ->limit(1)
+                ->get()
+                ->first()
+            ;
+
+            if ($row2) {
+                throw new InvalidArgumentException('该账号已存在', 400);
+            }
+
             $userRow = User::createByQuery($query);
 
             Session::put('user', [
@@ -250,6 +319,8 @@ class PublicController extends Controller
     public function logout()
     {
         Session::remove('user');
+
+        Session::remove('userRole');
 
         return Response::redirectTo('');
     }

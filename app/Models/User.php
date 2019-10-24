@@ -57,6 +57,19 @@ class User
             'user_role_id' => $user_role_id,
         ]);
 
+        DB::table('user_vip')
+            ->insert([
+                'user_role_id' => $user_role_id,
+                'level'        => 1,
+                'protect_hp'   => 60,
+                'success_rate' => 20,
+                'buy_count'    => 1,
+                'on_hook_type' => 1,
+                'on_hook_at'   => '1991-01-01 00:00:00',
+                'expired_at'   => date('Y-m-d H:i:s', strtotime('+31 day')),
+            ])
+        ;
+
         DB::commit();
 
         $userRow = DB::query()
