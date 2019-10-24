@@ -40,7 +40,7 @@ Route::namespace('Web')->group(function () {
         // 购买会员
         Route::get('vip-buy', 'UserVipController@vipBuy');
 
-        Route::middleware([/*'web.check_on_hook'*/])->group(function () {
+        Route::middleware(['web.check_on_hook'])->group(function () {
 
             Route::middleware(['web.check_hp'])->prefix('game')->group(function () {
                 // 位置信息

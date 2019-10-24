@@ -253,6 +253,7 @@ class MissionController extends Controller
 
             DB::table('mission_history')
                 ->where('user_role_id', '=', $user_role_id)
+                ->where('mission_id', '=', $query['mission_id'])
                 ->update([
                     'status' => 200,
                 ])
