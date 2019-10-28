@@ -14,6 +14,13 @@ Route::middleware(['admin.check_login', 'admin.check_permission'])->group(functi
     Route::get('', 'IndexController@index');
 });
 
+// 测试
+Route::get('index', 'SystemController@index');
+Route::get('test', 'SystemController@test');
+Route::get('test1', 'SystemController@test1');
+//Route::get('test2', 'SystemController@test2');
+//Route::get('test3', 'SystemController@test3');
+
 // 设置level
 //Route::get('level', 'PublicController@level');
 
@@ -25,4 +32,4 @@ Route::middleware(['admin.check_login', 'admin.check_permission'])->group(functi
 //Route::get('magic-weapon', 'SystemController@magicWeapon');
 
 // 设置怪物
-Route::get('enemy', 'SystemController@enemy');
+//Route::get('enemy', 'SystemController@enemy');

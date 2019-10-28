@@ -18,6 +18,10 @@ class Map
                 $data .= '<input type="button" class="action" data-url="' . URL::to('mission') . "?mission_id=" . $row->mission_id . '" value="任务" />';
             }
 
+            if ($row->npc_type == 20){
+                $data .= '<input type="button" class="action" data-url="' . URL::to('admin/test') . "?npc_id=" . '0' . '" value="合成" />';
+            }
+
             $data .= '<br>';
         }
 
