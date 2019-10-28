@@ -27,6 +27,10 @@ Route::namespace('Web')->group(function () {
     Route::get('register', 'PublicController@registerShow');
     // 注册
     Route::post('register', 'PublicController@registerCreate');
+    // 显示修改密码
+    Route::get('update', 'PublicController@passwordUpdateShow');
+    // 修改密码
+    Route::post('update', 'PublicController@passwordUpdate');
     // 发送验证码
     Route::post('send-verify-code', 'PublicController@sendVerifyCode');
 
@@ -39,8 +43,12 @@ Route::namespace('Web')->group(function () {
         Route::get('end-hook', 'UserVipController@endHook');
         // 购买会员
         Route::get('vip-buy', 'UserVipController@vipBuy');
+        // 排行榜
+        Route::get('ranking', 'GameController@ranking');
 
         Route::middleware(['web.check_on_hook'])->group(function () {
+            // 复活
+            Route::get('revive', 'GameController@revive');
 
             Route::middleware(['web.check_hp'])->prefix('game')->group(function () {
                 // 位置信息
@@ -76,6 +84,8 @@ Route::namespace('Web')->group(function () {
                 Route::get('recycle', 'ItemController@recycle');
                 // 查看物品
                 Route::get('check', 'ItemController@check');
+                // 快速使用血瓶
+                Route::get('user-blood-bottle', 'ItemController@useBloodBottle');
             });
             // 装备
             Route::prefix('equip')->group(function () {
@@ -125,6 +135,19 @@ Route::namespace('Web')->group(function () {
                     // 购买物品
                     Route::get('buy', 'ShopMallController@buy');
                 });
+            });
+            // 拍卖行
+            Route::prefix('shop-business')->group(function () {
+                // 显示拍卖行物品
+                Route::get('', 'ShopBusinessController@show');
+                // 显示可出售的物品
+                Route::get('sell-show', 'ShopBusinessController@sellShow');
+                // 出售物品
+                Route::get('sell', 'ShopBusinessController@sell');
+                // 购买物品
+                Route::get('buy', 'ShopBusinessController@buy');
+                // 下架物品
+                Route::get('unsell', 'ShopBusinessController@unSell');
             });
         });
     });

@@ -21,9 +21,10 @@
                 验证码：<input type="text" autocomplete="off" name="captcha" placeholder="请输入验证码">
             </li>
             <li>
+                <br>
                 <img id="js-img" style="cursor: pointer;" data-src="{!! URL::to('captcha') !!}">
             </li>
-            <li><input type="submit" value="登录"> <a href="{!! URL::to('register') !!}">注册用戶</a></li>
+            <li><input type="submit" value="登录"> <a href="{!! URL::to('register') !!}">注册用戶</a> <a href="{!! URL::to('update') !!}">修改密码</a></li>
         </ul>
     </form>
 </div>

@@ -39,6 +39,7 @@ class GameController extends Controller
                     DB::raw('IFNULL(`mleft`.`name`, "") AS `left_name`'),
                     DB::raw('IFNULL(`mright`.`name`, "") AS `right_name`'),
                     DB::raw('IFNULL(`n`.`mission_id`, 0) AS `mission_id`'),
+                    DB::raw('IFNULL(`n`.`type`, 0) AS `npc_type`'),
                 ])
                 ->from('map AS m')
                 ->join('user_role AS ur', function ($join) {
@@ -178,6 +179,7 @@ class GameController extends Controller
                     DB::raw('IFNULL(`mleft`.`name`, "") AS `left_name`'),
                     DB::raw('IFNULL(`mright`.`name`, "") AS `right_name`'),
                     DB::raw('IFNULL(`n`.`mission_id`, 0) AS `mission_id`'),
+                    DB::raw('IFNULL(`n`.`type`, 0) AS `npc_type`'),
                 ])
                 ->from('map AS m')
                 ->leftJoin('npc AS n', function ($join) {
@@ -285,6 +287,107 @@ class GameController extends Controller
             }
 
             $res =  UserRole::attackToEnemy($user_Role, $enemy);
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 复活
+    public function revive()
+    {
+        try {
+            $user_role_id = Session::get('user.account.user_role_id');
+
+            // 获取角色信息
+            $user_Role = DB::query()
+                ->select([
+                    'ur.*',
+                    'sf.map_id AS revive_map_id',
+                    'sf.coin AS revive_coin',
+                ])
+                ->from('user_role AS ur')
+                ->join('sys_fame AS sf', function ($join) {
+                    $join
+                        ->on('sf.id', '=', 'ur.fame_id')
+                    ;
+                })
+                ->where('ur.id', '=', $user_role_id)
+                ->get()
+                ->first()
+            ;
+
+            if ($user_Role->hp > 0) {
+                throw new InvalidArgumentException('您并不需要复活！', 400);
+            }
+
+            if ($user_Role->coin < $user_Role->revive_coin) {
+                throw new InvalidArgumentException('您的金币不足：' . $user_Role->revive_coin, 400);
+            }
+
+            DB::table('user_role')
+                ->where('id', '=', $user_role_id)
+                ->update([
+                    'coin'   => DB::raw('`coin` - ' . $user_Role->revive_coin),
+                    'hp'     => $user_Role->max_hp,
+                    'map_id' => $user_Role->revive_map_id != 0 ? $user_Role->revive_map_id : $user_Role->map_id,
+                ])
+            ;
+
+            return Response::json([
+                'code'    => 200,
+                'message' => '复活成功，-' . $user_Role->revive_coin . '金币',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 排行榜
+    public function ranking()
+    {
+        try {
+            $res = '<div class="wr-color-E53E27">等级排行前10</div>';
+
+            $rows = DB::query()
+                ->select([
+                    'ur.*'
+                ])
+                ->from('user_role AS ur')
+                ->limit(10)
+                ->orderBy('level', 'desc')
+                ->get()
+            ;
+
+            foreach ($rows as $row) {
+                $res .= $row->name . ' ：' . $row->level . '<br>';
+            }
+
+            $rows1 = DB::query()
+                ->select([
+                    'ur.*'
+                ])
+                ->from('user_role AS ur')
+                ->limit(10)
+                ->orderBy('attack', 'desc')
+                ->get()
+            ;
+
+            $res .= '<div class="wr-color-E53E27">攻击排行前10</div>';
+
+            foreach ($rows1 as $row1) {
+                $res .=  $row1->name . ' ：' . $row1->attack . '<br>';
+            }
 
             return Response::json([
                 'code'    => 200,

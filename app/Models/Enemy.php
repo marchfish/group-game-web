@@ -53,6 +53,6 @@ class Enemy
             return '您被击败了，请复活后继续...';
         }
 
-        return $user_Role->name . '-' . $enemy_hurt . '血量：' . $user_Role->hp;
+        return $user_Role->name . '-' . $enemy_hurt . ' 血量：' . $user_Role->hp;
     }
 }

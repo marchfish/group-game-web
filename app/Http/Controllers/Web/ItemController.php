@@ -265,4 +265,53 @@ class ItemController extends Controller
             ]);
         }
     }
+
+    // 快速使用血瓶
+    public function useBloodBottle()
+    {
+        try {
+            $user_role_id = Session::get('user.account.user_role_id');
+
+            // 判断是否存在物品
+            $row = DB::query()
+                ->select([
+                    'i.*',
+                ])
+                ->from('user_knapsack AS uk')
+                ->join('item AS i', function ($join) {
+                    $join
+                        ->on('i.id', '=', 'uk.item_id')
+                    ;
+                })
+                ->where('uk.user_role_id', '=', $user_role_id)
+                ->whereIn('uk.item_id', [3, 4])
+                ->where('uk.item_num', '>', 0)
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('您没有背包中没有任何血瓶！', 400);
+            }
+
+            $res = '';
+
+            $item = json_decode($row->content)[0];
+            $item->id = $row->id;
+
+            if ($row->type == 1) {
+                $res .= Item::useDrug($item);
+            }
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }

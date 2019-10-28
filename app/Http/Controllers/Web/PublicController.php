@@ -19,7 +19,6 @@ use App\Support\Facades\Email;
 
 class PublicController extends Controller
 {
-    //        dd(Session::get('user.account'));
     /**
      *发送验证码
      */
@@ -151,6 +150,14 @@ class PublicController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     *显示注册
+     */
+    public function passwordUpdateShow()
+    {
+        return Response::view('web/public/update');
     }
 
     /**

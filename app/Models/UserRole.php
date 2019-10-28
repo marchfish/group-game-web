@@ -76,95 +76,97 @@ class UserRole
         }
 
         $level_difference = $enemy->level - $user_Role->level;
-        if ($level_difference > 0 && is_success($level_difference)) {
-            return $enemy->name . '闪避了';
-        }
 
         $user_hurt = $user_Role->attack - $enemy->defense;
-        if ($user_hurt <= 0) {
-            return '您无法破防';
-        }
 
-        $hurt_wave = mt_rand(0, round($user_hurt * 0.5));
-
-        $rand_num = mt_rand(0, 100);
-
-        if ($rand_num >= 50 || is_success($user_Role->crit)) {
-            $user_hurt += $hurt_wave;
+        if ($level_difference > 0 && is_success($level_difference)) {
+            $res .= $enemy->name . '闪避了<br>';
+        }elseif ($user_hurt <= 0) {
+            $res .= '您无法破防<br>';
         }else {
-            $user_hurt -= $hurt_wave;
-        }
 
-        $enemy->hp -= $user_hurt;
+            $hurt_wave = mt_rand(0, round($user_hurt * 0.5));
 
-        // 存入数据
-        DB::table('fight')->updateOrInsert([
-            'user_role_id' => $user_role_id,
-        ], [
-            'enemy_id' => $enemy->id,
-            'enemy_hp' => $enemy->hp < 0 ? 0 : $enemy->hp,
-            'enemy_mp' => $enemy->mp,
-        ]);
+            $rand_num = mt_rand(0, 100);
 
-        if ($enemy->hp <= 0) {
-            $res .= $enemy->name . '被您击败了<br>';
+            if ($rand_num >= 50 || is_success($user_Role->crit)) {
+                $user_hurt += $hurt_wave;
+            } else {
+                $user_hurt -= $hurt_wave;
+            }
 
-            self::setExpAndCoin($enemy);
+            $enemy->hp -= $user_hurt;
 
-            $res .= '获得经验=' .  $enemy->exp . '<br>';
-            $res .= '获得金币=' .  $enemy->coin . '<br>';
+            // 存入数据
+            DB::table('fight')->updateOrInsert([
+                'user_role_id' => $user_role_id,
+            ], [
+                'enemy_id' => $enemy->id,
+                'enemy_hp' => $enemy->hp < 0 ? 0 : $enemy->hp,
+                'enemy_mp' => $enemy->mp,
+            ]);
 
-            $certain_items = json_decode($enemy->certain_items);
-            $items = json_decode($enemy->items);
+            if ($enemy->hp <= 0) {
+                $res .= $enemy->name . '被您击败了<br>';
 
-            if (is_success($enemy->probability)) {
-                $count = mt_rand(0, count($items) - 1);
-                $win_item[0] = $items[$count];
-                if (is_array($certain_items)) {
-                    $certain_items = array_merge($certain_items, $win_item);
-                }else {
-                    $certain_items = $win_item;
-                }
-                $result = [];
-                foreach($certain_items as $val){
-                    $key = $val->id;
-                    if(!isset($result[$key])){
-                        $result[$key] = $val;
-                    }else{
-                        $result[$key]->num += $val->num;
+                self::setExpAndCoin($enemy);
+
+                $res .= '获得经验=' . $enemy->exp . '<br>';
+                $res .= '获得金币=' . $enemy->coin . '<br>';
+
+                $certain_items = json_decode($enemy->certain_items);
+                $items = json_decode($enemy->items);
+
+                if (is_success($enemy->probability)) {
+                    $count = mt_rand(0, count($items) - 1);
+                    $win_item[0] = $items[$count];
+                    if (is_array($certain_items)) {
+                        $certain_items = array_merge($certain_items, $win_item);
+                    } else {
+                        $certain_items = $win_item;
                     }
+                    $result = [];
+                    foreach ($certain_items as $val) {
+                        $key = $val->id;
+                        if (!isset($result[$key])) {
+                            $result[$key] = $val;
+                        } else {
+                            $result[$key]->num += $val->num;
+                        }
+                    }
+
+                    $certain_items = $result;
                 }
 
-                $certain_items = $result;
+                if (is_array($certain_items)) {
+                    $res .= '获得物品:' . UserKnapsack::addItems($certain_items) . '<br>';
+                }
+
+                $is_up = self::is_upgrade();
+
+                if ($is_up != 0) {
+                    $res .= '恭喜您！等级提升至：' . $is_up . '<br>';
+                }
+
+                if ($enemy->move_map_id != 0) {
+                    DB::table('user_role')
+                        ->where('id', '=', $user_role_id)
+                        ->update([
+                            'map_id' => $enemy->move_map_id,
+                        ]);
+
+                    $res .= '您已被传送出该位置<br>';
+                }
+
+                return $res;
             }
 
-            if (is_array($certain_items)){
-                $res .='获得物品:' . UserKnapsack::addItems($certain_items) . '<br>';
-            }
-
-            $is_up = self::is_upgrade();
-
-            if ($is_up != 0) {
-                $res .='恭喜您！等级提升至：' . $is_up . '<br>';
-            }
-
-            if ($enemy->move_map_id != 0) {
-                DB::table('user_role')
-                    ->where('id', '=', $user_role_id)
-                    ->update([
-                        'map_id' => $enemy->move_map_id,
-                    ])
-                ;
-
-                $res .='您已被传送出该位置<br>';
-            }
-
-            return $res;
+            $res = $enemy->name . '-' . $user_hurt . ' 血量：' . $enemy->hp . '<br>' . $res;
         }
 
         $res .= Enemy::attackToUserRole($user_Role, $enemy);
 
-        return $enemy->name . '-' . $user_hurt . '血量：' . $enemy->hp . '<br>' . $res;
+        return $res;
     }
 
     public static function setExpAndCoin($row)
