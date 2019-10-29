@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Http\Controllers\Controller;
 use App\Models\UserRole;
 use App\Models\UserKnapsack;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
@@ -13,36 +13,49 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use InvalidArgumentException;
 
-class ShopMallController extends Controller
+class ShopController extends Controller
 {
-    // 显示
     public function show()
     {
         try {
-            // 获取装备信息
+            // 获取物品信息
+            $user_role_id = Session::get('user.account.user_role_id');
+
             $rows = DB::query()
                 ->select([
-                    'sm.*',
-                    'i.name AS item_name'
+                    's.*',
+                    'i.name AS item_name',
                 ])
-                ->from('shop_mall AS sm')
+                ->from('shop AS s')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 'sm.item_id')
+                        ->on('i.id', '=', 's.item_id')
                     ;
                 })
+                ->join('map AS m', function ($join) {
+                    $join
+                        ->on('m.npc_id', '=', 's.npc_id')
+                    ;
+                })
+                ->join('user_role AS ur', function ($join) {
+                    $join
+                        ->on('ur.map_id', '=', 'm.id')
+                    ;
+                })
+                ->where('ur.id', '=', $user_role_id)
                 ->get()
             ;
 
             $res = '';
 
             foreach ($rows as $row) {
-                $res .= $row->item_name . '：￥' . $row->coin . ' 金币';
+                $res .= $row->item_name . '：￥' . $row->coin . ' 金币 ';
                 $res .='<div>'
                     .'<input class="minus" name="" type="button" value="-" />'
                     .'<input style="width: 50px" onkeyup="value=value.replace(/[^\d]/g,\'\')" class="js-num" name="goodnum" type="tel" value="1"/>'
                     .'<input class="add" name="" type="button" value="+" />'
-                    . '<input type="button" class="action" data-url="' . URL::to('shop-mall/buy') . '?item_id=' . $row->item_id . '" value="购买" />'
+                    .'<input type="button" class="action" data-url="' . URL::to('shop/buy') . '?item_id=' . $row->item_id . '" value="购买" />'
+                    .' <input type="button" class="action" data-url="' . URL::to('item/check') . '?item_id=' . $row->item_id . '" value="查看" />'
                     .'</div>'
                 ;
                 $res .= '<br>';
@@ -83,22 +96,22 @@ class ShopMallController extends Controller
             // 判断是否存在物品
             $row = DB::query()
                 ->select([
-                    'sm.*',
+                    's.*',
                     'i.name AS item_name',
                 ])
-                ->from('shop_mall AS sm')
+                ->from('shop AS s')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 'sm.item_id')
+                        ->on('i.id', '=', 's.item_id')
                     ;
                 })
-                ->where('sm.item_id', '=', $query['item_id'])
+                ->where('s.item_id', '=', $query['item_id'])
                 ->get()
                 ->first()
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('商城中没有找到该物品', 400);
+                throw new InvalidArgumentException('商店中没有找到该物品', 400);
             }
 
             $userRole = UserRole::getUserRole();
