@@ -149,6 +149,29 @@ Route::namespace('Web')->group(function () {
                 // 下架物品
                 Route::get('unsell', 'ShopBusinessController@unSell');
             });
+            //合成
+            Route::prefix('synthesis')->group(function () {
+                // 显示列表
+                Route::get('', 'SynthesisController@showAll');
+                // 显示详情
+                Route::get('show', 'SynthesisController@show');
+                // 合成
+                Route::get('create', 'SynthesisController@create');
+            });
+            // 商店
+            Route::prefix('shop')->group(function () {
+                // 显示
+                Route::get('', 'ShopController@show');
+                // 购买物品
+                Route::get('buy', 'ShopController@buy');
+            });
+            // 排位
+            Route::prefix('rank')->group(function () {
+                // 显示
+                Route::get('', 'RankController@show');
+//                // 购买物品
+//                Route::get('buy', 'ShopController@buy');
+            });
         });
     });
 });

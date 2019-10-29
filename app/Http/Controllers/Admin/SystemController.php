@@ -424,26 +424,6 @@ class SystemController extends Controller
 
             $res .= '成功机率=' . $row->success_rate . '% <br>';
 
-//            // 查询是否接受过该任务
-//            $row1 = DB::query()
-//                ->select([
-//                    'mh.*',
-//                ])
-//                ->from('mission_history AS mh')
-//                ->where('mh.mission_id', '=', $query['mission_id'])
-//                ->where('mh.user_role_id', '=', $user_role_id)
-//                ->get()
-//                ->first()
-//            ;
-//
-//            if (!$row1) {
-//                $res .= '<input type="button" class="action" data-url="' . URL::to('mission/accept') . '" value="接受任务" />';
-//            }elseif($row1->status == 150) {
-//                $res .= '<input type="button" class="action" data-url="' . URL::to('mission/submit') . "?mission_id=" . $query['mission_id'] . '" value="提交任务" />';
-//            }else {
-//                $res .= '（已完成）';
-//            }
-
             return Response::json([
                 'code'    => 200,
                 'message' => $res,
@@ -462,69 +442,85 @@ class SystemController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'item_id' => ['required'],
-                'var_data' => ['required', 'integer'],
-                'var_data1' => ['required', 'integer'],
+                'synthesis_id' => ['required'],
             ], [
-                'item_id.required' => '物品id不能为空',
-                'var_data.required' => 'var_data不能为空',
-                'var_data1.required' => 'var_data1不能为空',
+                'synthesis_id.required' => 'synthesis_id不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            if ($query['var_data1'] <= 9) {
-                throw new InvalidArgumentException('物品价格小于10金币', 400);
-            }
-
             $user_role_id = Session::get('user.account.user_role_id');
 
-            // 判断是否存在物品
+            // 判断合成是否存在
             $row = DB::query()
                 ->select([
-                    'i.*',
+                    's.*',
+                    'i.name AS item_name',
                 ])
-                ->from('user_knapsack AS uk')
+                ->from('synthesis AS s')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 'uk.item_id')
+                        ->on('i.id', '=', 's.item_id')
                     ;
                 })
-                ->where('uk.user_role_id', '=', $user_role_id)
-                ->where('uk.item_id', '=', $query['item_id'])
-                ->where('uk.item_num', '>=', $query['var_data'])
+                ->where('s.id', '=', $query['synthesis_id'])
                 ->get()
                 ->first()
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('没有足够的物品数量', 400);
+                throw new InvalidArgumentException('没有找到该合成', 400);
             }
 
-            $res = '出售成功：' . $row->name . '*' . $query['var_data'];
+            $user_vip = DB::query()
+                ->select([
+                    'uv.*',
+                ])
+                ->from('user_vip AS uv')
+                ->where('uv.user_role_id', '=', $user_role_id)
+                ->get()
+                ->first()
+            ;
+
+            if ($user_vip) {
+                $row->success_rate += $user_vip->success_rate;
+            }
+
+            // 判断是否有足够的物品数量
+            $requirements = json_decode($row->requirements);
+            $retains = json_decode($row->retains);
+
+            $res_bool = UserKnapsack::isHaveItems($requirements);
+
+            if (!$res_bool) {
+                throw new InvalidArgumentException('背包中没有足够的材料', 400);
+            }
+
+            foreach ($requirements as $k => $v) {
+                if ($v->id == $retains[0]->id) {
+                    unset($requirements[$k]);
+                }
+            }
+
+            if (!is_success($row->success_rate)) {
+                UserKnapsack::useItems($requirements);
+                throw new InvalidArgumentException('合成失败！', 400);
+            }
 
             DB::beginTransaction();
 
-            DB::table('shop_business')
-                ->insert([
-                    'user_role_id' => $user_role_id,
-                    'item_id'      => $query['item_id'],
-                    'num'          => $query['var_data'],
-                    'coin'         => $query['var_data1'],
-                ])
-            ;
+            UserKnapsack::useItems($requirements);
 
-            DB::table('user_knapsack')
-                ->where('user_role_id', '=', $user_role_id)
-                ->where('item_id', '=', $query['item_id'])
-                ->update([
-                    'item_num' => DB::raw('`item_num` - ' . $query['var_data']),
-                ])
-            ;
+            $retains[0]->id = $row->item_id;
+            $retains[0]->num = 1;
+
+            UserKnapsack::addItems($retains);
 
             DB::commit();
+
+            $res = '恭喜您！成功合成：' . $row->item_name . '<br>';
 
             return Response::json([
                 'code'    => 200,
