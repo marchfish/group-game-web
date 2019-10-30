@@ -169,8 +169,10 @@ Route::namespace('Web')->group(function () {
             Route::prefix('rank')->group(function () {
                 // 显示
                 Route::get('', 'RankController@show');
-//                // 购买物品
-//                Route::get('buy', 'ShopController@buy');
+                // 查看奖励
+                Route::get('reward', 'RankController@reward');
+                // 挑战
+                Route::get('challenge', 'RankController@challenge');
             });
         });
     });

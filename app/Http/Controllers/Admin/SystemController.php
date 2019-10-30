@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\UserRole;
 use App\Models\UserKnapsack;
 use App\Models\Item;
+use App\Models\Enemy;
 use App\Support\Facades\Captcha;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
@@ -294,46 +295,24 @@ class SystemController extends Controller
     }
 
     // 测试
-    public function test()
+    public function test($e, $type)
     {
         try {
-            $query = Request::all();
-
-            $user_role_id = Session::get('user.account.user_role_id');
-
-            $rows = DB::query()
-                ->select([
-                    's.*',
-                    'i.name AS item_name',
-                    'i.level AS item_level',
-                ])
-                ->from('synthesis AS s')
-                ->join('item AS i', function ($join) {
-                    $join
-                        ->on('i.id', '=', 's.item_id')
-                    ;
-                })
-                ->join('map AS m', function ($join) {
-                    $join
-                        ->on('m.npc_id', '=', 's.npc_id')
-                    ;
-                })
-                ->join('user_role AS ur', function ($join) {
-                    $join
-                        ->on('ur.map_id', '=', 'm.id')
-                    ;
-                })
-                ->where('ur.id', '=', $user_role_id)
-                ->get()
-            ;
-
             $res = '';
 
-            foreach ($rows as $row) {
-                $res .= $row->item_name . '（' . $row->item_level . '级装备）-- 成功率：' . $row->success_rate . '<br>';
+            $user_date = UserRole::getUserDate();
 
-                $res .= '<input type="button" class="action" data-url="' . URL::to('admin/test1') . "?synthesis_id=" . $row->id . '" value="查看材料" />' . '<br>';
+            $now_at = strtotime('now');
+            $challenge_at = strtotime($user_date->challenge_at);
+            if ($type == 'minutes') {
+                return ($now_at - $challenge_at)/60;
             }
+
+            dd(($now_at - $challenge_at)/60);
+
+            if($now_at - $challenge_at < 1) {
+                throw new InvalidArgumentException('', 400);
+            };
 
             return Response::json([
                 'code'    => 200,

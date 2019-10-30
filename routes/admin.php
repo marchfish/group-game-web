@@ -17,8 +17,8 @@ Route::middleware(['admin.check_login', 'admin.check_permission'])->group(functi
 // 测试
 Route::get('index', 'SystemController@index');
 Route::get('test', 'SystemController@test');
-Route::get('test1', 'SystemController@test1');
-Route::get('test2', 'SystemController@test2');
+//Route::get('test1', 'SystemController@test1');
+//Route::get('test2', 'SystemController@test2');
 //Route::get('test3', 'SystemController@test3');
 
 // 设置level

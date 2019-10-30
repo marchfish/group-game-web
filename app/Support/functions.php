@@ -132,6 +132,22 @@ function is_success(int $probability_num)
 
     return $probability_num > $rand_num ? true : false;
 }
+// 时间差
+function time_difference ($old_at, $now_at, $type='minutes')
+{
+    $now_time = strtotime($now_at);
+    $old_time = strtotime($old_at);
+
+    if ($type == 'second') {
+        return ($now_time - $old_time);
+    }
+
+    if ($type == 'minutes') {
+        return ($now_time - $old_time)/60;
+    }
+
+    return 0;
+}
 
 // 百分比(分子, 分母, 百分号)
 function bfb($fz, $fm, $bfh = true)

@@ -255,6 +255,25 @@ class GameController extends Controller
         try {
             $user_role_id = Session::get('user.account.user_role_id');
 
+            $user_date = UserRole::getUserDate();
+
+            if ($user_date){
+                if ($user_date->attack_at) {
+                    $now_at = strtotime('now');
+                    $attack_at = strtotime($user_date->attack_at);
+
+                    if($now_at - $attack_at < 1) {
+                        throw new InvalidArgumentException('', 400);
+                    };
+                }
+
+                DB::table('user_date')
+                    ->where('user_role_id', '=', $user_role_id)
+                    ->update([
+                        'attack_at' => date('Y-m-d H:i:s', time()),
+                    ]);
+            }
+
             // 获取角色信息
             $user_Role = DB::query()
                 ->select([
