@@ -34,7 +34,16 @@ class RankController extends Controller
                 ->get()
             ;
 
-            $res = '<div class="wr-color-E53E27">[排位]</div>';
+            $sys_date = DB::query()
+                ->select([
+                    'sd.*',
+                ])
+                ->from('sys_date AS sd')
+                ->get()
+                ->first()
+            ;
+
+            $res = '<div class="wr-color-E53E27">[排位] <span class="wr-color-1490F7">本赛季结束日期：'. $sys_date->rank_expired_at . '<span></div>';
 
             foreach ($rows as $row) {
                 $res .=  $row->user_role_name . ' ：第' . $row->num . '名 ';

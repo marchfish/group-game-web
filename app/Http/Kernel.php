@@ -74,6 +74,7 @@ class Kernel extends HttpKernel
         'web.check_hp'           => \App\Http\Middleware\Web\CheckHP::class,
         'web.check_on_hook'      => \App\Http\Middleware\Web\CheckOnHook::class,
         'web.check_vip'          => \App\Http\Middleware\Web\CheckVip::class,
+        'web.check_rank'         => \App\Http\Middleware\Web\CheckRank::class,
         'admin.check_login'      => \App\Http\Middleware\Admin\CheckLogin::class,
         'admin.check_permission' => \App\Http\Middleware\Admin\CheckPermission::class,
     ];

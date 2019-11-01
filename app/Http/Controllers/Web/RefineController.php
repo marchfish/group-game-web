@@ -13,7 +13,7 @@ use InvalidArgumentException;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
-class SynthesisController extends Controller
+class RefineController extends Controller
 {
     public function showAll()
     {
@@ -22,19 +22,19 @@ class SynthesisController extends Controller
 
             $rows = DB::query()
                 ->select([
-                    's.*',
+                    'r.*',
                     'i.name AS item_name',
                     'i.level AS item_level',
                 ])
-                ->from('synthesis AS s')
+                ->from('refine AS r')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 's.item_id')
+                        ->on('i.id', '=', 'r.item_id')
                     ;
                 })
                 ->join('map AS m', function ($join) {
                     $join
-                        ->on('m.npc_id', '=', 's.npc_id')
+                        ->on('m.npc_id', '=', 'r.npc_id')
                     ;
                 })
                 ->join('user_role AS ur', function ($join) {
@@ -51,11 +51,11 @@ class SynthesisController extends Controller
             foreach ($rows as $row) {
                 $res .= $row->item_name . '（' . $row->item_level . '级装备）-- 成功率：' . $row->success_rate . '<br>';
 
-                $res .= '<input type="button" class="action" data-url="' . URL::to('synthesis/show') . "?synthesis_id=" . $row->id . '" value="查看材料" /> ';
+                $res .= '<input type="button" class="action" data-url="' . URL::to('refine/show') . "?refine_id=" . $row->id . '" value="查看材料" /> ';
 
                 $res .= ' <input type="button" class="action" data-url="' . URL::to('item/check') . "?item_id=" . $row->item_id . '" value="查看属性" /> ';
 
-                $res .= ' <input type="button" class="action" data-url="' . URL::to('synthesis/create') . "?synthesis_id=" . $row->id . '" value="合成" />' . '<br>';
+                $res .= ' <input type="button" class="action wr-bottom-10" data-url="' . URL::to('refine/create') . "?refine_id=" . $row->id . '" value="提炼" />' . '<br>';
             }
 
             return Response::json([
@@ -76,35 +76,33 @@ class SynthesisController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'synthesis_id' => ['required'],
+                'refine_id' => ['required'],
             ], [
-                'synthesis_id.required' => 'synthesis_id不能为空',
+                'refine_id.required' => 'refine_id不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
-
             $row = DB::query()
                 ->select([
-                    's.*',
+                    'r.*',
                     'i.name AS item_name',
                 ])
-                ->from('synthesis AS s')
+                ->from('refine AS r')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 's.item_id')
+                        ->on('i.id', '=', 'r.item_id')
                     ;
                 })
-                ->where('s.id', '=', $query['synthesis_id'])
+                ->where('r.id', '=', $query['refine_id'])
                 ->get()
                 ->first()
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('找不到该合成', 400);
+                throw new InvalidArgumentException('找不到该提炼', 400);
             }
 
             $res = '[' . $row->item_name . ']' . '<br>';
@@ -152,7 +150,7 @@ class SynthesisController extends Controller
 
             $res .= '成功机率=' . $row->success_rate . '% <br>';
 
-            $res .= '<input type="button" class="action" data-url="' . URL::to('synthesis/create') . "?synthesis_id=" . $row->id . '" value="合成" />' . '<br>';
+            $res .= '<input type="button" class="action" data-url="' . URL::to('refine/create') . "?refine_id=" . $row->id . '" value="提炼" />' . '<br>';
 
             return Response::json([
                 'code'    => 200,
@@ -172,9 +170,9 @@ class SynthesisController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'synthesis_id' => ['required'],
+                'refine_id' => ['required'],
             ], [
-                'synthesis_id.required' => 'synthesis_id不能为空',
+                'refine_id.required' => 'refine_id不能为空',
             ]);
 
             if ($validator->fails()) {
@@ -186,22 +184,22 @@ class SynthesisController extends Controller
             // 判断合成是否存在
             $row = DB::query()
                 ->select([
-                    's.*',
+                    'r.*',
                     'i.name AS item_name',
                 ])
-                ->from('synthesis AS s')
+                ->from('refine AS r')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 's.item_id')
+                        ->on('i.id', '=', 'r.item_id')
                     ;
                 })
-                ->where('s.id', '=', $query['synthesis_id'])
+                ->where('r.id', '=', $query['refine_id'])
                 ->get()
                 ->first()
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('没有找到该合成', 400);
+                throw new InvalidArgumentException('没有找到该提炼', 400);
             }
 
             $user_vip = DB::query()
@@ -215,7 +213,13 @@ class SynthesisController extends Controller
             ;
 
             if ($user_vip) {
-                $row->success_rate += $user_vip->success_rate;
+                $now_at = date('Y-m-d H:i:s',time());
+
+                $difference = time_difference($user_vip->expired_at, $now_at, 'second');
+
+                if ($difference < 0) {
+                    $row->success_rate += $user_vip->success_rate;
+                }
             }
 
             // 判断是否有足够的物品数量
@@ -239,7 +243,7 @@ class SynthesisController extends Controller
                 }
 
                 UserKnapsack::useItems($requirements);
-                throw new InvalidArgumentException('合成失败！', 400);
+                throw new InvalidArgumentException('提炼失败！', 400);
             }
 
             DB::beginTransaction();
@@ -257,7 +261,7 @@ class SynthesisController extends Controller
 
             DB::commit();
 
-            $res = '恭喜您！成功合成：' . $row->item_name . '<br>';
+            $res = '恭喜您！成功提炼：' . $row->item_name . '<br>';
 
             return Response::json([
                 'code'    => 200,

@@ -93,6 +93,8 @@ Route::namespace('Web')->group(function () {
                 Route::get('', 'EquipController@show');
                 // 装备
                 Route::post('', 'EquipController@equip');
+                // 卸下装备
+                Route::get('unequip', 'EquipController@unEquip');
             });
             // 用户
             Route::prefix('user')->group(function () {
@@ -166,13 +168,22 @@ Route::namespace('Web')->group(function () {
                 Route::get('buy', 'ShopController@buy');
             });
             // 排位
-            Route::prefix('rank')->group(function () {
+            Route::middleware(['web.check_rank'])->prefix('rank')->group(function () {
                 // 显示
                 Route::get('', 'RankController@show');
                 // 查看奖励
                 Route::get('reward', 'RankController@reward');
                 // 挑战
                 Route::get('challenge', 'RankController@challenge');
+            });
+            // 提炼
+            Route::prefix('refine')->group(function () {
+                // 显示列表
+                Route::get('', 'RefineController@showAll');
+                // 显示详情
+                Route::get('show', 'RefineController@show');
+                // 合成
+                Route::get('create', 'RefineController@create');
             });
         });
     });

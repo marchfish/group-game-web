@@ -42,7 +42,19 @@ class Equip
             throw new InvalidArgumentException('没有找到该装备', 400);
         }
 
+        if ($row->type != 10) {
+            throw new InvalidArgumentException('该物品不属于装备', 400);
+        }
+
         $item = json_decode($row->content)[0];
+
+        $arrEquip = obj2arr($equip);
+
+        $equip1 = $arrEquip[$item->type];
+
+        if ($equip1 != $item_id) {
+            throw new InvalidArgumentException('您没有穿戴该装备', 400);
+        }
 
         DB::beginTransaction();
 
@@ -83,5 +95,7 @@ class Equip
         ]);
 
         DB::commit();
+
+        return '成功卸下：' . $row->name;
     }
 }

@@ -109,8 +109,24 @@ class Rank
 
         foreach ($ranks as $rank)
         {
+            if ($rank->user_role_id != 0) {
+                $reward = json_decode($rank->reward);
+                UserKnapsack::addItems($reward, $rank->user_role_id);
 
+                DB::table('user_role')
+                    ->where('id', '=', $rank->user_role_id)
+                    ->update([
+                        'coin' => DB::raw('`coin` + ' . $rank->coin),
+                    ])
+                ;
+            }
         }
+
+        DB::table('rank')
+            ->update([
+                'user_role_id' => 0,
+            ])
+        ;
 
         DB::table('sys_date')
             ->where('id', '=', 1)

@@ -54,6 +54,7 @@
            <input type="button" class="action" data-url="{!! URL::to('ranking') !!}" value="排行榜" />
            <input type="button" class="action" data-url="{!! URL::to('shop-business/sell-show') !!}" value="出售物品" />
            <input type="button" class="action" data-url="{!! URL::to('shop-business') !!}" value="拍卖行" />
+           <input type="button" class="action" data-url="{!! URL::to('rank') !!}" value="排位" />
         </p>
     </div>
     <div class="row">

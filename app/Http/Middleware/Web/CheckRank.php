@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware\Web;
 
+use App\Models\Rank;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +34,8 @@ class CheckRank
         $difference = time_difference($row->rank_expired_at, $now_at, 'second');
 
         if ($difference >= 0) {
+
+            Rank::start();
 
             return Response::json([
                 'code'    => 400,

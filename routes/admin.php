@@ -27,6 +27,10 @@ Route::get('test', 'SystemController@test');
 // 设置装备
 //Route::get('equip', 'PublicController@equip');
 //Route::get('equip', 'SystemController@equip');
+//Route::get('equip', 'SystemController@colorEquip');
+
+// 设置提炼
+//Route::get('refine', 'SystemController@refine');
 
 // 设置法宝
 //Route::get('magic-weapon', 'SystemController@magicWeapon');
