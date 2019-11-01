@@ -26,6 +26,10 @@ class Map
                 $data .= ' <input type="button" class="action" data-url="' . URL::to('synthesis') . "?npc_id=" . '0' . '" value="合成" />';
             }
 
+            if ($row->npc_type == 30){
+                $data .= ' <input type="button" class="action" data-url="' . URL::to('refine') . "?npc_id=" . '0' . '" value="提炼" />';
+            }
+
             $data .= '<br>';
         }
 

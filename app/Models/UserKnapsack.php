@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Session;
 class UserKnapsack
 {
     // 添加物品
-    public static function addItems(array $items)
+    public static function addItems(array $items,int $user_role_id = 0)
     {
-        $user_role_id = Session::get('user.account.user_role_id');
+        if ($user_role_id == 0) {
+            $user_role_id = Session::get('user.account.user_role_id');
+        }
 
         $res = '';
 

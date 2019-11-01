@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use App\Models\Enemy;
 use App\Models\Item;
 use App\Models\UserKnapsack;
+use phpDocumentor\Reflection\Types\Null_;
 
 class UserRole
 {
@@ -64,13 +65,6 @@ class UserRole
 
         if ($fight)
         {
-            $now_at = strtotime('now');
-            $fight_at = strtotime($fight->updated_at);
-
-            if($now_at - $fight_at < 1) {
-                return '';
-            };
-
             $enemy->hp = $fight->enemy_hp;
             $enemy->mp = $fight->enemy_mp;
         }
@@ -182,7 +176,7 @@ class UserRole
         ;
     }
 
-    public static function is_upgrade ()
+    public static function is_upgrade()
     {
         $user_role_id = Session::get('user.account.user_role_id');
 
@@ -251,6 +245,31 @@ class UserRole
             return 0;
         }
 
+    }
+
+    public static function getUserDate()
+    {
+        $user_role_id = Session::get('user.account.user_role_id');
+
+        $user_date =  DB::query()
+            ->select([
+                'ud.*',
+            ])
+            ->from('user_date AS ud')
+            ->where('ud.user_role_id', '=', $user_role_id)
+            ->get()
+            ->first()
+        ;
+
+        if (!$user_date) {
+            DB::table('user_date')->insert([
+                'user_role_id' => $user_role_id
+            ]);
+
+            return null;
+        }
+
+        return $user_date;
     }
 
 }

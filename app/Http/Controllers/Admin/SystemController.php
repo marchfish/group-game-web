@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\UserRole;
 use App\Models\UserKnapsack;
 use App\Models\Item;
+use App\Models\Enemy;
 use App\Support\Facades\Captcha;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
@@ -116,6 +117,113 @@ class SystemController extends Controller
                 'level'        => 35,
                 'content'      => json_encode($equip['content']),
                 'recycle_coin' => 500,
+            ]);
+        }
+
+        dd('完成：' . date('Y-m-d H:i:s', time()));
+    }
+
+    public function colorEquip()
+    {
+        $color = '【橙】';
+//        $quality = 'blue';
+
+        $equips = [
+            [
+                'name' => '冰封战剑' . $color,
+                'content' => [
+                    [
+                        'type'    => 'weapon',
+                        'attack'  => 180,
+                        'max_hp' => 40,
+                        'max_mp' => 40,
+                        'magic'  => 10,
+                        'crit'    => 1,
+                        'dodge'   => 1
+                    ]
+                ],
+            ],
+            [
+                'name' => '冰封头盔' . $color,
+                'content' => [
+                    [
+                        'type' => 'helmet',
+                        'attack' => 170,
+                        'defense' => 170
+                    ]
+                ],
+            ],
+            [
+                'name' => '冰封战甲' . $color,
+                'content' => [
+                    [
+                        'type' => 'clothes',
+                        'defense' => 180,
+                        'max_hp' => 40,
+                        'max_mp' => 40,
+                        'magic'  => 10,
+                        'crit'    => 1,
+                        'dodge'   => 1
+                    ]
+                ],
+            ],
+            [
+                'name' => '冰封耳环' . $color,
+                'content' => [
+                    [
+                        'type' => 'earring',
+                        'attack' => 170
+                    ]
+                ],
+            ],
+            [
+                'name' => '冰封项链' . $color,
+                'content' => [
+                    [
+                        'type' => 'necklace',
+                        'attack' => 170,
+                        'defense' => 170
+                    ]
+                ],
+            ],
+            [
+                'name' => '冰封手镯' . $color,
+                'content' => [
+                    [
+                        'type' => 'bracelet',
+                        'attack' => 170
+                    ]
+                ],
+            ],
+            [
+                'name' => '冰封戒指' . $color,
+                'content' => [
+                    [
+                        'type' => 'ring',
+                        'attack' => 170
+                    ]
+                ],
+            ],
+            [
+                'name' => '冰封战靴' . $color,
+                'content' => [
+                    [
+                        'type' => 'shoes',
+                        'attack' => 170,
+                        'defense' => 170
+                    ]
+                ],
+            ],
+        ];
+
+        foreach ($equips as $equip) {
+            DB::table('item')->insert([
+                'name'         => $equip['name'],
+                'description'  => '特级装备，品质：' . $color,
+                'type'         => 10,
+                'level'        => 35,
+                'content'      => json_encode($equip['content']),
+                'recycle_coin' => 1000,
             ]);
         }
 
@@ -293,51 +401,165 @@ class SystemController extends Controller
         dd('完成：' . date('Y-m-d H:i:s', time()));
     }
 
+    // 设置提炼
+    public function refine()
+    {
+        $npc_id = 17;
+        $count = 0;
+        $item = 237;
+        $item2 = 229;
+        $success_rate = 10;
+
+        while ($count < 8){
+            $date =  [
+                'requirements' => [
+                    [
+                        'id'   => 130,
+                        'num'  => 10,
+                    ],
+                    [
+                        'id'   => 135,
+                        'num'  => 10,
+                    ],
+                    [
+                        'id'   => 156,
+                        'num'  => 10,
+                    ],
+                    [
+                        'id'   => $item2,
+                        'num'  => 1,
+                    ],
+                ],
+                'retains' => [
+                    [
+                        'id'   => $item2,
+                        'num'  => 1,
+                    ]
+                ]
+            ];
+
+            DB::table('refine')->insert([
+                'npc_id'        => $npc_id,
+                'item_id'       => $item,
+                'requirements'  => json_encode($date['requirements']),
+//                'retains'       => json_encode($date['retains']),
+                'success_rate'  => $success_rate
+            ]);
+            $count++;
+            $item++;
+            $item2++;
+        }
+
+        dd('完成：' . date('Y-m-d H:i:s', time()));
+    }
+
     // 测试
     public function test()
     {
         try {
             $query = Request::all();
 
+            $validator = Validator::make($query, [
+                'item_id' => ['required'],
+            ], [
+                'item_id.required' => 'item_id不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
             $user_role_id = Session::get('user.account.user_role_id');
 
-            $rows = DB::query()
+            // 获取装备信息
+            $equip = DB::query()
                 ->select([
-                    's.*',
-                    'i.name AS item_name',
-                    'i.level AS item_level',
+                    'e.*',
                 ])
-                ->from('synthesis AS s')
-                ->join('item AS i', function ($join) {
-                    $join
-                        ->on('i.id', '=', 's.item_id')
-                    ;
-                })
-                ->join('map AS m', function ($join) {
-                    $join
-                        ->on('m.npc_id', '=', 's.npc_id')
-                    ;
-                })
-                ->join('user_role AS ur', function ($join) {
-                    $join
-                        ->on('ur.map_id', '=', 'm.id')
-                    ;
-                })
-                ->where('ur.id', '=', $user_role_id)
+                ->from('user_equip AS e')
+                ->where('e.user_role_id', '=', $user_role_id)
                 ->get()
+                ->first()
             ;
 
-            $res = '';
-
-            foreach ($rows as $row) {
-                $res .= $row->item_name . '（' . $row->item_level . '级装备）-- 成功率：' . $row->success_rate . '<br>';
-
-                $res .= '<input type="button" class="action" data-url="' . URL::to('admin/test1') . "?synthesis_id=" . $row->id . '" value="查看材料" />' . '<br>';
+            if (!$equip) {
+                throw new InvalidArgumentException('数据出错，请联系管理员', 400);
             }
+
+            $row = DB::query()
+                ->select([
+                    'i.*',
+                ])
+                ->from('item AS i')
+                ->where('i.id', '=', $query['item_id'])
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('没有找到该装备', 400);
+            }
+
+            if ($row->type != 10) {
+                throw new InvalidArgumentException('该物品不属于装备', 400);
+            }
+
+            $item = json_decode($row->content)[0];
+
+            $arrEquip = obj2arr($equip);
+
+            $equip1 = $arrEquip[$item->type];
+
+            if ($equip1 != $query['item_id']) {
+                throw new InvalidArgumentException('您没有穿戴该装备', 400);
+            }
+
+            DB::beginTransaction();
+
+            DB::table('user_role')
+                ->where('id', '=', $user_role_id)
+                ->update([
+                    'max_hp' => DB::raw('`max_hp` - ' . ($item->max_hp ?? 0)),
+                    'max_mp' => DB::raw('`max_mp` - ' . ($item->max_mp ?? 0)),
+                    'attack' => DB::raw('`attack` - ' . ($item->attack ?? 0)),
+                    'magic' => DB::raw('`magic` - ' . ($item->magic ?? 0)),
+                    'crit' => DB::raw('`crit` - ' . ($item->crit ?? 0)),
+                    'dodge' => DB::raw('`dodge` - ' . ($item->dodge ?? 0)),
+                    'defense' => DB::raw('`defense` - ' . ($item->defense ?? 0)),
+                ])
+            ;
+
+            DB::table('user_equip')
+                ->where('user_role_id', '=', $user_role_id)
+                ->update([
+                    'weapon' => $item->type == 'weapon' ?  0 : $equip->weapon,
+                    'helmet' => $item->type == 'helmet' ?  0 : $equip->helmet,
+                    'clothes' => $item->type == 'clothes' ?  0 : $equip->clothes,
+                    'earring' => $item->type == 'earring' ?  0 : $equip->earring,
+                    'necklace' => $item->type == 'necklace' ?  0 : $equip->necklace,
+                    'bracelet' => $item->type == 'bracelet' ?  0 : $equip->bracelet,
+                    'ring' => $item->type == 'ring' ?  0 : $equip->ring,
+                    'shoes' => $item->type == 'shoes' ?  0 : $equip->shoes,
+                    'magic_weapon' => $item->type == 'magic_weapon' ?  0 : $equip->magic_weapon,
+                ])
+            ;
+
+            $data = $equip;
+            $data->num = 1;
+            $data->id = $query['item_id'];
+
+            UserKnapsack::addItems([
+                0 => $data
+            ]);
+
+            DB::commit();
+
+//            return '成功卸下：' . $row->name;
+
 
             return Response::json([
                 'code'    => 200,
-                'message' => $res,
+                'message' => '成功卸下：' . $row->name,
             ]);
         } catch (InvalidArgumentException $e) {
             return Response::json([

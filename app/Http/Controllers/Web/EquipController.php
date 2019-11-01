@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Session;
 use InvalidArgumentException;
 use App\Models\UserKnapsack;
@@ -89,15 +90,69 @@ class EquipController extends Controller
                 throw new InvalidArgumentException('没有找到', 400);
             }
 
-            $res = '武器：' . $row->weapon_name . '<br>';
-            $res .= '头盔：' . $row->helmet_name . '<br>';
-            $res .= '衣服：' . $row->clothes_name . '<br>';
-            $res .= '耳环：' . $row->earring_name . '<br>';
-            $res .= '项链：' . $row->necklace_name . '<br>';
-            $res .= '手镯：' . $row->bracelet_name . '<br>';
-            $res .= '戒指：' . $row->ring_name . '<br>';
-            $res .= '鞋子：' . $row->shoes_name . '<br>';
-            $res .= '法宝：' . $row->magic_weapon_name . '<br>';
+            $res = '武器：' . $row->weapon_name;
+            if ($row->weapon != 0) {
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('equip/unequip') . '?item_id=' . $row->weapon . '" value="卸下" /><br>';
+            }else {
+                $res .= '<br>';
+            }
+
+            $res .= '头盔：' . $row->helmet_name;
+            if ($row->helmet != 0) {
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('equip/unequip') . '?item_id=' . $row->helmet . '" value="卸下" /><br>';
+            }else {
+                $res .= '<br>';
+            }
+
+            $res .= '衣服：' . $row->clothes_name;
+            if ($row->clothes != 0) {
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('equip/unequip') . '?item_id=' . $row->clothes . '" value="卸下" /><br>';
+            }else {
+                $res .= '<br>';
+            }
+
+            $res .= '耳环：' . $row->earring_name;
+            if ($row->earring != 0) {
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('equip/unequip') . '?item_id=' . $row->earring . '" value="卸下" /><br>';
+            }else {
+                $res .= '<br>';
+            }
+
+            $res .= '项链：' . $row->necklace_name;
+            if ($row->necklace != 0) {
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('equip/unequip') . '?item_id=' . $row->necklace . '" value="卸下" /><br>';
+            }else {
+                $res .= '<br>';
+            }
+
+            $res .= '手镯：' . $row->bracelet_name;
+            if ($row->bracelet != 0) {
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('equip/unequip') . '?item_id=' . $row->bracelet . '" value="卸下" /><br>';
+            }else {
+                $res .= '<br>';
+            }
+
+
+            $res .= '戒指：' . $row->ring_name;
+            if ($row->ring != 0) {
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('equip/unequip') . '?item_id=' . $row->ring . '" value="卸下" /><br>';
+            }else {
+                $res .= '<br>';
+            }
+
+            $res .= '鞋子：' . $row->shoes_name;
+            if ($row->shoes != 0) {
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('equip/unequip') . '?item_id=' . $row->shoes . '" value="卸下" /><br>';
+            }else {
+                $res .= '<br>';
+            }
+
+            $res .= '法宝：' . $row->magic_weapon_name;
+            if ($row->magic_weapon != 0) {
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('equip/unequip') . '?item_id=' . $row->magic_weapon . '" value="卸下" /><br>';
+            }else {
+                $res .= '<br>';
+            }
 
             return Response::json([
                 'code'    => 200,
@@ -235,6 +290,36 @@ class EquipController extends Controller
             ;
 
             DB::commit();
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 卸下装备
+    public function unEquip()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'item_id' => ['required'],
+            ], [
+                'item_id.required' => '物品id不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $res = Equip::unEquip($query['item_id']);
 
             return Response::json([
                 'code'    => 200,
