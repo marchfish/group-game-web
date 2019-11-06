@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserRole;
@@ -19,7 +19,7 @@ class ShopBusinessController extends Controller
     public function show()
     {
         try {
-            $user_role_id = Session::get('user.account.user_role_id');
+            $query = Request::all();
 
             $sys_date = DB::query()
                 ->select([
@@ -61,34 +61,16 @@ class ShopBusinessController extends Controller
                 ->from('shop_business AS sb')
                 ->where('sb.num', '>', 0)
                 ->orderBy('sb.created_at', 'desc')
-                ->get()
+                ->paginate($query['size'])
             ;
 
-            $res = '<div class="wr-color-E53E27">[拍卖行]</div>';
+            $res = '[拍卖行] 共：' . $rows->lastPage() . '页' . '(' . $rows->currentPage() . ')'. '\r\n';
 
             foreach ($rows as $row) {
-                if ($user_role_id != $row->user_role_id) {
-                    $res .= $row->item_name . '：￥' . $row->coin . ' 金币 （剩余:' . $row->num . '）--- ['. $row->user_name .']';
-                    $res .='<div>'
-                        .'<input class="minus" name="" type="button" value="-" />'
-                        .'<input style="width: 50px" onkeyup="value=value.replace(/[^\d]/g,\'\')" class="js-num" name="goodnum" type="tel" value="1"/>'
-                        .'<input class="add" name="" type="button" value="+" />'
-                        . '<input type="button" class="action" data-url="' . URL::to('shop-business/buy') . '?shop_business_id=' . $row->id . '" value="购买" />'
-                        .'</div>'
-                    ;
-                    $res .= '<br>';
-                }else {
-                    $res .= $row->item_name . '：￥' . $row->coin . ' 金币 （剩余:' . $row->num . '）--- ['. $row->user_name .']';
-                    $res .='<div>'
-                        .'<input class="minus" name="" type="button" value="-" />'
-                        .'<input style="width: 50px" onkeyup="value=value.replace(/[^\d]/g,\'\')" class="js-num" name="goodnum" type="tel" value="1"/>'
-                        .'<input class="add" name="" type="button" value="+" />'
-                        . '<input type="button" class="action" data-url="' . URL::to('shop-business/unsell') . '?shop_business_id=' . $row->id . '" value="下架" />'
-                        .'</div>'
-                    ;
-                    $res .= '<br>';
-                }
+                $res .= $row->item_name . '：' . $row->coin . ' (' . $row->num . ')\r\n';
             }
+
+            $res .= '翻页：拍卖行 数字';
 
             return Response::json([
                 'code'    => 200,

@@ -191,7 +191,6 @@ class UserRole
             ->first()
         ;
 
-
         $role_level = $row->level;
 
         DB::beginTransaction();
@@ -270,6 +269,126 @@ class UserRole
         }
 
         return $user_date;
+    }
+
+    // QQ
+    public static function getUserRoleToQQ(int $user_role_id)
+    {
+        $row = DB::query()
+            ->select([
+                'ur.*',
+                DB::raw('IFNULL(`m`.`name`, "") AS `map_name`'),
+                DB::raw('IFNULL(`sf`.`name`, "") AS `fame_name`'),
+            ])
+            ->from('user_role AS ur')
+            ->leftJoin('map AS m', function ($join) {
+                $join
+                    ->on('m.id', '=', 'ur.map_id')
+                ;
+            })
+            ->leftJoin('sys_fame AS sf', function ($join) {
+                $join
+                    ->on('sf.id', '=', 'ur.fame_id')
+                ;
+            })
+            ->where('ur.id', '=', $user_role_id)
+            ->limit(1)
+            ->get()
+            ->first()
+        ;
+
+        return $row;
+    }
+
+    public static function getUserDateToQQ(int $user_role_id)
+    {
+        $user_date =  DB::query()
+            ->select([
+                'ud.*',
+            ])
+            ->from('user_date AS ud')
+            ->where('ud.user_role_id', '=', $user_role_id)
+            ->get()
+            ->first()
+        ;
+
+        if (!$user_date) {
+            DB::table('user_date')->insert([
+                'user_role_id' => $user_role_id
+            ]);
+
+            return null;
+        }
+
+        return $user_date;
+    }
+
+    public static function isUpgradeToQQ(int $user_role_id)
+    {
+        $row = DB::query()
+            ->select([
+                'ur.*',
+            ])
+            ->from('user_role AS ur')
+            ->where('id', '=', $user_role_id)
+            ->limit(1)
+            ->get()
+            ->first()
+        ;
+
+        $role_level = $row->level;
+
+        DB::beginTransaction();
+
+        do {
+            $role_level += 1;
+
+            $row1 = DB::query()
+                ->select([
+                    'sl.*',
+                ])
+                ->from('sys_level AS sl')
+                ->where('level', '=', $role_level)
+                ->limit(1)
+                ->get()
+                ->first()
+            ;
+
+            if(!$row1) {
+                break ;
+            };
+
+            if ($row->exp >= $row1->exp) {
+                DB::table('user_role')
+                    ->where('id', '=', $user_role_id)
+                    ->update([
+                        'max_hp' => DB::raw('`max_hp` + ' . $row1->max_hp),
+                        'max_mp' => DB::raw('`max_mp` + ' . $row1->max_mp),
+                        'attack' => DB::raw('`attack` + ' . $row1->attack),
+                        'magic' => DB::raw('`magic` + ' . $row1->magic),
+                        'crit' => DB::raw('`crit` + ' . $row1->crit),
+                        'dodge' => DB::raw('`dodge` + ' . $row1->dodge),
+                        'defense' => DB::raw('`defense` + ' . $row1->defense),
+                        'level' => $row1->level,
+                        'fame_id' => $row1->fame_id,
+                    ])
+                ;
+
+                $row->new_level = $row1->level;
+
+
+            }
+
+        } while ($row->exp > $row1->exp);
+
+        DB::commit();
+
+        if (isset($row->new_level) && $row->new_level > $row->level) {
+            return $row->new_level;
+        }else {
+            return 0;
+        }
+
     }
 
 }

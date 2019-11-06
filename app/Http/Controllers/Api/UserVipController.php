@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserRole;
@@ -70,7 +70,9 @@ class UserVipController extends Controller
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             $row = DB::query()
                 ->select([
@@ -90,7 +92,7 @@ class UserVipController extends Controller
                 ->where('user_role_id', '=', $user_role_id)
                 ->update([
                     'on_hook_at'   => date('Y-m-d H:i:s', time()),
-                    'on_hook_type' => $query['action'] == '挂机经验' ? 1 : 2,
+                    'on_hook_type' => $query['action'] == '2' ? 2 : 1,
                 ])
             ;
 
@@ -110,7 +112,11 @@ class UserVipController extends Controller
     public function endHook()
     {
         try {
-            $user_role_id = Session::get('user.account.user_role_id');
+            $query = Request::all();
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             $row = DB::query()
                 ->select([
@@ -136,7 +142,7 @@ class UserVipController extends Controller
 
             $num = (int)round($num / 60);
 
-            $res = '您共挂机：' . $num . '分钟' . '<br>';
+            $res = '您共挂机：' . $num . '分钟' . '\r\n';
 
             $exp = 0;
             $coin = 0;
@@ -144,11 +150,11 @@ class UserVipController extends Controller
             switch ($row->on_hook_type) {
                 case 1 :
                     $exp = $num * 10;
-                    $res .= '获得经验：' . $exp . '<br>';
+                    $res .= '获得经验：' . $exp;
                     break;
                 case 2 :
                     $coin = $num * 5;
-                    $res .= '获得金币：' . $coin . '<br>';
+                    $res .= '获得金币：' . $coin;
                     break;
             }
 
@@ -171,10 +177,10 @@ class UserVipController extends Controller
 
             DB::commit();
 
-            $level = UserRole::is_upgrade();
+            $level = UserRole::isUpgradeToQQ($user_role_id);
 
             if ($level != 0) {
-                $res .= '恭喜您！等级提升为：' . $level;
+                $res .= '\r\n恭喜您！等级提升为：' . $level;
             }
 
             return Response::json([
