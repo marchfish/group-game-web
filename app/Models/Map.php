@@ -34,6 +34,11 @@ class Map
         }
 
         if ($row->enemy_name && $row->enemy_name != '') {
+
+            if($row->enemy_img && $row->enemy_img != '') {
+                $data .= '<img style="width:40px" src="'. upload_url($row->enemy_img) .'" alt="" >';
+            }
+
             $data .= '<span class="wr-color-E53E27">怪物=' . $row->enemy_name . '</span><br> ';
         }
 

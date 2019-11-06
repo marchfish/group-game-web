@@ -34,7 +34,8 @@ function upload_url(string $path): string
         return $path;
     }
 
-    return Str::startsWith($path, 'http') ? $path : (Config::get('app.url') . '/' . $path);
+//    return Str::startsWith($path, 'http') ? $path : (Config::get('app.url') . '/' . $path);
+    return Str::startsWith($path, 'http') ? $path :  './' . $path;
 }
 
 function multi_upload_url(string $path): string

@@ -13,6 +13,7 @@
 
 // 后台
 Route::prefix('admin')->namespace('Admin')->group(base_path('routes/admin.php'));
+Route::prefix('api')->namespace('Api')->group(base_path('routes/api.php'));
 
 Route::namespace('Web')->group(function () {
     // 显示登录
@@ -125,7 +126,7 @@ Route::namespace('Web')->group(function () {
                     // 挂机
                     Route::get('on-hook', 'UserVipController@onHook');
                     // 自动攻击
-                    Route::get('auto-attack', 'GameController@attack');
+                    Route::middleware(['web.check_hp'])->get('auto-attack', 'GameController@attack');
                     // 存入物品
                     Route::get('warehouse-save', 'UserWarehouseController@create');
                 });
