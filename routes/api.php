@@ -10,11 +10,28 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+// 注册
+Route::get('register', 'PublicController@registerCreate');
+
 Route::middleware(['api.check_token_qq'])->group(function () {
     // 结束挂机
     Route::get('end-hook', 'UserVipController@endHook');
+    // 排行榜
+    Route::get('ranking', 'GameController@ranking');
+
+    // 彩票
+    Route::middleware(['check_lottery'])->prefix('lottery')->group(function () {
+        // 显示
+        Route::get('', 'GameController@lotteryShow');
+        // 购买
+        Route::get('buy', 'GameController@lotteryBuy');
+    });
 
     Route::middleware(['api.check_on_hook'])->group(function () {
+        // 复活
+        Route::get('revive', 'GameController@revive');
+
         // 用户
         Route::prefix('user')->group(function () {
             // 角色
@@ -96,12 +113,21 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             });
 
             // 商城
-    //        Route::prefix('shop-mall')->group(function () {
-    //            // 显示
-    //            Route::get('', 'ShopMallController@show');
-    //            // 购买物品
-    //            Route::get('buy', 'ShopMallController@buy');
-    //        });
+            Route::prefix('shop/mall')->group(function () {
+                // 显示
+                Route::get('', 'ShopMallController@show');
+                // 购买物品
+                Route::get('buy', 'ShopMallController@buy');
+            });
+        });
+
+        Route::middleware(['api.check_hp'])->prefix('game')->group(function () {
+            // 位置信息
+            Route::get('location', 'GameController@location');
+            // 移动
+            Route::get('move', 'GameController@move');
+            // 攻击
+            Route::get('attack', 'GameController@attack');
         });
     });
 });

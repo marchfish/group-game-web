@@ -59,7 +59,11 @@ class ItemController extends Controller
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('您没有该物品', 400);
+                throw new InvalidArgumentException('物品的数量不足', 400);
+            }
+
+            if ($row->content == "") {
+                throw new InvalidArgumentException('该物品不可使用', 400);
             }
 
             $res = '';

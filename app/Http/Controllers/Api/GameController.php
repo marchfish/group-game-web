@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Map;
 use App\Models\UserRole;
@@ -15,17 +15,15 @@ use InvalidArgumentException;
 
 class GameController extends Controller
 {
-    // 界面
-    public function index()
-    {
-        return Response::view('web/game/index');
-    }
-
     // 获取位置信息
     public function location()
     {
         try {
-            $user_role_id = Session::get('user.account.user_role_id');
+            $query = Request::all();
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             $row = DB::query()
                 ->select([
@@ -94,7 +92,7 @@ class GameController extends Controller
                 ->first()
             ;
 
-            $res = Map::getLocationToMessage($row);
+            $res = Map::getLocationToQQ($row);
 
             return Response::json([
                 'code'    => 200,
@@ -124,7 +122,9 @@ class GameController extends Controller
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             $row = DB::query()
                 ->select([
@@ -230,7 +230,7 @@ class GameController extends Controller
                 ->first()
             ;
 
-            $res = Map::getLocationToMessage($row1);
+            $res = Map::getLocationToQQ($row1);
 
             // 更新位置
             DB::table('user_role')
@@ -256,9 +256,13 @@ class GameController extends Controller
     public function attack()
     {
         try {
-            $user_role_id = Session::get('user.account.user_role_id');
+            $query = Request::all();
 
-            $user_date = UserRole::getUserDate();
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            $user_date = UserRole::getUserDateToQQ($user_role_id);
 
             if ($user_date){
                 if ($user_date->attack_at) {
@@ -308,7 +312,45 @@ class GameController extends Controller
                 throw new InvalidArgumentException('当前位置并没有怪物！', 400);
             }
 
-            $res =  UserRole::attackToEnemy($user_Role, $enemy);
+            $res =  UserRole::attackToEnemyToQQ($user_Role, $enemy);
+
+            if ($user_date){
+                if ($user_date->attack_at) {
+                    $now_at = strtotime('now');
+                    $attack_at = strtotime($user_date->attack_at);
+
+                    if($now_at - $attack_at < 20) {
+                        $res = '';
+                        $user_vip = DB::query()
+                            ->select([
+                                'uv.*',
+                            ])
+                            ->from('user_vip AS uv')
+                            ->where('uv.user_role_id', '=', $user_role_id)
+                            ->get()
+                            ->first()
+                        ;
+
+                        if (!$user_vip || time() > strtotime($user_vip->expired_at)) {
+                            $res = '';
+                        }else {
+                            $user_Role1 = DB::query()
+                                ->select([
+                                    'ur.*',
+                                ])
+                                ->from('user_role AS ur')
+                                ->where('ur.id', '=', $user_role_id)
+                                ->get()
+                                ->first()
+                            ;
+
+                            if ($user_Role1->hp < $user_vip->protect_hp) {
+                                $res = '您的血量小于：' . $user_vip->protect_hp;
+                            }
+                        };
+                    };
+                }
+            }
 
             return Response::json([
                 'code'    => 200,
@@ -326,7 +368,11 @@ class GameController extends Controller
     public function revive()
     {
         try {
-            $user_role_id = Session::get('user.account.user_role_id');
+            $query = Request::all();
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             // 获取角色信息
             $user_Role = DB::query()
@@ -379,52 +425,78 @@ class GameController extends Controller
     public function ranking()
     {
         try {
-            $res = '<div class="wr-color-E53E27">等级排行前10</div>';
+            $query = Request::all();
 
-            $rows = DB::query()
-                ->select([
-                    'ur.*'
-                ])
-                ->from('user_role AS ur')
-                ->limit(10)
-                ->orderBy('level', 'desc')
-                ->get()
-            ;
+            $validator = Validator::make($query, [
+                'action' => ['required'],
+            ], [
+                'action.required' => 'action不能为空',
+            ]);
 
-            foreach ($rows as $row) {
-                $res .= $row->name . ' ：' . $row->level . '<br>';
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $rows1 = DB::query()
-                ->select([
-                    'ur.*'
-                ])
-                ->from('user_role AS ur')
-                ->limit(10)
-                ->orderBy('attack', 'desc')
-                ->get()
-            ;
+            $res = '';
 
-            $res .= '<div class="wr-color-E53E27">攻击排行前10</div>';
+            switch ($query['action']) {
+                case 2:
 
-            foreach ($rows1 as $row1) {
-                $res .=  $row1->name . ' ：' . $row1->attack . '<br>';
-            }
+                    $rows1 = DB::query()
+                        ->select([
+                            'ur.*'
+                        ])
+                        ->from('user_role AS ur')
+                        ->limit(10)
+                        ->orderBy('attack', 'desc')
+                        ->get()
+                    ;
 
-            $rows2 = DB::query()
-                ->select([
-                    'ur.*'
-                ])
-                ->from('user_role AS ur')
-                ->limit(10)
-                ->orderBy('defense', 'desc')
-                ->get()
-            ;
+                    $res .= '攻击排行前10';
 
-            $res .= '<div class="wr-color-E53E27">防御排行前10</div>';
+                    foreach ($rows1 as $row1) {
+                        $res .=  '\r\n' . $row1->name . ' ：' . $row1->attack;
+                    };
 
-            foreach ($rows2 as $row2) {
-                $res .=  $row2->name . ' ：' . $row2->defense . '<br>';
+                    break;
+                case 3:
+
+                    $rows2 = DB::query()
+                        ->select([
+                            'ur.*'
+                        ])
+                        ->from('user_role AS ur')
+                        ->limit(10)
+                        ->orderBy('defense', 'desc')
+                        ->get()
+                    ;
+
+                    $res .= '防御排行前10';
+
+                    foreach ($rows2 as $row2) {
+                        $res .= '\r\n' . $row2->name . ' ：' . $row2->defense;
+                    };
+
+                    break;
+                default:
+
+                    $res = '等级排行前10';
+
+                    $rows = DB::query()
+                        ->select([
+                            'ur.*'
+                        ])
+                        ->from('user_role AS ur')
+                        ->limit(10)
+                        ->orderBy('level', 'desc')
+                        ->get()
+                    ;
+
+                    foreach ($rows as $row) {
+                        $res .= '\r\n' . $row->name . ' ：' . $row->level;
+                    };
+
+                    break;
             }
 
             return Response::json([
@@ -464,9 +536,9 @@ class GameController extends Controller
             ;
 
             if ($row) {
-                $res .= '<div class="wr-color-E53E27">上次中奖：[' . $row->user_name . '] 获得' . $row->coin . '金币--('. $row->number .')</div>';
+                $res .= '上次中奖：[' . $row->user_name . '] 获得' . $row->coin . '金币--('. $row->number .')\r\n';
             }else {
-                $res .= '上次中奖：无人中奖<br>';
+                $res .= '上次中奖：无人中奖\r\n';
             }
 
             $last = DB::query()
@@ -482,7 +554,7 @@ class GameController extends Controller
             ;
 
             if ($last) {
-                $res .= '上次开奖号码：'. $last->number .'<br><br>';
+                $res .= '上次开奖号码：'. $last->number .'\r\n';
             }
 
             $row1 = DB::query()
@@ -497,7 +569,7 @@ class GameController extends Controller
                 ->first()
             ;
 
-            $res .= '第' . $row1->stage . '期<br>';
+            $res .= '第' . $row1->stage . '期\r\n';
 
             $row2 = DB::query()
                 ->select([
@@ -509,14 +581,9 @@ class GameController extends Controller
                 ->first()
             ;
 
-            $res .= '<div class="wr-color-E53E27">奖池：' . $row2->lottery_coin . '</div><br>';
-            $res .= '注：每人每天仅限购买一次，花费：1000/次';
-
-            $res .='<div>'
-                .'<input class="js-num" onkeyup="value=value.replace(/[^\d]/g,\'\')" name="goodnum" minlength="3" maxlength="3" type="text" style="width: 50px" value="000"/><br>'
-                . '<input type="button" class="action" data-url="' . URL::to('lottery/buy') . '?item_id=' . 1 . '" value="购买号码" />'
-                .'</div>'
-            ;
+            $res .= '奖池：' . $row2->lottery_coin . '\r\n';
+            $res .= '注：每人每天仅限购买一次，花费：1000/次\r\n';
+            $res .= '输入：购买号码 三位数字';
 
             return Response::json([
                 'code'    => 200,
@@ -537,16 +604,18 @@ class GameController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'var_data' => ['required'],
+                'number' => ['required'],
             ], [
-                'var_data.required' => 'var_data不能为空',
+                'number.required' => 'number不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             $lottery = DB::query()
                 ->select([
@@ -580,9 +649,7 @@ class GameController extends Controller
                 throw new InvalidArgumentException('您今天已经购买过了，购买号码：' . $userLottery->number, 400);
             }
 
-            $userRole = UserRole::getUserRole();
-
-            if ($userRole->coin < 1000) {
+            if ($user_role->coin < 1000) {
                 throw new InvalidArgumentException('您金币不足1000', 400);
             }
 
@@ -592,7 +659,7 @@ class GameController extends Controller
                 ->insert([
                     'user_role_id' => $user_role_id,
                     'stage'        => $lottery->stage,
-                    'number'       => $query['var_data'],
+                    'number'       => $query['number'],
                 ])
             ;
 

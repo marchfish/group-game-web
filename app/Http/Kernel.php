@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'debug_input'            => \App\Http\Middleware\DebugInput::class,
         'debug_sql'              => \App\Http\Middleware\DebugSql::class,
         'format_paginate'        => \App\Http\Middleware\FormatPaginate::class,
+        'check_lottery'          => \App\Http\Middleware\CheckLottery::class,
         'api.check_token_qq'     => \App\Http\Middleware\Api\CheckTokenAndQQ::class,
         'api.check_rank'         => \App\Http\Middleware\Api\CheckRank::class,
         'api.check_hp'           => \App\Http\Middleware\Api\CheckHP::class,

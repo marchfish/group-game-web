@@ -35,6 +35,14 @@ Route::namespace('Web')->group(function () {
     // 发送验证码
     Route::post('send-verify-code', 'PublicController@sendVerifyCode');
 
+    // 彩票
+    Route::middleware(['check_lottery'])->prefix('lottery')->group(function () {
+        // 显示
+        Route::get('', 'GameController@lotteryShow');
+        // 购买
+        Route::get('buy', 'GameController@lotteryBuy');
+    });
+
     Route::middleware(['web.check_login'])->group(function () {
         // 界面
         Route::get('index', 'GameController@index');
