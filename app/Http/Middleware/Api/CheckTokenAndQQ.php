@@ -18,7 +18,6 @@ class CheckTokenAndQQ
      */
     public function handle($request, Closure $next)
     {
-
         $token = $request->input('token');
         $qq = $request->input('qq');
         $app_token = env('APP_TOKEN');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserKnapsack;
@@ -18,7 +18,11 @@ class SynthesisController extends Controller
     public function showAll()
     {
         try {
-            $user_role_id = Session::get('user.account.user_role_id');
+            $query = Request::all();
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             $rows = DB::query()
                 ->select([
@@ -43,20 +47,22 @@ class SynthesisController extends Controller
                     ;
                 })
                 ->where('ur.id', '=', $user_role_id)
-                ->get()
+                ->paginate($query['size'])
             ;
 
-            $res = '';
+            if (count($rows->items()) <= 0) {
+                throw new InvalidArgumentException('当前位置并没有合成店或没有该页!', 400);
+            }
+
+            $res = '[合成] 共：' . $rows->lastPage() . '页' . '(' . $rows->currentPage() . ')'. '\r\n';
 
             foreach ($rows as $row) {
-                $res .= $row->item_name . '（' . $row->item_level . '级装备）-- 成功率：' . $row->success_rate . '<br>';
-
-                $res .= '<input type="button" class="action" data-url="' . URL::to('synthesis/show') . "?synthesis_id=" . $row->id . '" value="查看材料" /> ';
-
-                $res .= ' <input type="button" class="action" data-url="' . URL::to('item/check') . "?item_id=" . $row->item_id . '" value="查看属性" /> ';
-
-                $res .= ' <input type="button" class="action" data-url="' . URL::to('synthesis/create') . "?synthesis_id=" . $row->id . '" value="合成" />' . '<br>';
+                $res .= $row->item_name . '（' . $row->item_level . '级装备）-- 成功率：' . $row->success_rate . '\r\n';
             }
+
+            $res .= '输入：查看合成 物品名称\r\n';
+
+            $res .= '输入：合成 物品名称';
 
             return Response::json([
                 'code'    => 200,
@@ -76,16 +82,14 @@ class SynthesisController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'synthesis_id' => ['required'],
+                'item_name' => ['required'],
             ], [
-                'synthesis_id.required' => 'synthesis_id不能为空',
+                'item_name.required' => '物品名称不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
-
-            $user_role_id = Session::get('user.account.user_role_id');
 
             $row = DB::query()
                 ->select([
@@ -98,7 +102,7 @@ class SynthesisController extends Controller
                         ->on('i.id', '=', 's.item_id')
                     ;
                 })
-                ->where('s.id', '=', $query['synthesis_id'])
+                ->where('i.name', '=', $query['item_name'])
                 ->get()
                 ->first()
             ;
@@ -107,7 +111,7 @@ class SynthesisController extends Controller
                 throw new InvalidArgumentException('找不到该合成', 400);
             }
 
-            $res = '[' . $row->item_name . ']' . '<br>';
+            $res = '[' . $row->item_name . ']\r\n';
 
             $res .= '所需物品=';
 
@@ -126,7 +130,7 @@ class SynthesisController extends Controller
                 $res .= $requirement->name . '*' . $requirement->num . '，';
             }
 
-            $res = rtrim($res, "，") . '<br>';
+            $res = rtrim($res, "，") . '\r\n';
 
             // 失败保留
             if ($row->retains != '') {
@@ -144,15 +148,15 @@ class SynthesisController extends Controller
                     $res .= $retain->name . '*' . $retain->num . '，';
                 }
 
-                $res = rtrim($res, "，") . '<br>';
+                $res = rtrim($res, "，") . '\r\n';
 
             }else {
-                $res .= '失败保留物品=无<br>';
+                $res .= '失败保留物品=无\r\n';
             }
 
-            $res .= '成功机率=' . $row->success_rate . '% <br>';
+            $res .= '成功机率=' . $row->success_rate . '%\r\n';
 
-            $res .= '<input type="button" class="action" data-url="' . URL::to('synthesis/create') . "?synthesis_id=" . $row->id . '" value="合成" />' . '<br>';
+            $res .= '输入：合成 物品名称';
 
             return Response::json([
                 'code'    => 200,
@@ -172,18 +176,19 @@ class SynthesisController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'synthesis_id' => ['required'],
+                'item_name' => ['required'],
             ], [
-                'synthesis_id.required' => 'synthesis_id不能为空',
+                'item_name.required' => '物品名称不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role = $query['user_role'];
 
-            // 判断合成是否存在
+            $user_role_id = $user_role->id;
+
             $row = DB::query()
                 ->select([
                     's.*',
@@ -195,7 +200,7 @@ class SynthesisController extends Controller
                         ->on('i.id', '=', 's.item_id')
                     ;
                 })
-                ->where('s.id', '=', $query['synthesis_id'])
+                ->where('i.name', '=', $query['item_name'])
                 ->get()
                 ->first()
             ;
@@ -244,13 +249,13 @@ class SynthesisController extends Controller
                     }
                 }
 
-                UserKnapsack::useItems($requirements);
+                UserKnapsack::useItems($requirements, $user_role_id);
                 throw new InvalidArgumentException('合成失败！', 400);
             }
 
             DB::beginTransaction();
 
-            UserKnapsack::useItems($requirements);
+            UserKnapsack::useItems($requirements, $user_role_id);
 
             $user_vip->id = $row->item_id;
             $user_vip->num = 1;
@@ -259,11 +264,11 @@ class SynthesisController extends Controller
                 $user_vip
             ];
 
-            UserKnapsack::addItems($data);
+            UserKnapsack::addItems($data, $user_role_id);
 
             DB::commit();
 
-            $res = '恭喜您！成功合成：' . $row->item_name . '<br>';
+            $res = '恭喜您！成功合成：' . $row->item_name . '\r\n';
 
             return Response::json([
                 'code'    => 200,

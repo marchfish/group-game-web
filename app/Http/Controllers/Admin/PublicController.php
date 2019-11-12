@@ -122,17 +122,17 @@ class PublicController extends Controller
     {
         DB::beginTransaction();
 
-        $count = 4700000;
+        $count = 10000000;
 
-        for ($i = 61; $i <= 90; $i++) {
+        for ($i = 91; $i <= 120; $i++) {
             DB::table('sys_level')->insert([
                 'level'   => $i,
                 'exp'     => $count,
                 'attack'  => 2,
                 'defense' => 2,
-                'fame_id' => 4,
+                'fame_id' => 5,
             ]);
-            $count += 100000;
+            $count += 1000000;
         }
 
         DB::commit();

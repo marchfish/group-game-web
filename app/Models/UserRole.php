@@ -391,4 +391,133 @@ class UserRole
 
     }
 
+    public static function attackToEnemyToQQ($user_Role, $enemy)
+    {
+        $user_role_id = $user_Role->id;
+
+        $res = '';
+
+        $fight = DB::query()
+            ->select([
+                '*',
+            ])
+            ->from('fight AS f')
+            ->where('user_role_id', '=', $user_role_id)
+            ->where('enemy_id', '=', $enemy->id)
+            ->where('enemy_hp', '>', 0)
+            ->limit(1)
+            ->get()
+            ->first()
+        ;
+
+        if ($fight)
+        {
+            $enemy->hp = $fight->enemy_hp;
+            $enemy->mp = $fight->enemy_mp;
+        }
+
+        $level_difference = $enemy->level - $user_Role->level;
+
+        $user_hurt = $user_Role->attack - $enemy->defense;
+
+        if ($level_difference > 0 && is_success($level_difference)) {
+            $res .= $enemy->name . '闪避了\r\n';
+        }elseif ($user_hurt <= 0) {
+            $res .= '您无法破防\r\n';
+        }else {
+
+            $hurt_wave = mt_rand(0, round($user_hurt * 0.5));
+
+            $rand_num = mt_rand(0, 100);
+
+            if ($rand_num >= 50 || is_success($user_Role->crit)) {
+                $user_hurt += $hurt_wave;
+            } else {
+                $user_hurt -= $hurt_wave;
+            }
+
+            $enemy->hp -= $user_hurt;
+
+            // 存入数据
+            DB::table('fight')->updateOrInsert([
+                'user_role_id' => $user_role_id,
+            ], [
+                'enemy_id' => $enemy->id,
+                'enemy_hp' => $enemy->hp < 0 ? 0 : $enemy->hp,
+                'enemy_mp' => $enemy->mp,
+            ]);
+
+            if ($enemy->hp <= 0) {
+                $res .= $enemy->name . '被您击败了\r\n';
+
+                self::setExpAndCoinToQQ($enemy, $user_role_id);
+
+                $res .= '获得经验=' . $enemy->exp . '\r\n';
+                $res .= '获得金币=' . $enemy->coin . '\r\n';
+
+                $certain_items = json_decode($enemy->certain_items);
+                $items = json_decode($enemy->items);
+
+                if (is_success($enemy->probability)) {
+                    $count = mt_rand(0, count($items) - 1);
+                    $win_item[0] = $items[$count];
+                    if (is_array($certain_items)) {
+                        $certain_items = array_merge($certain_items, $win_item);
+                    } else {
+                        $certain_items = $win_item;
+                    }
+                    $result = [];
+                    foreach ($certain_items as $val) {
+                        $key = $val->id;
+                        if (!isset($result[$key])) {
+                            $result[$key] = $val;
+                        } else {
+                            $result[$key]->num += $val->num;
+                        }
+                    }
+
+                    $certain_items = $result;
+                }
+
+                if (is_array($certain_items)) {
+                    $res .= '获得物品:' . UserKnapsack::addItems($certain_items) . '\r\n';
+                }
+
+                $is_up = self::isUpgradeToQQ($user_role_id);
+
+                if ($is_up != 0) {
+                    $res .= '恭喜您！等级提升至：' . $is_up . '\r\n';
+                }
+
+                if ($enemy->move_map_id != 0) {
+                    DB::table('user_role')
+                        ->where('id', '=', $user_role_id)
+                        ->update([
+                            'map_id' => $enemy->move_map_id,
+                        ]);
+
+                    $res .= '您已被传送出该位置';
+                }
+
+                return $res;
+            }
+
+            $res = $enemy->name . '-' . $user_hurt . ' 血量：' . $enemy->hp . '\r\n' . $res;
+        }
+
+        $res .= Enemy::attackToUserRoleToQQ($user_Role, $enemy);
+
+        return $res;
+    }
+
+    public static function setExpAndCoinToQQ($row, int $user_role_id)
+    {
+        DB::table('user_role')
+            ->where('id', '=', $user_role_id)
+            ->update([
+                'exp' => DB::raw('`exp` + ' . $row->exp),
+                'coin' => DB::raw('`coin` + ' . $row->coin),
+            ])
+        ;
+    }
 }

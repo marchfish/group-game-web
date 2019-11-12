@@ -72,6 +72,12 @@
       </p>
     </div>
     <div class="row">
+        休闲：
+        <p>
+            <input type="button" class="action" data-url="{!! URL::to('lottery') !!}" value="搏一搏"/>
+        </p>
+    </div>
+    <div class="row">
         <a class="btn btn-default" href="{!! URL::to('logout') !!}">退出</a>
     </div>
 </div>
@@ -103,6 +109,14 @@
                     var_data = 1;
                 }
                 var_data1 = $(this).parent().find(".sell-item").val();
+            }
+
+            if(actionName == "购买号码"){
+                var_data = $(this).parent().find(".js-num").val();
+                if(var_data.length < 3){
+                    alert("号码必须3位数");
+                    return;
+                }
             }
 
             $.ajax({
