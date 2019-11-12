@@ -84,85 +84,32 @@ class ShopBusinessController extends Controller
         }
     }
 
-    public function sellShow()
-    {
-        try {
-            $user_role_id = Session::get('user.account.user_role_id');
-
-            $rows = DB::query()
-                ->select([
-                    'uk.*',
-                    'i.name AS item_name',
-                    'i.type AS item_type',
-                ])
-                ->from('user_knapsack AS uk')
-                ->join('item AS i', function ($join) {
-                    $join
-                        ->on('i.id', '=', 'uk.item_id')
-                    ;
-                })
-                ->where('uk.user_role_id', '=', $user_role_id)
-                ->where('uk.item_num', '>', 0)
-                ->get()
-            ;
-
-            $res = '';
-
-            foreach ($rows as $row) {
-                $res .= $row->item_name . '：' . $row->item_num;
-
-                $res .='<div>'
-                    .'出售单价：<input class="sell-item" onkeyup="value=value.replace(/[^\d]/g,\'\')" name="" type="tel" style="width: 50px" value="1"/><br>'
-                    .'出售数量：<input class="minus" name="" type="button" value="-" />'
-                    .'<input class="js-num" onkeyup="value=value.replace(/[^\d]/g,\'\')" name="" type="tel" style="width: 50px" value="1"/>'
-                    .'<input class="add" name="" type="button" value="+" />'
-                    .'<input type="button" class="action" data-url="' . URL::to('shop-business/sell') . '?item_id=' . $row->item_id . '" value="出售" />'
-                    .'</div>'
-                ;
-
-                $res .= '<br>';
-            }
-
-            if ($res == '') {
-                $res = '您没有可出售的物品!';
-            }
-
-            return Response::json([
-                'code'    => 200,
-                'message' => $res,
-            ]);
-        } catch (InvalidArgumentException $e) {
-            return Response::json([
-                'code'    => $e->getCode(),
-                'message' => $e->getMessage(),
-            ]);
-        }
-    }
-
     public function sell()
     {
         try {
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'item_id' => ['required'],
-                'var_data' => ['required', 'integer'],
-                'var_data1' => ['required', 'integer'],
+                'item_name' => ['required'],
+                'price'     => ['required', 'integer'],
+                'num'       => ['required', 'integer'],
             ], [
-                'item_id.required' => '物品id不能为空',
-                'var_data.required' => 'var_data不能为空',
-                'var_data1.required' => 'var_data1不能为空',
+                'item_name.required' => '物品名称不能为空',
+                'price.required'     => '单价不能为空',
+                'num.required'       => '数量不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            if ($query['var_data1'] <= 9) {
+            if ($query['price'] <= 9) {
                 throw new InvalidArgumentException('物品价格小于10金币', 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             // 判断是否存在物品
             $row = DB::query()
@@ -176,8 +123,8 @@ class ShopBusinessController extends Controller
                     ;
                 })
                 ->where('uk.user_role_id', '=', $user_role_id)
-                ->where('uk.item_id', '=', $query['item_id'])
-                ->where('uk.item_num', '>=', $query['var_data'])
+                ->where('i.name', '=', $query['item_name'])
+                ->where('uk.item_num', '>=', $query['num'])
                 ->get()
                 ->first()
             ;
@@ -186,24 +133,24 @@ class ShopBusinessController extends Controller
                 throw new InvalidArgumentException('没有足够的物品数量', 400);
             }
 
-            $res = '出售成功：' . $row->name . '*' . $query['var_data'];
+            $res = '出售成功：' . $row->name . '*' . $query['num'];
 
             DB::beginTransaction();
 
             DB::table('shop_business')
                 ->insert([
                     'user_role_id' => $user_role_id,
-                    'item_id'      => $query['item_id'],
-                    'num'          => $query['var_data'],
-                    'coin'         => $query['var_data1'],
+                    'item_id'      => $row->id,
+                    'num'          => $query['num'],
+                    'coin'         => $query['price'],
                 ])
             ;
 
             DB::table('user_knapsack')
                 ->where('user_role_id', '=', $user_role_id)
-                ->where('item_id', '=', $query['item_id'])
+                ->where('item_id', '=', $row->id)
                 ->update([
-                    'item_num' => DB::raw('`item_num` - ' . $query['var_data']),
+                    'item_num' => DB::raw('`item_num` - ' . $query['num']),
                 ])
             ;
 
@@ -333,18 +280,20 @@ class ShopBusinessController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'shop_business_id' => ['required'],
-                'var_data' => ['required', 'integer'],
+                'item_name' => ['required'],
+                'num'       => ['nullable', 'integer'],
             ], [
-                'shop_business_id.required' => 'shop_business_id不能为空',
-                'var_data.required' => 'var_data不能为空',
+                'item_name.required' => '商品名称不能为空',
+                'num.required'       => '数量不能为空'
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             // 判断是否存在物品
             $row = DB::query()
@@ -358,22 +307,28 @@ class ShopBusinessController extends Controller
                         ->on('i.id', '=', 'sb.item_id')
                     ;
                 })
-                ->where('sb.id', '=', $query['shop_business_id'])
-                ->where('sb.num', '>=', $query['var_data'])
+                ->where('i.name', '=', $query['item_name'])
+                ->where('sb.user_role_id', '=', $user_role_id)
                 ->get()
                 ->first()
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('商品数量不足：' . $query['var_data'], 400);
+                throw new InvalidArgumentException('拍卖行中并没有找到您上架的该物品：' . $query['item_name'], 400);
             }
 
-            if ($row->user_role_id != $user_role_id) {
-                throw new InvalidArgumentException('不能下架别人的商品!', 400);
+            if (!isset($query['num'])) {
+                $query['num'] = $row->num;
             }
+
+            if ($row->num < $query['num']) {
+                throw new InvalidArgumentException('商品数量不足：' . $query['num'], 400);
+            }
+
+            $shop_business_id = $row->id;
 
             $row->id = $row->item_id;
-            $row->num = $query['var_data'];
+            $row->num = $query['num'];
 
             $data = [
                 $row
@@ -381,12 +336,12 @@ class ShopBusinessController extends Controller
 
             DB::beginTransaction();
 
-            UserKnapsack::addItems($data);
+            UserKnapsack::addItems($data, $user_role_id);
 
             DB::table('shop_business')
-                ->where('id', '=', $query['shop_business_id'])
+                ->where('id', '=', $shop_business_id)
                 ->update([
-                    'num' => DB::raw('`num` - ' . $query['var_data']),
+                    'num' => DB::raw('`num` - ' . $query['num']),
                 ])
             ;
 
@@ -397,7 +352,7 @@ class ShopBusinessController extends Controller
 
             DB::commit();
 
-            $res = '下架成功：' . $row->item_name . '*' . $query['var_data'];
+            $res = '下架成功：' . $row->item_name . '*' . $query['num'];
 
             return Response::json([
                 'code'    => 200,

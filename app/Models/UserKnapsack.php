@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Session;
 class UserKnapsack
 {
     // 添加物品
-    public static function addItems(array $items,int $user_role_id = 0)
+    public static function addItems(array $items, int $user_role_id = 0)
     {
         if ($user_role_id == 0) {
             $user_role_id = Session::get('user.account.user_role_id');
@@ -66,9 +66,11 @@ class UserKnapsack
     }
 
     // 使用物品
-    public static function useItems(array $items)
+    public static function useItems(array $items, int $user_role_id = 0)
     {
-        $user_role_id = Session::get('user.account.user_role_id');
+        if ($user_role_id == 0) {
+            $user_role_id = Session::get('user.account.user_role_id');
+        }
 
         DB::beginTransaction();
 
@@ -92,9 +94,11 @@ class UserKnapsack
     }
 
     // 判断是否有足够的物品数量
-    public static function isHaveItems(array $items)
+    public static function isHaveItems(array $items, int $user_role_id = 0)
     {
-        $user_role_id = Session::get('user.account.user_role_id');
+        if ($user_role_id == 0) {
+            $user_role_id = Session::get('user.account.user_role_id');
+        }
 
         foreach ($items as $item) {
             $my_item = DB::query()

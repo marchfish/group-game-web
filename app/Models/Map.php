@@ -75,25 +75,25 @@ class Map
 
     public static function getLocationToQQ($row)
     {
-        $data = '[当前位置]' . $row->name . '\r\n';
+        $data = '[当前位置]\r\n' . $row->name . '\r\n';
 
         if ($row->npc_name && $row->npc_name != '') {
             $data .= 'npc=' . $row->npc_name;
 
             if ($row->mission_id > 0) {
-                $data .= ' -- 任务';
+                $data .= ' -- (任务)';
             }
 
             if ($row->npc_type == 10){
-                $data .= ' -- 商店';
+                $data .= ' -- (商店)';
             }
 
             if ($row->npc_type == 20){
-                $data .= ' -- 合成';
+                $data .= ' -- (合成)';
             }
 
             if ($row->npc_type == 30){
-                $data .= ' -- 提炼';
+                $data .= ' -- (提炼)';
             }
 
             $data .= '\r\n';
@@ -128,8 +128,10 @@ class Map
         }
 
         if ($row->behind_name && $row->behind_name != '') {
-            $data .= '后=' . $row->behind_name;
+            $data .= '后=' . $row->behind_name . '\r\n';
         }
+
+        $data .= '注：请根据方位进行移动';
 
         return $data;
     }

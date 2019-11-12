@@ -554,7 +554,7 @@ class GameController extends Controller
             ;
 
             if ($last) {
-                $res .= '上次开奖号码：'. $last->number .'\r\n';
+                $res .= '上期开奖号码：'. $last->number .'\r\n';
             }
 
             $row1 = DB::query()

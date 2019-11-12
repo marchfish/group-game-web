@@ -74,7 +74,7 @@ class Lottery
                 DB::table('sys_coin')
                     ->where('id', '=', 1)
                     ->update([
-                        'lottery_coin' => 500000,
+                        'lottery_coin' => 5000000,
                     ])
                 ;
             }
