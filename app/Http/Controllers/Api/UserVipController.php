@@ -18,7 +18,11 @@ class UserVipController extends Controller
     public function vipShow()
     {
         try {
-            $user_role_id = Session::get('user.account.user_role_id');
+            $query = Request::all();
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             $row = DB::query()
                 ->select([
@@ -31,16 +35,16 @@ class UserVipController extends Controller
             ;
 
             if (!$row || time() > strtotime($row->expired_at)) {
-                $res = '您还不是会员' . '<br>';
+                $res = '您还不是会员\r\n';
             }else {
-                $res  = '会员到期时间为：' . $row->expired_at . '<br>';
-                $res .= '会员等级为：' . $row->level . '<br>';
-                $res .= '血量保护为：' . $row->protect_hp . '<br>';
-                $res .= '成功率提升：' . $row->success_rate . '<br>';
+                $res  = '会员到期时间为：' . $row->expired_at . '\r\n';
+                $res .= '会员等级为：' . $row->level . '\r\n';
+                $res .= '血量保护为：' . $row->protect_hp . '\r\n';
+                $res .= '成功率提升：' . $row->success_rate . '\r\n';
             }
 
-            $res .= '会员价格：50000金币一个月' . '<br>';
-            $res .= '<input type="button" class="action" data-url="' . URL::to('vip-buy') . '" value="购买会员" />';
+            $res .= '会员价格：50000金币一个月\r\n';
+            $res .= '输入：购买会员';
 
             return Response::json([
                 'code'    => 200,
@@ -199,9 +203,13 @@ class UserVipController extends Controller
     public function vipBuy()
     {
         try {
-            $user_role_id = Session::get('user.account.user_role_id');
+            $query = Request::all();
 
-            $userRole = UserRole::getUserRole();
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            $userRole = $user_role;
 
             if ($userRole->coin < 50000) {
                 throw new InvalidArgumentException('您的金币不足：50000', 400);
@@ -259,6 +267,49 @@ class UserVipController extends Controller
             return Response::json([
                 'code'    => 200,
                 'message' => '购买成功，您的会员有效期至：' . $expired_at,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 设置保护
+    public function setProtectHp()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'hp' => ['required', 'integer'],
+            ], [
+                'hp.required' => '保护不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            if ($query['hp'] > ($user_role->max_hp * 0.6)) {
+                throw new InvalidArgumentException('保护不能大于血量上限的60%', 400);
+            }
+
+            DB::table('user_vip')
+                ->where('user_role_id', '=', $user_role_id)
+                ->update([
+                    'protect_hp' => intval($query['hp']),
+                ])
+            ;
+
+            return Response::json([
+                'code'    => 200,
+                'message' => '设置成功，当前保护为：' . intval($query['hp']),
             ]);
         } catch (InvalidArgumentException $e) {
             return Response::json([

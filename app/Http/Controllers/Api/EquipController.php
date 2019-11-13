@@ -122,16 +122,18 @@ class EquipController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'item_id' => ['required'],
+                'item_name' => ['required'],
             ], [
-                'item_id.required' => '物品id不能为空',
+                'item_name.required' => '物品名称不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             // 判断是否存在物品
             $row = DB::query()
@@ -151,7 +153,7 @@ class EquipController extends Controller
                     ;
                 })
                 ->where('uk.user_role_id', '=', $user_role_id)
-                ->where('uk.item_id', '=', $query['item_id'])
+                ->where('i.name', '=', $query['item_name'])
                 ->where('uk.item_num', '>', 0)
                 ->get()
                 ->first()
@@ -183,6 +185,8 @@ class EquipController extends Controller
             if (!$row1) {
                 throw new InvalidArgumentException('数据出错，请联系管理员', 400);
             }
+
+            $query['item_id'] = $row->id;
 
             $res = '装备成功：' . $row->name;
 
@@ -217,10 +221,10 @@ class EquipController extends Controller
 
             UserKnapsack::useItems([
                 0 => $data
-            ]);
+            ], $user_role_id);
 
             if ($equip != 0) {
-                Equip::unEquip($equip);
+                Equip::unEquipToQQ($equip, $user_role_id);
             }
 
             DB::table('user_equip')
@@ -259,16 +263,39 @@ class EquipController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'item_id' => ['required'],
+                'item_name' => ['required'],
             ], [
-                'item_id.required' => '物品id不能为空',
+                'item_name.required' => '物品名称不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $res = Equip::unEquip($query['item_id']);
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            // 判断是否存在物品
+            $row = DB::query()
+                ->select([
+                    'i.*',
+                ])
+                ->from('item AS i')
+                ->where('i.name', '=', $query['item_name'])
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('您没有该物品', 400);
+            }
+
+            if ($row->type != 10) {
+                throw new InvalidArgumentException('该物品不属于装备', 400);
+            }
+
+            $res = Equip::unEquipToQQ($row->id, $user_role_id);
 
             return Response::json([
                 'code'    => 200,

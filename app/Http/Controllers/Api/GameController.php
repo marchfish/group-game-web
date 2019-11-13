@@ -40,6 +40,8 @@ class GameController extends Controller
                     DB::raw('IFNULL(`mright`.`name`, "") AS `right_name`'),
                     DB::raw('IFNULL(`n`.`mission_id`, 0) AS `mission_id`'),
                     DB::raw('IFNULL(`n`.`type`, 0) AS `npc_type`'),
+                    DB::raw('IFNULL(`ed`.`hour`, "") AS `enemy_hour`'),
+                    DB::raw('IFNULL(`md`.`hour`, "") AS `map_hour`'),
                 ])
                 ->from('map AS m')
                 ->join('user_role AS ur', function ($join) {
@@ -55,6 +57,16 @@ class GameController extends Controller
                 ->leftJoin('enemy AS e', function ($join) {
                     $join
                         ->on('e.id', '=', 'm.enemy_id')
+                    ;
+                })
+                ->leftJoin('enemy_date AS ed', function ($join) {
+                    $join
+                        ->on('ed.enemy_id', '=', 'm.enemy_id')
+                    ;
+                })
+                ->leftJoin('map_date AS md', function ($join) {
+                    $join
+                        ->on('md.map_id', '=', 'm.id')
                     ;
                 })
                 ->leftJoin('map AS mforward', function ($join) {
@@ -183,6 +195,8 @@ class GameController extends Controller
                     DB::raw('IFNULL(`mright`.`name`, "") AS `right_name`'),
                     DB::raw('IFNULL(`n`.`mission_id`, 0) AS `mission_id`'),
                     DB::raw('IFNULL(`n`.`type`, 0) AS `npc_type`'),
+                    DB::raw('IFNULL(`ed`.`hour`, "") AS `enemy_hour`'),
+                    DB::raw('IFNULL(`md`.`hour`, "") AS `map_hour`'),
                 ])
                 ->from('map AS m')
                 ->leftJoin('npc AS n', function ($join) {
@@ -193,6 +207,16 @@ class GameController extends Controller
                 ->leftJoin('enemy AS e', function ($join) {
                     $join
                         ->on('e.id', '=', 'm.enemy_id')
+                    ;
+                })
+                ->leftJoin('enemy_date AS ed', function ($join) {
+                    $join
+                        ->on('ed.enemy_id', '=', 'm.enemy_id')
+                    ;
+                })
+                ->leftJoin('map_date AS md', function ($join) {
+                    $join
+                        ->on('md.map_id', '=', 'm.id')
                     ;
                 })
                 ->leftJoin('map AS mforward', function ($join) {
@@ -296,11 +320,17 @@ class GameController extends Controller
             $enemy = DB::query()
                 ->select([
                     'e.*',
+                    DB::raw('IFNULL(`ed`.`hour`, "") AS `enemy_hour`'),
                 ])
                 ->from('enemy AS e')
                 ->join('map AS m', function ($join) {
                     $join
                         ->on('m.enemy_id', '=', 'e.id')
+                    ;
+                })
+                ->leftJoin('enemy_date AS ed', function ($join) {
+                    $join
+                        ->on('ed.enemy_id', '=', 'e.id')
                     ;
                 })
                 ->where('m.id', '=', $user_Role->map_id)
@@ -309,6 +339,10 @@ class GameController extends Controller
             ;
 
             if (!$enemy) {
+                throw new InvalidArgumentException('当前位置并没有怪物！', 400);
+            }
+
+            if ($enemy->enemy_hour != '' && strpos($enemy->enemy_hour, date('H', time())) === false) {
                 throw new InvalidArgumentException('当前位置并没有怪物！', 400);
             }
 
@@ -682,6 +716,52 @@ class GameController extends Controller
             return Response::json([
                 'code'    => 200,
                 'message' => '购买成功',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 开奖历史
+    public function lotteryHistory()
+    {
+        try {
+            $query = Request::all();
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            $rows = DB::query()
+                ->select([
+                    'l.*',
+                    DB::raw('IFNULL(`ur`.`name`, "无人中奖") AS `user_role_name`'),
+                ])
+                ->from('lottery AS l')
+                ->leftJoin('user_role AS ur', function ($join) {
+                    $join
+                        ->on('ur.id', '=', 'l.user_role_id')
+                    ;
+                })
+                ->where('l.number', '<>', '')
+                ->orderBy('l.created_at', 'desc')
+                ->paginate($query['size'])
+            ;
+
+            $res = '[开奖历史] 共：' . $rows->lastPage() . '页' . '(' . $rows->currentPage() . ')'. '\r\n';
+
+            foreach ($rows as $row) {
+                $res .='第(' . $row->stage . ')期 号码：' . $row->number . '---' . $row->user_role_name . '\r\n';
+            }
+
+            $res .= '翻页：开奖历史 页数';
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
             ]);
         } catch (InvalidArgumentException $e) {
             return Response::json([

@@ -100,7 +100,11 @@ class Map
         }
 
         if ($row->enemy_name && $row->enemy_name != '') {
-            $data .= '怪物=' . $row->enemy_name . '\r\n';
+            if ($row->enemy_hour != '' && strpos($row->enemy_hour, date('H', time())) === false) {
+
+            }else {
+                $data .= '怪物=' . $row->enemy_name . '\r\n';
+            }
         }
 
         if ($row->description && $row->description != '') {
