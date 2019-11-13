@@ -268,7 +268,7 @@ class SynthesisController extends Controller
 
             DB::commit();
 
-            $res = '恭喜您！成功合成：' . $row->item_name . '\r\n';
+            $res = '恭喜您！成功合成：' . $row->item_name;
 
             return Response::json([
                 'code'    => 200,

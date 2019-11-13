@@ -26,6 +26,8 @@ Route::middleware(['api.check_token_qq'])->group(function () {
         Route::get('', 'GameController@lotteryShow');
         // 购买
         Route::get('buy', 'GameController@lotteryBuy');
+        // 开奖历史
+        Route::get('history', 'GameController@lotteryHistory')->middleware(['format_paginate']);
     });
 
     Route::middleware(['api.check_on_hook'])->group(function () {
@@ -52,9 +54,9 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             // 显示
             Route::get('', 'EquipController@show');
             // 装备
-    //        Route::post('', 'EquipController@equip');
+            Route::get('up', 'EquipController@equip');
             // 卸下装备
-    //        Route::get('unequip', 'EquipController@unEquip');
+            Route::get('down', 'EquipController@unEquip');
         });
 
         // 商店
@@ -70,7 +72,6 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             });
             // 购买物品
     //        Route::get('buy', 'ShopBusinessController@buy');
-
         });
 
         // 排位
@@ -93,22 +94,28 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             Route::get('check', 'ItemController@check');
         });
 
-        // 会员功能
-        Route::middleware(['api.check_vip'])->group(function () {
-            // 会员
-            Route::prefix('vip')->group(function () {
+        // 会员
+        Route::prefix('vip')->group(function () {
+            // 会员信息
+            Route::get('', 'UserVipController@vipShow');
+            // 购买会员
+            Route::get('buy', 'UserVipController@vipBuy');
+            // 会员功能
+            Route::middleware(['api.check_vip'])->group(function () {
                 // 挂机
                 Route::get('on-hook', 'UserVipController@onHook');
+                // 设置血量保护
+                Route::get('protect', 'UserVipController@setProtectHp');
                 // 存入物品
-    //            Route::get('warehouse-save', 'UserWarehouseController@create');
-            });
+                Route::get('warehouse/save', 'UserWarehouseController@create');
 
-            // 商城
-            Route::prefix('shop/mall')->group(function () {
-                // 显示
-                Route::get('', 'ShopMallController@show');
-                // 购买物品
-                Route::get('buy', 'ShopMallController@buy');
+                // 商城
+                Route::prefix('shop/mall')->group(function () {
+                    // 显示
+                    Route::get('', 'ShopMallController@show');
+                    // 购买物品
+                    Route::get('buy', 'ShopMallController@buy');
+                });
             });
         });
 
@@ -152,6 +159,28 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             Route::get('show', 'SynthesisController@show');
             // 合成
             Route::get('create', 'SynthesisController@create');
+        });
+
+        // 商店
+        Route::prefix('shop')->group(function () {
+            // 显示
+            Route::get('', 'ShopController@show')->middleware(['format_paginate']);
+            // 购买物品
+            Route::get('buy', 'ShopController@buy');
+        });
+
+        // 地图
+        Route::prefix('map')->group(function () {
+            // 传送
+            Route::get('transfer', 'MapController@transfer');
+        });
+
+        // 仓库
+        Route::prefix('warehouse')->group(function () {
+            // 显示仓库物品
+            Route::get('', 'UserWarehouseController@show')->middleware(['format_paginate']);
+            // 取出物品
+            Route::get('out', 'UserWarehouseController@delete');
         });
     });
 });
