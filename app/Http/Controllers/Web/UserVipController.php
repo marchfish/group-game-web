@@ -35,7 +35,14 @@ class UserVipController extends Controller
             }else {
                 $res  = '会员到期时间为：' . $row->expired_at . '<br>';
                 $res .= '会员等级为：' . $row->level . '<br>';
-                $res .= '血量保护为：' . $row->protect_hp . '<br>';
+                $res .= '血量保护为：' . $row->protect_hp;
+                $res .='<div>'
+                    .'<input class="minus" name="" type="button" value="-" />'
+                    .'<input style="width: 50px" onkeyup="value=value.replace(/[^\d]/g,\'\')" class="js-num" name="goodnum" type="tel" value="60"/>'
+                    .'<input class="add" name="" type="button" value="+" />'
+                    . '<input type="button" class="action" data-url="' . URL::to('vip/protect') . '?id=' . 1 . '" value="设置" />'
+                    .'</div>'
+                ;
                 $res .= '成功率提升：' . $row->success_rate . '<br>';
             }
 
@@ -253,6 +260,49 @@ class UserVipController extends Controller
             return Response::json([
                 'code'    => 200,
                 'message' => '购买成功，您的会员有效期至：' . $expired_at,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 设置保护
+    public function setProtectHp()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'var_data' => ['required', 'integer'],
+            ], [
+                'var_data.required' => '保护不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $user_role_id = Session::get('user.account.user_role_id');
+
+            $user_role = UserRole::getUserRole();
+
+            if ($query['var_data'] > ($user_role->max_hp * 0.6)) {
+                throw new InvalidArgumentException('保护不能大于血量上限的60%', 400);
+            }
+
+            DB::table('user_vip')
+                ->where('user_role_id', '=', $user_role_id)
+                ->update([
+                    'protect_hp' => intval($query['var_data']),
+                ])
+            ;
+
+            return Response::json([
+                'code'    => 200,
+                'message' => '设置成功，当前保护为：' . $query['var_data'],
             ]);
         } catch (InvalidArgumentException $e) {
             return Response::json([

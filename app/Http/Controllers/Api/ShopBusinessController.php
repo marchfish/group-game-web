@@ -174,18 +174,22 @@ class ShopBusinessController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'shop_business_id' => ['required'],
-                'var_data' => ['required', 'integer'],
+                'item_name' => ['required'],
+                'price'     => ['required', 'integer'],
+                'num'       => ['required', 'integer'],
             ], [
-                'shop_business_id.required' => 'shop_business_id不能为空',
-                'var_data.required' => 'var_data不能为空',
+                'item_name.required' => '物品名称不能为空',
+                'price.required'     => '单价不能为空',
+                'num.required'       => '数量不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             // 判断是否存在物品
             $row = DB::query()
@@ -199,30 +203,32 @@ class ShopBusinessController extends Controller
                         ->on('i.id', '=', 'sb.item_id')
                     ;
                 })
-                ->where('sb.id', '=', $query['shop_business_id'])
-                ->where('sb.num', '>=', $query['var_data'])
+                ->where('i.name', '=', $query['item_name'])
+                ->where('sb.num', '>=', $query['num'])
+                ->where('sb.coin', '=', $query['price'])
                 ->get()
                 ->first()
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('商品数量不足：' . $query['var_data'], 400);
+                throw new InvalidArgumentException('没有找到对应商品，或数量不足：' . $query['num'], 400);
             }
 
             if ($row->user_role_id == $user_role_id) {
                 throw new InvalidArgumentException('不能购买自己上架的商品!', 400);
             }
 
-            $userRole = UserRole::getUserRole();
+            $userRole = $user_role;
 
-            $use_coin = $row->coin * $query['var_data'];
+            $use_coin = $row->coin * $query['num'];
 
             if ($userRole->coin < $use_coin) {
                 throw new InvalidArgumentException('您的金币不足：' . $use_coin, 400);
             }
+            $query['shop_business_id'] = $row->id;
 
             $row->id = $row->item_id;
-            $row->num = $query['var_data'];
+            $row->num = $query['num'];
 
             $data = [
                 $row
@@ -230,7 +236,7 @@ class ShopBusinessController extends Controller
 
             DB::beginTransaction();
 
-            UserKnapsack::addItems($data);
+            UserKnapsack::addItems($data, $user_role_id);
 
             DB::table('user_role')
                 ->where('id', '=', $user_role_id)
@@ -249,7 +255,7 @@ class ShopBusinessController extends Controller
             DB::table('shop_business')
                 ->where('id', '=', $query['shop_business_id'])
                 ->update([
-                    'num' => DB::raw('`num` - ' . $query['var_data']),
+                    'num' => DB::raw('`num` - ' . $query['num']),
                 ])
             ;
 
@@ -260,7 +266,7 @@ class ShopBusinessController extends Controller
 
             DB::commit();
 
-            $res = '购买成功：' . $row->item_name . '*' . $query['var_data'] . ' - ' . $use_coin . '金币';
+            $res = '购买成功：' . $row->item_name . '*' . $query['num'] . ' - ' . $use_coin . '金币';
 
             return Response::json([
                 'code'    => 200,

@@ -59,7 +59,7 @@ Route::namespace('Web')->group(function () {
             // 复活
             Route::get('revive', 'GameController@revive');
 
-            Route::middleware(['web.check_hp'])->prefix('game')->group(function () {
+            Route::middleware(['web.check_hp', 'web.check_map'])->prefix('game')->group(function () {
                 // 位置信息
                 Route::get('location', 'GameController@location');
                 // 移动
@@ -137,6 +137,8 @@ Route::namespace('Web')->group(function () {
                     Route::middleware(['web.check_hp'])->get('auto-attack', 'GameController@attack');
                     // 存入物品
                     Route::get('warehouse-save', 'UserWarehouseController@create');
+                    // 设置血量保护
+                    Route::get('protect', 'UserVipController@setProtectHp');
                 });
 
                 // 商城

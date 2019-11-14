@@ -59,7 +59,7 @@ class ItemController extends Controller
             $item = json_decode($row->content)[0];
             $item->id = $row->id;
 
-            if ($row->type == 1) {
+            if ($row->type == 1 || $row->type == 2) {
                 $res .= Item::useDrug($item);
             }
 

@@ -458,8 +458,9 @@ class SystemController extends Controller
     public function test()
     {
         try {
+            $user_role_id = Session::get('user.account.user_role_id');
 
-            Lottery::update();
+            $res = '';
 
             return Response::json([
                 'code'    => 200,

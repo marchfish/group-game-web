@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Map;
 use App\Models\UserRole;
+use App\Models\Item;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
 use InvalidArgumentException;
 
 class GameController extends Controller
@@ -41,7 +40,7 @@ class GameController extends Controller
                     DB::raw('IFNULL(`n`.`mission_id`, 0) AS `mission_id`'),
                     DB::raw('IFNULL(`n`.`type`, 0) AS `npc_type`'),
                     DB::raw('IFNULL(`ed`.`hour`, "") AS `enemy_hour`'),
-                    DB::raw('IFNULL(`md`.`hour`, "") AS `map_hour`'),
+                    DB::raw('IFNULL(`ed`.`refresh_at`, "") AS `enemy_refresh_at`'),
                 ])
                 ->from('map AS m')
                 ->join('user_role AS ur', function ($join) {
@@ -62,11 +61,6 @@ class GameController extends Controller
                 ->leftJoin('enemy_date AS ed', function ($join) {
                     $join
                         ->on('ed.enemy_id', '=', 'm.enemy_id')
-                    ;
-                })
-                ->leftJoin('map_date AS md', function ($join) {
-                    $join
-                        ->on('md.map_id', '=', 'm.id')
                     ;
                 })
                 ->leftJoin('map AS mforward', function ($join) {
@@ -196,7 +190,7 @@ class GameController extends Controller
                     DB::raw('IFNULL(`n`.`mission_id`, 0) AS `mission_id`'),
                     DB::raw('IFNULL(`n`.`type`, 0) AS `npc_type`'),
                     DB::raw('IFNULL(`ed`.`hour`, "") AS `enemy_hour`'),
-                    DB::raw('IFNULL(`md`.`hour`, "") AS `map_hour`'),
+                    DB::raw('IFNULL(`ed`.`refresh_at`, "") AS `enemy_refresh_at`'),
                 ])
                 ->from('map AS m')
                 ->leftJoin('npc AS n', function ($join) {
@@ -212,11 +206,6 @@ class GameController extends Controller
                 ->leftJoin('enemy_date AS ed', function ($join) {
                     $join
                         ->on('ed.enemy_id', '=', 'm.enemy_id')
-                    ;
-                })
-                ->leftJoin('map_date AS md', function ($join) {
-                    $join
-                        ->on('md.map_id', '=', 'm.id')
                     ;
                 })
                 ->leftJoin('map AS mforward', function ($join) {
@@ -321,6 +310,7 @@ class GameController extends Controller
                 ->select([
                     'e.*',
                     DB::raw('IFNULL(`ed`.`hour`, "") AS `enemy_hour`'),
+                    DB::raw('IFNULL(`ed`.`refresh_at`, "") AS `enemy_refresh_at`'),
                 ])
                 ->from('enemy AS e')
                 ->join('map AS m', function ($join) {
@@ -344,6 +334,10 @@ class GameController extends Controller
 
             if ($enemy->enemy_hour != '' && strpos($enemy->enemy_hour, date('H', time())) === false) {
                 throw new InvalidArgumentException('当前位置并没有怪物！', 400);
+            }
+
+            if ($enemy->enemy_refresh_at != '' &&  time() < strtotime($enemy->enemy_refresh_at)) {
+                throw new InvalidArgumentException('怪物还未出现，刷新时间：' . date('H:i:s', strtotime($enemy->enemy_refresh_at)), 400);
             }
 
             $res =  UserRole::attackToEnemyToQQ($user_Role, $enemy);
@@ -378,8 +372,33 @@ class GameController extends Controller
                                 ->first()
                             ;
 
-                            if ($user_Role1->hp < $user_vip->protect_hp) {
-                                $res = '您的血量小于：' . $user_vip->protect_hp;
+                            if ($user_Role1->hp > 0 && $user_Role1->hp < $user_vip->protect_hp) {
+                                // 判断是否存在物品
+                                $row = DB::query()
+                                    ->select([
+                                        'i.*',
+                                    ])
+                                    ->from('user_knapsack AS uk')
+                                    ->join('item AS i', function ($join) {
+                                        $join
+                                            ->on('i.id', '=', 'uk.item_id')
+                                        ;
+                                    })
+                                    ->where('uk.user_role_id', '=', $user_role_id)
+                                    ->where('i.type', '=', 1)
+                                    ->where('uk.item_num', '>', 0)
+                                    ->get()
+                                    ->first()
+                                ;
+
+                                if (!$row) {
+                                    $res = '您的血瓶没有了!';
+                                }else {
+                                    $item = json_decode($row->content)[0];
+                                    $item->id = $row->id;
+
+                                    Item::useDrugToQQ($item, $user_role_id, 1);
+                                }
                             }
                         };
                     };

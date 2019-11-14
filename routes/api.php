@@ -61,6 +61,11 @@ Route::middleware(['api.check_token_qq'])->group(function () {
 
         // 商店
         Route::prefix('shop')->group(function () {
+            // 显示
+            Route::get('', 'ShopController@show')->middleware(['format_paginate']);
+            // 购买物品
+            Route::get('buy', 'ShopController@buy');
+
             // 拍卖行
             Route::prefix('business')->group(function () {
                 // 显示拍卖行物品
@@ -69,9 +74,9 @@ Route::middleware(['api.check_token_qq'])->group(function () {
                 Route::get('sell', 'ShopBusinessController@sell');
                 // 下架物品
                 Route::get('unsell', 'ShopBusinessController@unSell');
+                // 购买物品
+                Route::get('buy', 'ShopBusinessController@buy');
             });
-            // 购买物品
-    //        Route::get('buy', 'ShopBusinessController@buy');
         });
 
         // 排位
@@ -120,7 +125,7 @@ Route::middleware(['api.check_token_qq'])->group(function () {
         });
 
         //
-        Route::middleware(['api.check_hp'])->prefix('game')->group(function () {
+        Route::middleware(['api.check_hp', 'api.check_map'])->prefix('game')->group(function () {
             // 位置信息
             Route::get('location', 'GameController@location');
             // 移动
@@ -159,14 +164,6 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             Route::get('show', 'SynthesisController@show');
             // 合成
             Route::get('create', 'SynthesisController@create');
-        });
-
-        // 商店
-        Route::prefix('shop')->group(function () {
-            // 显示
-            Route::get('', 'ShopController@show')->middleware(['format_paginate']);
-            // 购买物品
-            Route::get('buy', 'ShopController@buy');
         });
 
         // 地图
