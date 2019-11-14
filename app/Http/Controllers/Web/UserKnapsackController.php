@@ -43,7 +43,7 @@ class UserKnapsackController extends Controller
             foreach ($rows as $row) {
                 $res .= $row->item_name . '：' . $row->item_num;
 
-                if ($row->item_type == 1) {
+                if ($row->item_type == 1 || $row->item_type == 2) {
                     $res .=' ----- ' . '<input type="button" class="action" data-url="' . URL::to('item/use') . '?item_id=' . $row->item_id . '" value="使用" />';
                 }elseif ($row->item_type == 10) {
                     $res .=' ----- ' . '<input type="button" class="action-post" data-url="' . URL::to('equip') . '?item_id=' . $row->item_id . '" value="装备" />';

@@ -32,11 +32,17 @@ class CheckTokenAndQQ
         $user_role = DB::query()
             ->select([
                 'ur.*',
+                'm.area AS area',
             ])
             ->from('user_role AS ur')
             ->join('user AS u', function ($join) {
                 $join
                     ->on('u.id', '=', 'ur.user_id')
+                ;
+            })
+            ->join('map AS m', function ($join) {
+                $join
+                    ->on('m.id', '=', 'ur.map_id')
                 ;
             })
             ->where('u.qq', '=', $qq)

@@ -103,7 +103,7 @@
                 return ;
             };
 
-            if(actionName == "回收" || actionName == "购买" || actionName == "存入" || actionName == "取出" || actionName == "出售" || actionName == "下架") {
+            if(actionName == "回收" || actionName == "购买" || actionName == "存入" || actionName == "取出" || actionName == "出售" || actionName == "下架" || actionName == "设置") {
                 var_data = $(this).parent().find(".js-num").val();
                 if(var_data < 1) {
                     var_data = 1;

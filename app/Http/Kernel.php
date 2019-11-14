@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         'api.check_hp'           => \App\Http\Middleware\Api\CheckHP::class,
         'api.check_vip'          => \App\Http\Middleware\Api\CheckVip::class,
         'api.check_on_hook'      => \App\Http\Middleware\Api\CheckOnHook::class,
+        'api.check_map'          => \App\Http\Middleware\Api\CheckMap::class,
         'wechat.auth_base'       => \App\Http\Middleware\Wechat\AuthBase::class,
         'wechat.auth_userinfo'   => \App\Http\Middleware\Wechat\AuthUserinfo::class,
         'web.api_token'          => \App\Http\Middleware\Web\ApiToken::class,
@@ -77,6 +78,7 @@ class Kernel extends HttpKernel
         'web.check_on_hook'      => \App\Http\Middleware\Web\CheckOnHook::class,
         'web.check_vip'          => \App\Http\Middleware\Web\CheckVip::class,
         'web.check_rank'         => \App\Http\Middleware\Web\CheckRank::class,
+        'web.check_map'          => \App\Http\Middleware\Web\CheckMap::class,
         'admin.check_login'      => \App\Http\Middleware\Admin\CheckLogin::class,
         'admin.check_permission' => \App\Http\Middleware\Admin\CheckPermission::class,
     ];
