@@ -45,6 +45,10 @@ class PublicController extends Controller
                 throw new InvalidArgumentException('验证失败', 400);
             }
 
+            if (mb_strlen($query['nickname'],'utf8') > 10) {
+                throw new InvalidArgumentException('游戏名字不能大于10个字', 400);
+            }
+
             $row = DB::query()
                 ->select(['id'])
                 ->from('user')

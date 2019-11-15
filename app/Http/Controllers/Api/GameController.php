@@ -291,7 +291,8 @@ class GameController extends Controller
                     ->where('user_role_id', '=', $user_role_id)
                     ->update([
                         'attack_at' => date('Y-m-d H:i:s', time()),
-                    ]);
+                    ])
+                ;
             }
 
             // 获取角色信息

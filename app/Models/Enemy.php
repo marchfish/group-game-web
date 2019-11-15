@@ -101,4 +101,6 @@ class Enemy
 
         return $user_Role->name . '-' . $enemy_hurt . ' 血量：' . $user_Role->hp;
     }
+
+
 }

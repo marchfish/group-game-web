@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Skill;
 use App\Models\UserRole;
 use App\Models\Item;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -68,22 +67,23 @@ class UserSkillController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'item_id' => ['required'],
+                'item_name' => ['required'],
             ], [
-                'item_id.required' => '物品id不能为空',
+                'item_name.required' => '名称不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             // 判断是否存在物品
             $row = DB::query()
                 ->select([
                     'i.*',
-                    'ur.level AS user_role_level',
                 ])
                 ->from('user_knapsack AS uk')
                 ->join('item AS i', function ($join) {
@@ -91,13 +91,8 @@ class UserSkillController extends Controller
                         ->on('i.id', '=', 'uk.item_id')
                     ;
                 })
-                ->join('user_role AS ur', function ($join) {
-                    $join
-                        ->on('ur.id', '=', 'uk.user_role_id')
-                    ;
-                })
                 ->where('uk.user_role_id', '=', $user_role_id)
-                ->where('uk.item_id', '=', $query['item_id'])
+                ->where('i.name', '=', $query['item_name'])
                 ->where('uk.item_num', '>=', 1)
                 ->get()
                 ->first()
@@ -111,11 +106,11 @@ class UserSkillController extends Controller
                 throw new InvalidArgumentException('该物品不可学习', 400);
             }
 
-            if ($row->user_role_level < $row->level) {
+            if ($row->level > $user_role->level) {
                 throw new InvalidArgumentException('无法学习，等级不足：' . $row->level, 400);
             }
 
-            $res = Skill::study($row);
+            $res = Skill::study($row, $user_role_id);
 
             return Response::json([
                 'code'    => 200,

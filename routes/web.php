@@ -196,6 +196,17 @@ Route::namespace('Web')->group(function () {
                 // 合成
                 Route::get('create', 'RefineController@create');
             });
+            // 技能
+            Route::prefix('skill')->group(function () {
+                // 显示
+                Route::get('', 'UserSkillController@show');
+                // 学习
+                Route::get('study', 'UserSkillController@study');
+                // 使用技能
+                Route::get('use', 'UserSkillController@usrSkill');
+                // 设置快捷键
+                Route::get('quick', 'UserSkillController@setQuick');
+            });
         });
     });
 });

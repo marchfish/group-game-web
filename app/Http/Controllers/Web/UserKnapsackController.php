@@ -49,6 +49,8 @@ class UserKnapsackController extends Controller
                     $res .=' ----- ' . '<input type="button" class="action-post" data-url="' . URL::to('equip') . '?item_id=' . $row->item_id . '" value="装备" />';
                 }elseif ($row->item_type == 30) {
                     $res .=' ----- ' . '<input type="button" class="action" data-url="' . URL::to('map/transfer') . '?item_id=' . $row->item_id . '" value="传送" />';
+                }elseif ($row->item_type == 40) {
+                    $res .=' ----- ' . '<input type="button" class="action" data-url="' . URL::to('skill/study') . '?item_id=' . $row->item_id . '" value="学习" />';
                 }
 
                 $res .= ' ----- ' . '<input type="button" class="action" data-url="' . URL::to('item/check') . '?item_id=' . $row->item_id . '" value="查看" /><br>';

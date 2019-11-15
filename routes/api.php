@@ -179,6 +179,18 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             // 取出物品
             Route::get('out', 'UserWarehouseController@delete');
         });
+
+        // 技能
+        Route::prefix('skill')->group(function () {
+            // 显示
+            Route::get('', 'UserSkillController@show');
+            // 学习
+            Route::get('study', 'UserSkillController@study');
+            // 使用技能
+            Route::get('use', 'UserSkillController@usrSkill');
+            // 设置快捷键
+            Route::get('quick', 'UserSkillController@setQuick');
+        });
     });
 });
 
