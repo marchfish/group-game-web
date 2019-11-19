@@ -170,6 +170,13 @@ Route::middleware(['api.check_token_qq'])->group(function () {
         Route::prefix('map')->group(function () {
             // 传送
             Route::get('transfer', 'MapController@transfer');
+            // 活动地图
+            Route::prefix('activity')->group(function () {
+                // 展示
+                Route::get('', 'MapController@activity');
+                // 传送
+                Route::get('transfer', 'MapController@activityTransfer');
+            });
         });
 
         // 仓库
@@ -178,6 +185,18 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             Route::get('', 'UserWarehouseController@show')->middleware(['format_paginate']);
             // 取出物品
             Route::get('out', 'UserWarehouseController@delete');
+        });
+
+        // 技能
+        Route::prefix('skill')->group(function () {
+            // 显示
+            Route::get('', 'UserSkillController@show');
+            // 学习
+            Route::get('study', 'UserSkillController@study');
+            // 使用技能
+            Route::get('use', 'UserSkillController@usrSkill');
+            // 设置快捷键
+            Route::get('quick', 'UserSkillController@setQuick');
         });
     });
 });

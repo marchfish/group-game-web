@@ -30,6 +30,10 @@
     input {
         margin-bottom: 5px;
     }
+    .skill-select {
+        height: 26px;
+        width: 80px;
+    }
 </style>
 <body>
 <div class="row" style="height: 100%">
@@ -47,14 +51,36 @@
         <p>　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="上" />　　<input type="button" class="action" data-url="{!! URL::to('game/attack') !!}" value="攻击">　<input type="button" class="action" data-url="{!! URL::to('user-knapsack') !!}" value="背包">　<input type="button" class="action" data-url="{!! URL::to('mission/user') !!}" value="任务">　<input type="button" class="action" data-url="{!! URL::to('equip') !!}" value="装备"></p>
     </div>
     <div class="row">
-        <p> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="左" /> 　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="右" /> <input type="button" class="action" data-url="{!! URL::to('item/user-blood-bottle') !!}" value="使用血瓶" /> <input type="button" class="action" data-url="{!! URL::to('revive') !!}" value="复活" /></p>
+        <p><input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="左" /> 　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="右" />
+            <input type="button" class="action" data-url="{!! URL::to('game/location') !!}" value="位置">
+            <select id="drugs" class="skill-select"  name="item_id">
+                <option value="3">小血瓶</option>
+                <option value="4">大血瓶</option>
+                <option value="7">超级血瓶</option>
+                <option value="5">小蓝瓶</option>
+                <option value="6">大蓝瓶</option>
+                <option value="8">超级蓝瓶</option>
+            </select>
+            <input type="button" class="action" data-url="{!! URL::to('item/use-drugs') !!}" value="使用药品"/>　
+        </p>
     </div>
     <div class="row">
-        <p><input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="前" /> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="下" /> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="后" />　 <input type="button" class="action" data-url="{!! URL::to('user/role') !!}" value="状态">　<input type="button" class="action" data-url="{!! URL::to('game/location') !!}" value="位置">　<input type="button" class="action" data-url="{!! URL::to('item/recycle-show') !!}" value="回收" />
+        <p><input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="前" /> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="下" /> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="后" />
+            @if(count($rows) > 0)
+                <select id="skill" class="skill-select" name="skill_id">
+                    @foreach($rows as $row)
+                        <option value="{!! $row->id !!}">{!! $row->name !!}</option>
+                    @endforeach
+                </select>
+                <input type="button" class="action" data-url="{!! URL::to('skill/use') !!}" value="技能"/>
+            @endif
+           <input type="button" class="action" data-url="{!! URL::to('user/role') !!}" value="状态">
+           <input type="button" class="action" data-url="{!! URL::to('item/recycle-show') !!}" value="回收" />
            <input type="button" class="action" data-url="{!! URL::to('ranking') !!}" value="排行榜" />
            <input type="button" class="action" data-url="{!! URL::to('shop-business/sell-show') !!}" value="出售物品" />
            <input type="button" class="action" data-url="{!! URL::to('shop-business') !!}" value="拍卖行" />
            <input type="button" class="action" data-url="{!! URL::to('rank') !!}" value="排位" />
+           <input type="button" class="action" data-url="{!! URL::to('revive') !!}" value="复活"/>
         </p>
     </div>
     <div class="row">
@@ -72,9 +98,10 @@
       </p>
     </div>
     <div class="row">
-        休闲：
+        其它：
         <p>
             <input type="button" class="action" data-url="{!! URL::to('lottery') !!}" value="搏一搏"/>
+            <input type="button" class="action" data-url="{!! URL::to('map/activity') !!}" value="活动地图"/>
         </p>
     </div>
     <div class="row">
@@ -117,6 +144,14 @@
                     alert("号码必须3位数");
                     return;
                 }
+            }
+
+            if(actionName == "技能"){
+                var_data = $('#skill option:selected').val();
+            }
+
+            if(actionName == "使用药品"){
+                var_data = $('#drugs option:selected').val();
             }
 
             $.ajax({

@@ -19,7 +19,26 @@ class GameController extends Controller
     // 界面
     public function index()
     {
-        return Response::view('web/game/index');
+        $user_role_id = Session::get('user.account.user_role_id');
+
+        $rows = DB::query()
+            ->select([
+                's.*',
+                'us.quick_key as quick_key',
+            ])
+            ->from('skill AS s')
+            ->join('user_skill AS us', function ($join) {
+                $join
+                    ->on('us.skill_id', '=', 's.id')
+                ;
+            })
+            ->where('us.user_role_id', '=', $user_role_id)
+            ->get()
+        ;
+
+        return Response::view('web/game/index', [
+            'rows' => $rows,
+        ]);
     }
 
     // 获取位置信息
@@ -35,6 +54,7 @@ class GameController extends Controller
                     DB::raw('IFNULL(`n`.`name`, "") AS `npc_name`'),
                     DB::raw('IFNULL(`e`.`name`, "") AS `enemy_name`'),
                     DB::raw('IFNULL(`e`.`img`, "") AS `enemy_img`'),
+                    DB::raw('IFNULL(`e`.`level`, 0) AS `enemy_level`'),
                     DB::raw('IFNULL(`mforward`.`name`, "") AS `forward_name`'),
                     DB::raw('IFNULL(`mbehind`.`name`, "") AS `behind_name`'),
                     DB::raw('IFNULL(`mup`.`name`, "") AS `up_name`'),
@@ -183,6 +203,7 @@ class GameController extends Controller
                     DB::raw('IFNULL(`n`.`name`, "") AS `npc_name`'),
                     DB::raw('IFNULL(`e`.`name`, "") AS `enemy_name`'),
                     DB::raw('IFNULL(`e`.`img`, "") AS `enemy_img`'),
+                    DB::raw('IFNULL(`e`.`level`, 0) AS `enemy_level`'),
                     DB::raw('IFNULL(`mforward`.`name`, "") AS `forward_name`'),
                     DB::raw('IFNULL(`mbehind`.`name`, "") AS `behind_name`'),
                     DB::raw('IFNULL(`mup`.`name`, "") AS `up_name`'),
@@ -309,6 +330,7 @@ class GameController extends Controller
                     'e.*',
                     DB::raw('IFNULL(`ed`.`hour`, "") AS `enemy_hour`'),
                     DB::raw('IFNULL(`ed`.`refresh_at`, "") AS `enemy_refresh_at`'),
+                    DB::raw('IFNULL(`ed`.`refresh_minute`, "") AS `enemy_refresh_minute`'),
                 ])
                 ->from('enemy AS e')
                 ->join('map AS m', function ($join) {
@@ -337,6 +359,8 @@ class GameController extends Controller
             if ($enemy->enemy_refresh_at != '' &&  time() < strtotime($enemy->enemy_refresh_at)) {
                 throw new InvalidArgumentException('怪物还未出现，刷新时间：' . date('H:i:s', strtotime($enemy->enemy_refresh_at)), 400);
             }
+
+            $enemy->max_hp = $enemy->hp;
 
             $res =  UserRole::attackToEnemy($user_Role, $enemy);
 

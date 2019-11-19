@@ -31,6 +31,7 @@ class GameController extends Controller
                     DB::raw('IFNULL(`n`.`name`, "") AS `npc_name`'),
                     DB::raw('IFNULL(`e`.`name`, "") AS `enemy_name`'),
                     DB::raw('IFNULL(`e`.`img`, "") AS `enemy_img`'),
+                    DB::raw('IFNULL(`e`.`level`, 0) AS `enemy_level`'),
                     DB::raw('IFNULL(`mforward`.`name`, "") AS `forward_name`'),
                     DB::raw('IFNULL(`mbehind`.`name`, "") AS `behind_name`'),
                     DB::raw('IFNULL(`mup`.`name`, "") AS `up_name`'),
@@ -181,6 +182,7 @@ class GameController extends Controller
                     DB::raw('IFNULL(`n`.`name`, "") AS `npc_name`'),
                     DB::raw('IFNULL(`e`.`name`, "") AS `enemy_name`'),
                     DB::raw('IFNULL(`e`.`img`, "") AS `enemy_img`'),
+                    DB::raw('IFNULL(`e`.`level`, 0) AS `enemy_level`'),
                     DB::raw('IFNULL(`mforward`.`name`, "") AS `forward_name`'),
                     DB::raw('IFNULL(`mbehind`.`name`, "") AS `behind_name`'),
                     DB::raw('IFNULL(`mup`.`name`, "") AS `up_name`'),
@@ -291,7 +293,8 @@ class GameController extends Controller
                     ->where('user_role_id', '=', $user_role_id)
                     ->update([
                         'attack_at' => date('Y-m-d H:i:s', time()),
-                    ]);
+                    ])
+                ;
             }
 
             // 获取角色信息
@@ -311,6 +314,7 @@ class GameController extends Controller
                     'e.*',
                     DB::raw('IFNULL(`ed`.`hour`, "") AS `enemy_hour`'),
                     DB::raw('IFNULL(`ed`.`refresh_at`, "") AS `enemy_refresh_at`'),
+                    DB::raw('IFNULL(`ed`.`refresh_minute`, "") AS `enemy_refresh_minute`'),
                 ])
                 ->from('enemy AS e')
                 ->join('map AS m', function ($join) {
@@ -339,6 +343,8 @@ class GameController extends Controller
             if ($enemy->enemy_refresh_at != '' &&  time() < strtotime($enemy->enemy_refresh_at)) {
                 throw new InvalidArgumentException('怪物还未出现，刷新时间：' . date('H:i:s', strtotime($enemy->enemy_refresh_at)), 400);
             }
+
+            $enemy->max_hp = $enemy->hp;
 
             $res =  UserRole::attackToEnemyToQQ($user_Role, $enemy);
 

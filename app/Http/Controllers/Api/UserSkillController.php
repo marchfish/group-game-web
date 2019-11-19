@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Skill;
 use App\Models\UserRole;
 use App\Models\Item;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -26,6 +25,7 @@ class UserSkillController extends Controller
 
             $res = '';
 
+            // 判断是否存在物品
             $rows = DB::query()
                 ->select([
                     's.*',
@@ -67,22 +67,23 @@ class UserSkillController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'item_id' => ['required'],
+                'item_name' => ['required'],
             ], [
-                'item_id.required' => '物品id不能为空',
+                'item_name.required' => '名称不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
 
             // 判断是否存在物品
             $row = DB::query()
                 ->select([
                     'i.*',
-                    'ur.level AS user_role_level',
                 ])
                 ->from('user_knapsack AS uk')
                 ->join('item AS i', function ($join) {
@@ -90,13 +91,8 @@ class UserSkillController extends Controller
                         ->on('i.id', '=', 'uk.item_id')
                     ;
                 })
-                ->join('user_role AS ur', function ($join) {
-                    $join
-                        ->on('ur.id', '=', 'uk.user_role_id')
-                    ;
-                })
                 ->where('uk.user_role_id', '=', $user_role_id)
-                ->where('uk.item_id', '=', $query['item_id'])
+                ->where('i.name', '=', $query['item_name'])
                 ->where('uk.item_num', '>=', 1)
                 ->get()
                 ->first()
@@ -110,11 +106,11 @@ class UserSkillController extends Controller
                 throw new InvalidArgumentException('该物品不可学习', 400);
             }
 
-            if ($row->user_role_level < $row->level) {
+            if ($row->level > $user_role->level) {
                 throw new InvalidArgumentException('无法学习，等级不足：' . $row->level, 400);
             }
 
-            $res = Skill::study($row);
+            $res = Skill::study($row, $user_role_id);
 
             return Response::json([
                 'code'    => 200,
@@ -135,20 +131,22 @@ class UserSkillController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'var_data' => ['required', 'integer'],
+                'quick_key'  => ['integer', 'min:1', 'max:8', 'required_without_all:skill_name'],
+                'skill_name' => ['required_without_all:quick_key'],
             ], [
-                'var_data.required' => '技能id不能为空',
+                'quick_key'  => '技能快捷键不能为空',
+                'skill_name' => '技能名称不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $query['skill_id'] = $query['var_data'];
+            $user_role = $query['user_role'];
 
-            $user_role_id = Session::get('user.account.user_role_id');
+            $user_role_id = $user_role->id;
 
-            $user_date = UserRole::getUserDate();
+            $user_date = UserRole::getUserDateToQQ($user_role_id);
 
             if ($user_date){
                 if ($user_date->attack_at) {
@@ -168,17 +166,6 @@ class UserSkillController extends Controller
                 ;
             }
 
-            // 获取角色信息
-            $user_role = DB::query()
-                ->select([
-                    'ur.*',
-                ])
-                ->from('user_role AS ur')
-                ->where('ur.id', '=', $user_role_id)
-                ->get()
-                ->first()
-            ;
-
             // 获取属性信息
             $userSkill = DB::query()
                 ->select([
@@ -191,17 +178,24 @@ class UserSkillController extends Controller
                     ;
                 })
                 ->where('us.user_role_id', '=', $user_role_id)
-                ->where('us.skill_id', '=', $query['skill_id'])
-                ->get()
-                ->first()
             ;
+
+            if (isset($query['quick_key'])) {
+                $userSkill->where('us.quick_key', '=', $query['quick_key']);
+            }
+
+            if (isset($query['skill_name'])) {
+                $userSkill->where('s.name', '=', $query['skill_name']);
+            }
+
+            $userSkill = $userSkill->get()->first();
 
             if (!$userSkill) {
                 throw new InvalidArgumentException('没有找到该技能！', 400);
             }
 
             if ($userSkill->sort == 1) {
-                $res = Skill::securitySkill($user_role, $userSkill);
+                $res = Skill::securitySkill($user_role, $userSkill, $user_role_id);
             }else {
                 // 获取怪物信息
                 $enemy = DB::query()
@@ -241,54 +235,68 @@ class UserSkillController extends Controller
 
                 $enemy->max_hp = $enemy->hp;
 
-                $res = Skill::skill($user_role, $userSkill, $enemy);
+                $res =  Skill::skill($user_role, $userSkill, $enemy, $user_role_id);
 
-                $user_vip = DB::query()
-                    ->select([
-                        'uv.*',
-                    ])
-                    ->from('user_vip AS uv')
-                    ->where('uv.user_role_id', '=', $user_role_id)
-                    ->get()
-                    ->first()
-                ;
+                if ($user_date){
+                    if ($user_date->attack_at) {
+                        $now_at = strtotime('now');
+                        $attack_at = strtotime($user_date->attack_at);
 
-                if ($user_vip && time() < strtotime($user_vip->expired_at)) {
+                        if($now_at - $attack_at < 3) {
+                            $res = '';
+                            $user_vip = DB::query()
+                                ->select([
+                                    'uv.*',
+                                ])
+                                ->from('user_vip AS uv')
+                                ->where('uv.user_role_id', '=', $user_role_id)
+                                ->get()
+                                ->first()
+                            ;
 
-                    $user_Role1 = DB::query()
-                        ->select([
-                            'ur.*',
-                        ])
-                        ->from('user_role AS ur')
-                        ->where('ur.id', '=', $user_role_id)
-                        ->get()
-                        ->first();
+                            if (!$user_vip || time() > strtotime($user_vip->expired_at)) {
+                                $res = '';
+                            }else {
+                                $user_Role1 = DB::query()
+                                    ->select([
+                                        'ur.*',
+                                    ])
+                                    ->from('user_role AS ur')
+                                    ->where('ur.id', '=', $user_role_id)
+                                    ->get()
+                                    ->first()
+                                ;
 
-                    if ($user_Role1->hp > 0 && $user_Role1->hp < $user_vip->protect_hp) {
-                        // 判断是否存在物品
-                        $row = DB::query()
-                            ->select([
-                                'i.*',
-                            ])
-                            ->from('user_knapsack AS uk')
-                            ->join('item AS i', function ($join) {
-                                $join
-                                    ->on('i.id', '=', 'uk.item_id');
-                            })
-                            ->where('uk.user_role_id', '=', $user_role_id)
-                            ->where('i.type', '=', 1)
-                            ->where('uk.item_num', '>', 0)
-                            ->get()
-                            ->first();
+                                if ($user_Role1->hp > 0 && $user_Role1->hp < $user_vip->protect_hp) {
+                                    // 判断是否存在物品
+                                    $row = DB::query()
+                                        ->select([
+                                            'i.*',
+                                        ])
+                                        ->from('user_knapsack AS uk')
+                                        ->join('item AS i', function ($join) {
+                                            $join
+                                                ->on('i.id', '=', 'uk.item_id')
+                                            ;
+                                        })
+                                        ->where('uk.user_role_id', '=', $user_role_id)
+                                        ->where('i.type', '=', 1)
+                                        ->where('uk.item_num', '>', 0)
+                                        ->get()
+                                        ->first()
+                                    ;
 
-                        if (!$row) {
-                            $res .= '<br>您的血瓶没有了!';
-                        } else {
-                            $item = json_decode($row->content)[0];
-                            $item->id = $row->id;
+                                    if (!$row) {
+                                        $res = '您的血瓶没有了!';
+                                    }else {
+                                        $item = json_decode($row->content)[0];
+                                        $item->id = $row->id;
 
-                            Item::useDrug($item);
-                        }
+                                        Item::useDrugToQQ($item, $user_role_id, 1);
+                                    }
+                                }
+                            };
+                        };
                     }
                 }
             }
@@ -380,5 +388,4 @@ class UserSkillController extends Controller
             ]);
         }
     }
-
 }
