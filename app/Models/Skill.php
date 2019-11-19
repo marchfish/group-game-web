@@ -149,7 +149,8 @@ class Skill
                 ])
             ;
 
-            $res .= '[' . $user_role->name . '] 使用：' . $skill->name . '，生命 +' . $skill_hp . $line . '当前血量：' . $user_hp;
+            $res .= '[' . $user_role->name . '] 使用：' . $skill->name . '，生命 +' . $skill_hp . $line . '当前血量：' . $user_hp . $line;
+            $res .= '当前蓝量：' . ($user_role->mp - $skill_content->use_mp);
         }
 
         return $res;
@@ -186,35 +187,82 @@ class Skill
             ->first()
         ;
 
-        if ($fight->content != '') {
+        $restrict_num = 0;
+        if ($fight && $fight->content != '') {
             $fight_contents = json_decode($fight->content);
 
             foreach ($fight_contents as $fight_content) {
                 if (isset($fight_content->skill_type) && $fight_content->skill_type == 'restrict-attack') {
                     $is_restrict = true;
+                    $restrict_num = $fight_content->num;
                 }
             }
         }
 
         if ($is_restrict) {
+            $restrict_num -= 1;
             if ($skill->type == 'relieve-attack') {
-
+                if (is_success($skill_content->probability)){
+                    foreach ($fight_contents as $k => $v) {
+                        if (isset($v->skill_type) && $v->skill_type == 'restrict-attack') {
+                            unset($fight_contents[$k]);
+                        }
+                    }
+                    $res .= '[' . $user_role->name . '] 使用：' . $skill->name . '，成功解除限制！' . $line;
+                }else {
+                    foreach ($fight_contents as $k => $v) {
+                        if (isset($v->skill_type) && $v->skill_type == 'restrict-attack') {
+                            $v->num = $restrict_num;
+                        }
+                    }
+                    $res .= '[' . $user_role->name . '] 使用：' . $skill->name . '，解除限制失败！' . $line;
+                }
             }else {
-                $res .= '[' . $user_role->name . '] 被禁止攻击，' . $fight_content->num . '回合后解除！' . $line;
+                foreach ($fight_contents as $k => $v) {
+                    if (isset($v->skill_type) && $v->skill_type == 'restrict-attack') {
+                        if ($restrict_num <= 0) {
+                            unset($fight_contents[$k]);
+                            $res .= '[' . $user_role->name . '] 禁止攻击已解除！' . $line;
+                        }else {
+                            $v->num = $restrict_num;
+                            $res .= '[' . $user_role->name . '] 被禁止攻击，' . $restrict_num . '回合后解除！' . $line;
+                        }
+                    }
+                }
             }
+            DB::table('fight')
+                ->where('user_role_id', '=', $user_role->id)
+                ->where('enemy_id', '=', $enemy->id)
+                ->update([
+                    'content' => json_encode($fight_contents),
+                ])
+            ;
         } else {
             if ($skill->type == 'relieve-attack') {
-                DB::table('user_role')
-                    ->where('id', '=', $user_role->id)
-                    ->update([
-                        'mp' => DB::raw('`mp` - ' . $skill_content->use_mp),
-                    ])
-                ;
                 $res .= '[' . $user_role->name . '] 使用：' . $skill->name . '，您当前并未被禁！' . $line;
             }
         }
 
-        $res .= Enemy::attackToUserRoleToQQ($user_role, $enemy);
+        DB::table('user_role')
+            ->where('id', '=', $user_role->id)
+            ->update([
+                'mp' => DB::raw('`mp` - ' . $skill_content->use_mp),
+            ])
+        ;
+
+        if ($user_role_id != 0) {
+            if ($enemy->skill_probability != 0 && is_success($enemy->skill_probability)) {
+                $res .= Enemy::skillToUserRole($user_role, $enemy, $user_role_id);
+            }else {
+                $res .= Enemy::attackToUserRoleToQQ($user_role, $enemy);
+            }
+        }else {
+            if ($enemy->skill_probability != 0 && is_success($enemy->skill_probability)) {
+                $res .= Enemy::skillToUserRole($user_role, $enemy);
+            }else {
+                $res .= Enemy::attackToUserRole($user_role, $enemy);
+            }
+        }
 
         return $res;
     }

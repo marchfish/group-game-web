@@ -13,6 +13,8 @@ class IndexController extends Controller
 {
     public function index()
     {
-        return Response::view('admin/index/index');
+        return Response::view('admin/index/index', [
+
+        ]);
     }
 }

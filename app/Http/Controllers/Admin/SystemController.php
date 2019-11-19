@@ -22,7 +22,26 @@ class SystemController extends Controller
 {
     public function index()
     {
-        return Response::view('admin/test/index');
+        $user_role_id = Session::get('user.account.user_role_id');
+
+        $rows = DB::query()
+            ->select([
+                's.*',
+                'us.quick_key as quick_key',
+            ])
+            ->from('skill AS s')
+            ->join('user_skill AS us', function ($join) {
+                $join
+                    ->on('us.skill_id', '=', 's.id')
+                ;
+            })
+            ->where('us.user_role_id', '=', $user_role_id)
+            ->get()
+        ;
+
+        return Response::view('admin/test/index', [
+            'rows' => $rows,
+        ]);
     }
 
     // 插入装备数据

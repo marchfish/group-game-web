@@ -170,6 +170,13 @@ Route::middleware(['api.check_token_qq'])->group(function () {
         Route::prefix('map')->group(function () {
             // 传送
             Route::get('transfer', 'MapController@transfer');
+            // 活动地图
+            Route::prefix('activity')->group(function () {
+                // 展示
+                Route::get('', 'MapController@activity');
+                // 传送
+                Route::get('transfer', 'MapController@activityTransfer');
+            });
         });
 
         // 仓库

@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 use InvalidArgumentException;
 
 class MapController extends Controller
 {
     // 传送
-    public static function transfer()
+    public function transfer()
     {
         try {
             $query = Request::all();
@@ -77,6 +78,113 @@ class MapController extends Controller
 
                 $res = '您已传送至：' . $userRole->map_name;
             }
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res ?? '',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 活动地图显示
+    public function activity()
+    {
+        try {
+            // 判断是否存在物品
+            $rows = DB::query()
+                ->select([
+                    'm.*',
+                    'md.hour AS hour',
+                ])
+                ->from('map AS m')
+                ->join('map_date AS md', function ($join) {
+                    $join
+                        ->on('md.map_id', '=', 'm.id')
+                    ;
+                })
+                ->where('m.is_activity', '=', 1)
+                ->get()
+            ;
+
+            $res = '[当前活动地图]<br>';
+
+            foreach ($rows as $row) {
+                if ($row->hour != '' && strpos($row->hour, date('H', time())) === false) {
+                    continue ;
+                }
+
+                $res .= '<span class="wr-color-E53E27">'. $row->name . '</span>：' . $row->description . '<br>';
+
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('map/activity/transfer') . "?map_id=" . $row->id . '" value="传送" />' . '<br>';
+            }
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 活动地图传送
+    public function activityTransfer()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'map_id' => ['required', 'integer'],
+            ], [
+                'map_id.required' => '地图id不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $user_role_id = Session::get('user.account.user_role_id');
+
+            $row = DB::query()
+                ->select([
+                    'md.*',
+                    'm.name AS map_name',
+                ])
+                ->from('map_date AS md')
+                ->join('map AS m', function ($join) {
+                    $join
+                        ->on('m.id', '=', 'md.map_id')
+                    ;
+                })
+                ->where('md.map_id', '=', $query['map_id'])
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('没有该活动地图！', 400);
+            }
+
+            if ($row->hour != '' && strpos($row->hour, date('H', time())) === false) {
+                throw new InvalidArgumentException('地图还未到开启时间！', 400);
+            }
+
+            DB::table('user_role')
+                ->where('id', '=', $user_role_id)
+                ->update([
+                    'map_id' => $query['map_id'],
+                ])
+            ;
+
+            $res = '您已传送至：' . $row->map_name;
 
             return Response::json([
                 'code'    => 200,

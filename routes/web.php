@@ -93,6 +93,8 @@ Route::namespace('Web')->group(function () {
                 Route::get('recycle', 'ItemController@recycle');
                 // 查看物品
                 Route::get('check', 'ItemController@check');
+                // 使用药品
+                Route::get('use-drugs', 'ItemController@useDrugs');
                 // 快速使用血瓶
                 Route::get('user-blood-bottle', 'ItemController@useBloodBottle');
             });
@@ -117,6 +119,13 @@ Route::namespace('Web')->group(function () {
             Route::prefix('map')->group(function () {
                 // 传送
                 Route::get('transfer', 'MapController@transfer');
+                // 活动地图
+                Route::prefix('activity')->group(function () {
+                    // 展示
+                    Route::get('', 'MapController@activity');
+                    // 传送
+                    Route::get('transfer', 'MapController@activityTransfer');
+                });
             });
             // 仓库
             Route::prefix('warehouse')->group(function () {

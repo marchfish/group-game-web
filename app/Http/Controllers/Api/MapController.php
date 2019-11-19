@@ -93,4 +93,113 @@ class MapController extends Controller
             ]);
         }
     }
+
+    // 活动地图显示
+    public function activity()
+    {
+        try {
+            // 判断是否存在物品
+            $rows = DB::query()
+                ->select([
+                    'm.*',
+                    'md.hour AS hour',
+                ])
+                ->from('map AS m')
+                ->join('map_date AS md', function ($join) {
+                    $join
+                        ->on('md.map_id', '=', 'm.id')
+                    ;
+                })
+                ->where('m.is_activity', '=', 1)
+                ->get()
+            ;
+
+            $res = '[当前活动地图]\r\n';
+
+            foreach ($rows as $row) {
+                if ($row->hour != '' && strpos($row->hour, date('H', time())) === false) {
+                    continue ;
+                }
+
+                $res .=  $row->name . '：' . $row->description . '\r\n';
+            }
+
+            $res .= '输入：活动传送 地图名称';
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 活动地图传送
+    public function activityTransfer()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'map_name' => ['required'],
+            ], [
+                'map_name.required' => '地图名称不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            $row = DB::query()
+                ->select([
+                    'md.*',
+                    'm.name AS map_name',
+                ])
+                ->from('map_date AS md')
+                ->join('map AS m', function ($join) {
+                    $join
+                        ->on('m.id', '=', 'md.map_id')
+                    ;
+                })
+                ->where('m.name', '=', $query['map_name'])
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('没有该活动地图！', 400);
+            }
+
+            if ($row->hour != '' && strpos($row->hour, date('H', time())) === false) {
+                throw new InvalidArgumentException('地图还未到开启时间！', 400);
+            }
+
+            DB::table('user_role')
+                ->where('id', '=', $user_role_id)
+                ->update([
+                    'map_id' => $row->map_id,
+                ])
+            ;
+
+            $res = '您已传送至：' . $row->map_name;
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res ?? '',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }
