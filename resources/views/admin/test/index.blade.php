@@ -36,6 +36,7 @@
     }
 </style>
 <body>
+{{--<div  style="height: 100%; margin:0 auto; max-width:600px;">--}}
 <div class="row" style="height: 100%">
     <div class="xianshiquyu">
         欢迎来到开荒之路~<br>
@@ -108,6 +109,7 @@
         <a class="btn btn-default" href="{!! URL::to('logout') !!}">退出</a>
     </div>
 </div>
+{{--</div>--}}
 </body>
 <script>
     $(function () {

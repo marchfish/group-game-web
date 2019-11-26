@@ -49,81 +49,89 @@ class SystemController extends Controller
     {
         $equips = [
             [
-                'name' => '冰封战剑',
+                'name' => '黑雨利刃',
                 'content' => [
                     [
                         'type'   => 'weapon',
-                        'attack' => 120,
-                        'max_hp' => 10,
-                        'max_mp' => 10
+                        'attack' => 150,
+                        'max_hp' => 50,
+                        'max_mp' => 50,
+                        'magic' => 100
                     ]
                 ],
             ],
             [
-                'name' => '冰封头盔',
+                'name' => '黑雨头盔',
                 'content' => [
                     [
                         'type' => 'helmet',
-                        'attack' => 110,
-                        'defense' => 110
+                        'attack' => 140,
+                        'defense' => 160,
+                        'magic' => 50
                     ]
                 ],
             ],
             [
-                'name' => '冰封战甲',
+                'name' => '黑雨战甲',
                 'content' => [
                     [
                         'type' => 'clothes',
-                        'defense' => 120,
-                        'max_hp' => 10,
-                        'max_mp' => 10
+                        'defense' => 170,
+                        'max_hp' => 50,
+                        'max_mp' => 50
                     ]
                 ],
             ],
             [
-                'name' => '冰封耳环',
+                'name' => '黑雨耳环',
                 'content' => [
                     [
                         'type' => 'earring',
-                        'attack' => 110
+                        'attack' => 140,
+                        'defense' => 50,
+                        'magic' => 100
                     ]
                 ],
             ],
             [
-                'name' => '冰封项链',
+                'name' => '黑雨项链',
                 'content' => [
                     [
                         'type' => 'necklace',
-                        'attack' => 110,
-                        'defense' => 110
+                        'attack' => 150,
+                        'defense' => 150,
+                        'magic' => 50
                     ]
                 ],
             ],
             [
-                'name' => '冰封手镯',
+                'name' => '黑雨手镯',
                 'content' => [
                     [
                         'type' => 'bracelet',
-                        'attack' => 110
+                        'attack' => 140,
+                        'magic' => 100
                     ]
                 ],
             ],
             [
-                'name' => '冰封戒指',
+                'name' => '黑雨戒指',
                 'content' => [
                     [
                         'type' => 'ring',
-                        'attack' => 110
+                        'attack' => 140,
+                        'magic' => 100
                     ]
                 ],
             ],
             [
-                'name' => '冰封战靴',
+                'name' => '黑雨战靴',
                 'content' => [
                     [
                         'type' => 'shoes',
-                        'attack' => 110,
-                        'defense' => 110
+                        'attack' => 150,
+                        'defense' => 160,
+                        'magic' => 100
                     ]
                 ],
             ],
@@ -132,9 +140,9 @@ class SystemController extends Controller
         foreach ($equips as $equip) {
             DB::table('item')->insert([
                 'name'         => $equip['name'],
-                'description'  => '中级装备',
+                'description'  => '高级装备',
                 'type'         => 10,
-                'level'        => 35,
+                'level'        => 45,
                 'content'      => json_encode($equip['content']),
                 'recycle_coin' => 500,
             ]);
@@ -285,80 +293,91 @@ class SystemController extends Controller
     public function enemy()
     {
         $date =  [
-//            'name' => '藤蔓怪人',
             'items' => [
                 [
-                    'id'   => 111,
+                    'id'   => 296,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 112,
+                    'id'   => 297,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 113,
+                    'id'   => 298,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 114,
+                    'id'   => 299,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 115,
+                    'id'   => 300,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 116,
+                    'id'   => 301,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 117,
+                    'id'   => 302,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 118,
+                    'id'   => 303,
                     'num'  => 1,
                 ],
-//                [
-//                    'id'   => 118,
-//                    'num'  => 1,
-//                ],
-//                [
-//                    'id'   => 126,
-//                    'num'  => 1,
-//                ],
-//                [
-//                    'id'   => 129,
-//                    'num'  => 1,
-//                ],
-//                [
-//                    'id'   => 104,
-//                    'num'  => 1,
-//                ],
-//                [
-//                    'id'   => 128,
-//                    'num'  => 1,
-//                ]
+                [
+                    'id'   => 304,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 305,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 306,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 307,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 308,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 309,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 310,
+                    'num'  => 1,
+                ],
+                [
+                    'id'   => 311,
+                    'num'  => 1,
+                ]
             ],
             'certain_items' => [
                 [
-                    'id'    => 2,
+                    'id'   => 312,
                     'num'  => 1,
                 ]
             ]
         ];
 
         DB::table('enemy')->insert([
-            'name'          => '冰封魔王【BOSS】',
-            'hp'            => 400,
-            'attack'        => 800,
-            'defense'       => 800,
-            'level'         => 30,
-            'exp'           => 30,
-            'coin'          => 30,
+            'name'          => '火炎魔王【魔BOSS】',
+            'hp'            => 5000,
+            'attack'        => 2500,
+            'defense'       => 1900,
+            'level'         => 80,
+            'exp'           => 80,
+            'coin'          => 80,
             'items'         => json_encode($date['items']),
-//            'certain_items' => json_encode($date['certain_items']),
-            'probability'   => 6,
+            'certain_items' => json_encode($date['certain_items']),
+            'probability'   => 10,
             'description'   => '',
             'type'          => 10,
             'move_map_id'   => 0
@@ -407,7 +426,7 @@ class SystemController extends Controller
             'hp'            => 120,
             'attack'        => 75,
             'defense'       => 45,
-            'level'         => 5,
+            'level'         => 15,
             'exp'           => 5,
             'coin'          => 25,
             'items'         => json_encode($date['items']),
@@ -778,6 +797,38 @@ class SystemController extends Controller
                 'code'    => 200,
                 'message' => $res,
             ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 设置角色测试
+    public function userRole()
+    {
+        try {
+
+            DB::table('user_role')
+                ->where('id', '=', 1)
+                ->update([
+                    'hp'  => 100000,
+                    'mp'  => 100000,
+//                    'max_hp'  => 600,
+//                    'max_mp'  => 600,
+                    'attack'  => 1950,
+                    'magic'   => 1400,
+//                    'crit'    => 14,
+//                    'dodge'   => 14,
+                    'defense' => 1600,
+//                    'map_id'  => 133,
+//                      'level'   => 200
+                ])
+            ;
+
+            dd('完成：' . date('Y-m-d H:i:s', time()));
+
         } catch (InvalidArgumentException $e) {
             return Response::json([
                 'code'    => $e->getCode(),

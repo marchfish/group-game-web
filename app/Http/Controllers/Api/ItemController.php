@@ -137,6 +137,10 @@ class ItemController extends Controller
                 throw new InvalidArgumentException('没有足够的物品数量', 400);
             }
 
+            if ($row->recycle_coin <= 0) {
+                throw new InvalidArgumentException('该物品不能回收', 400);
+            }
+
             if (!isset($query['num'])) {
                 $query['num'] = $row->item_num;
             }

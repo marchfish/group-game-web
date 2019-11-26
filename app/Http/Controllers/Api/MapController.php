@@ -103,6 +103,7 @@ class MapController extends Controller
                 ->select([
                     'm.*',
                     'md.hour AS hour',
+                    'md.description AS description1',
                 ])
                 ->from('map AS m')
                 ->join('map_date AS md', function ($join) {
@@ -121,10 +122,11 @@ class MapController extends Controller
                     continue ;
                 }
 
-                $res .=  $row->name . '：' . $row->description . '\r\n';
+                $res .=  $row->name . '：' . $row->description1 . '\r\n';
             }
 
-            $res .= '输入：活动传送 地图名称';
+            $res .= '输入：活动传送 地图名称\r\n';
+            $res .= '地图均为限时地图，别犹豫看见就进！';
 
             return Response::json([
                 'code'    => 200,

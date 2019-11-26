@@ -100,6 +100,7 @@ class MapController extends Controller
                 ->select([
                     'm.*',
                     'md.hour AS hour',
+                    'md.description AS description1',
                 ])
                 ->from('map AS m')
                 ->join('map_date AS md', function ($join) {
@@ -118,10 +119,12 @@ class MapController extends Controller
                     continue ;
                 }
 
-                $res .= '<span class="wr-color-E53E27">'. $row->name . '</span>：' . $row->description . '<br>';
+                $res .= '<span class="wr-color-E53E27">'. $row->name . '</span>：' . $row->description1 . '<br>';
 
                 $res .= ' <input type="button" class="action" data-url="' . URL::to('map/activity/transfer') . "?map_id=" . $row->id . '" value="传送" />' . '<br>';
             }
+
+            $res .= '地图均为限时地图，别犹豫看见就进！';
 
             return Response::json([
                 'code'    => 200,

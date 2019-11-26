@@ -183,6 +183,7 @@ class UserSkillController extends Controller
             $userSkill = DB::query()
                 ->select([
                     's.*',
+                    'us.expired_at AS expired_at',
                 ])
                 ->from('skill AS s')
                 ->join('user_skill AS us', function ($join) {

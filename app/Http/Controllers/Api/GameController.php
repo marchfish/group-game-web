@@ -506,6 +506,7 @@ class GameController extends Controller
                             'ur.*'
                         ])
                         ->from('user_role AS ur')
+                        ->where('id', '<>', 1)
                         ->limit(10)
                         ->orderBy('attack', 'desc')
                         ->get()
@@ -525,6 +526,7 @@ class GameController extends Controller
                             'ur.*'
                         ])
                         ->from('user_role AS ur')
+                        ->where('id', '<>', 1)
                         ->limit(10)
                         ->orderBy('defense', 'desc')
                         ->get()
@@ -546,6 +548,7 @@ class GameController extends Controller
                             'ur.*'
                         ])
                         ->from('user_role AS ur')
+                        ->where('id', '<>', 1)
                         ->limit(10)
                         ->orderBy('level', 'desc')
                         ->get()

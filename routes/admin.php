@@ -26,7 +26,7 @@ Route::middleware(['web.check_map'])->get('test', 'SystemController@test');
 
 // 设置装备
 //Route::get('equip', 'PublicController@equip');
-//Route::get('equip', 'SystemController@equip');
+//Route::get('equip', 'EquipController@equip');
 //Route::get('equip', 'SystemController@colorEquip');
 
 // 设置提炼
@@ -37,3 +37,6 @@ Route::middleware(['web.check_map'])->get('test', 'SystemController@test');
 
 // 设置怪物
 //Route::get('enemy', 'SystemController@enemy');
+
+// 设置角色测试
+Route::get('user/role', 'SystemController@userRole');

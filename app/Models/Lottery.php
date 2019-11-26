@@ -93,6 +93,13 @@ class Lottery
             ])
         ;
 
+        DB::table('sys_coin')
+            ->where('id', '=', 1)
+            ->update([
+                'lottery_coin' => DB::raw('`lottery_coin` + ' . 1000),
+            ])
+        ;
+
         DB::commit();
 
         return '';

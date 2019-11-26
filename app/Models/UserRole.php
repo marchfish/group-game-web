@@ -207,9 +207,11 @@ class UserRole
         return $res;
     }
 
-    public static function setExpAndCoin($row)
+    public static function setExpAndCoin($row, int $user_role_id = 0)
     {
-        $user_role_id = Session::get('user.account.user_role_id');
+        if ($user_role_id == 0) {
+            $user_role_id = Session::get('user.account.user_role_id');
+        }
 
         DB::table('user_role')
             ->where('id', '=', $user_role_id)
@@ -220,9 +222,11 @@ class UserRole
         ;
     }
 
-    public static function is_upgrade()
+    public static function is_upgrade(int $user_role_id = 0)
     {
-        $user_role_id = Session::get('user.account.user_role_id');
+        if ($user_role_id == 0) {
+            $user_role_id = Session::get('user.account.user_role_id');
+        }
 
         $row = DB::query()
             ->select([
@@ -419,8 +423,6 @@ class UserRole
                 ;
 
                 $row->new_level = $row1->level;
-
-
             }
 
         } while ($row->exp > $row1->exp);
