@@ -57,7 +57,7 @@ class SynthesisController extends Controller
             $res = '[合成] 共：' . $rows->lastPage() . '页' . '(' . $rows->currentPage() . ')'. '\r\n';
 
             foreach ($rows as $row) {
-                $res .= $row->item_name . '（' . $row->item_level . '级装备）-- 成功率：' . $row->success_rate . '\r\n';
+                $res .= $row->item_name . '（' . $row->item_level . '级）-- 成功率：' . $row->success_rate . '\r\n';
             }
 
             $res .= '输入：查看合成 物品名称\r\n';

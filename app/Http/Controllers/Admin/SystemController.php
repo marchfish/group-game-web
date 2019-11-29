@@ -44,244 +44,30 @@ class SystemController extends Controller
         ]);
     }
 
-    // 插入装备数据
-    public function equip()
-    {
-        $equips = [
-            [
-                'name' => '黑雨利刃',
-                'content' => [
-                    [
-                        'type'   => 'weapon',
-                        'attack' => 150,
-                        'max_hp' => 50,
-                        'max_mp' => 50,
-                        'magic' => 100
-                    ]
-                ],
-            ],
-            [
-                'name' => '黑雨头盔',
-                'content' => [
-                    [
-                        'type' => 'helmet',
-                        'attack' => 140,
-                        'defense' => 160,
-                        'magic' => 50
-                    ]
-                ],
-            ],
-            [
-                'name' => '黑雨战甲',
-                'content' => [
-                    [
-                        'type' => 'clothes',
-                        'defense' => 170,
-                        'max_hp' => 50,
-                        'max_mp' => 50
-                    ]
-                ],
-            ],
-            [
-                'name' => '黑雨耳环',
-                'content' => [
-                    [
-                        'type' => 'earring',
-                        'attack' => 140,
-                        'defense' => 50,
-                        'magic' => 100
-                    ]
-                ],
-            ],
-            [
-                'name' => '黑雨项链',
-                'content' => [
-                    [
-                        'type' => 'necklace',
-                        'attack' => 150,
-                        'defense' => 150,
-                        'magic' => 50
-                    ]
-                ],
-            ],
-            [
-                'name' => '黑雨手镯',
-                'content' => [
-                    [
-                        'type' => 'bracelet',
-                        'attack' => 140,
-                        'magic' => 100
-                    ]
-                ],
-            ],
-            [
-                'name' => '黑雨戒指',
-                'content' => [
-                    [
-                        'type' => 'ring',
-                        'attack' => 140,
-                        'magic' => 100
-                    ]
-                ],
-            ],
-            [
-                'name' => '黑雨战靴',
-                'content' => [
-                    [
-                        'type' => 'shoes',
-                        'attack' => 150,
-                        'defense' => 160,
-                        'magic' => 100
-                    ]
-                ],
-            ],
-        ];
-
-        foreach ($equips as $equip) {
-            DB::table('item')->insert([
-                'name'         => $equip['name'],
-                'description'  => '高级装备',
-                'type'         => 10,
-                'level'        => 45,
-                'content'      => json_encode($equip['content']),
-                'recycle_coin' => 500,
-            ]);
-        }
-
-        dd('完成：' . date('Y-m-d H:i:s', time()));
-    }
-
-    public function colorEquip()
-    {
-        $color = '【橙】';
-//        $quality = 'blue';
-
-        $equips = [
-            [
-                'name' => '冰封战剑' . $color,
-                'content' => [
-                    [
-                        'type'    => 'weapon',
-                        'attack'  => 180,
-                        'max_hp' => 40,
-                        'max_mp' => 40,
-                        'magic'  => 10,
-                        'crit'    => 1,
-                        'dodge'   => 1
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封头盔' . $color,
-                'content' => [
-                    [
-                        'type' => 'helmet',
-                        'attack' => 170,
-                        'defense' => 170
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封战甲' . $color,
-                'content' => [
-                    [
-                        'type' => 'clothes',
-                        'defense' => 180,
-                        'max_hp' => 40,
-                        'max_mp' => 40,
-                        'magic'  => 10,
-                        'crit'    => 1,
-                        'dodge'   => 1
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封耳环' . $color,
-                'content' => [
-                    [
-                        'type' => 'earring',
-                        'attack' => 170
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封项链' . $color,
-                'content' => [
-                    [
-                        'type' => 'necklace',
-                        'attack' => 170,
-                        'defense' => 170
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封手镯' . $color,
-                'content' => [
-                    [
-                        'type' => 'bracelet',
-                        'attack' => 170
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封戒指' . $color,
-                'content' => [
-                    [
-                        'type' => 'ring',
-                        'attack' => 170
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封战靴' . $color,
-                'content' => [
-                    [
-                        'type' => 'shoes',
-                        'attack' => 170,
-                        'defense' => 170
-                    ]
-                ],
-            ],
-        ];
-
-        foreach ($equips as $equip) {
-            DB::table('item')->insert([
-                'name'         => $equip['name'],
-                'description'  => '特级装备，品质：' . $color,
-                'type'         => 10,
-                'level'        => 35,
-                'content'      => json_encode($equip['content']),
-                'recycle_coin' => 1000,
-            ]);
-        }
-
-        dd('完成：' . date('Y-m-d H:i:s', time()));
-    }
-
     // 法宝设置
     public function magicWeapon()
     {
         $date =  [
-            'name' => '冰封寒盾',
+            'name' => '炎魔披风',
             'content' => [
                 [
                     'type'    => 'magic_weapon',
-                    'max_hp'  => 10,
-                    'max_mp'  => 10,
-                    'attack'  => 30,
-                    'magic'   => 30,
-                    'crit'    => 14,
-                    'dodge'   => 14,
-                    'defense' => 30,
+                    'max_hp'  => 300,
+                    'max_mp'  => 300,
+                    'attack'  => 300,
+                    'magic'   => 300,
+                    'crit'    => 16,
+                    'dodge'   => 16,
+                    'defense' => 300,
                 ]
             ]
         ];
 
         DB::table('item')->insert([
             'name'         => $date['name'],
-            'description'  => '中级法宝',
+            'description'  => '高级法宝',
             'type'         => 10,
-            'level'        => 20,
+            'level'        => 60,
             'content'      => json_encode($date['content']),
             'recycle_coin' => 1000,
         ]);
@@ -295,69 +81,69 @@ class SystemController extends Controller
         $date =  [
             'items' => [
                 [
-                    'id'   => 296,
+                    'id'   => 122,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 297,
+                    'id'   => 122,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 298,
+                    'id'   => 122,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 299,
+                    'id'   => 122,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 300,
+                    'id'   => 122,
                     'num'  => 1,
                 ],
-                [
-                    'id'   => 301,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 302,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 303,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 304,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 305,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 306,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 307,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 308,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 309,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 310,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 311,
-                    'num'  => 1,
-                ]
+//                [
+//                    'id'   => 301,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 302,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 303,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 304,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 305,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 306,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 307,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 308,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 309,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 310,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 311,
+//                    'num'  => 1,
+//                ]
             ],
             'certain_items' => [
                 [
@@ -368,16 +154,16 @@ class SystemController extends Controller
         ];
 
         DB::table('enemy')->insert([
-            'name'          => '火炎魔王【魔BOSS】',
-            'hp'            => 5000,
-            'attack'        => 2500,
-            'defense'       => 1900,
-            'level'         => 80,
-            'exp'           => 80,
-            'coin'          => 80,
+            'name'          => '花妖【野外BOSS】',
+            'hp'            => 1000,
+            'attack'        => 1200,
+            'defense'       => 1050,
+            'level'         => 40,
+            'exp'           => 40,
+            'coin'          => 40,
             'items'         => json_encode($date['items']),
-            'certain_items' => json_encode($date['certain_items']),
-            'probability'   => 10,
+//            'certain_items' => json_encode($date['certain_items']),
+            'probability'   => 15,
             'description'   => '',
             'type'          => 10,
             'move_map_id'   => 0
@@ -443,10 +229,10 @@ class SystemController extends Controller
     // 设置提炼
     public function refine()
     {
-        $npc_id = 17;
+        $npc_id = 30;
         $count = 0;
-        $item = 237;
-        $item2 = 229;
+        $item = 375;
+        $item2 = 367;
         $success_rate = 10;
 
         while ($count < 8){
@@ -822,7 +608,7 @@ class SystemController extends Controller
 //                    'crit'    => 14,
 //                    'dodge'   => 14,
                     'defense' => 1600,
-//                    'map_id'  => 133,
+                    'map_id'  => 163,
 //                      'level'   => 200
                 ])
             ;

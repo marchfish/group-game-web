@@ -137,4 +137,129 @@ class EquipController extends Controller
 
         dd('完成：' . date('Y-m-d H:i:s', time()));
     }
+
+    public function colorEquip()
+    {
+        $color = '【橙】';
+//        $quality = 'blue';
+
+        $equips = [
+            [
+                'name' => '炎魔战剑' . $color,
+                'content' => [
+                    [
+                        'type'   => 'weapon',
+                        'attack' => 370,
+                        'defense' => 250,
+                        'max_hp' => 370,
+                        'max_mp' => 370,
+                        'magic' => 420,
+                        'dodge' => 3,
+                    ]
+                ],
+            ],
+            [
+                'name' => '炎魔头盔' . $color,
+                'content' => [
+                    [
+                        'type' => 'helmet',
+                        'attack' => 300,
+                        'defense' => 240,
+                        'max_hp' => 270,
+                        'max_mp' => 270,
+                        'magic' => 270
+                    ]
+                ],
+            ],
+            [
+                'name' => '炎魔战甲' . $color,
+                'content' => [
+                    [
+                        'type' => 'clothes',
+                        'attack' => 300,
+                        'defense' => 370,
+                        'max_hp' => 370,
+                        'max_mp' => 370,
+                        'magic' => 370,
+                        'dodge' => 3,
+                    ]
+                ],
+            ],
+            [
+                'name' => '炎魔耳环' . $color,
+                'content' => [
+                    [
+                        'type' => 'earring',
+                        'attack' => 300,
+                        'defense' => 240,
+                        'magic' => 270,
+                        'crit'  => 4,
+                    ]
+                ],
+            ],
+            [
+                'name' => '炎魔项链' . $color,
+                'content' => [
+                    [
+                        'type' => 'necklace',
+                        'attack' => 300,
+                        'defense' => 240,
+                        'max_hp' => 270,
+                        'max_mp' => 270,
+                        'magic' => 270,
+                        'crit'  => 4,
+                    ]
+                ],
+            ],
+            [
+                'name' => '炎魔手镯' . $color,
+                'content' => [
+                    [
+                        'type' => 'bracelet',
+                        'attack' => 300,
+                        'defense' => 240,
+                        'magic' => 270,
+                        'crit'  => 4,
+                    ]
+                ],
+            ],
+            [
+                'name' => '炎魔戒指' . $color,
+                'content' => [
+                    [
+                        'type' => 'ring',
+                        'attack' => 300,
+                        'defense' => 240,
+                        'magic' => 270,
+                        'crit'  => 4,
+                    ]
+                ],
+            ],
+            [
+                'name' => '炎魔战靴' . $color,
+                'content' => [
+                    [
+                        'type' => 'shoes',
+                        'attack' => 300,
+                        'defense' => 240,
+                        'magic' => 270,
+                        'crit'  => 4,
+                    ]
+                ],
+            ],
+        ];
+
+        foreach ($equips as $equip) {
+            DB::table('item')->insert([
+                'name'         => $equip['name'],
+                'description'  => '强力装备【魔已无所畏惧】，品质：' . $color,
+                'type'         => 10,
+                'level'        => 90,
+                'content'      => json_encode($equip['content']),
+                'recycle_coin' => 1000,
+            ]);
+        }
+
+        dd('完成：' . date('Y-m-d H:i:s', time()));
+    }
 }
