@@ -152,4 +152,54 @@ class Item
 
         return '使用成功 \r\n当前血量：' . $row->hp . '\r\n' . '当前蓝量：' . $row->mp;
     }
+
+    // 使用百分比药品
+    public static function useDrugBfb($item, int $user_role_id = 0, int $num = 1)
+    {
+        if ($user_role_id != 0) {
+            $line = '\r\n';
+        }else {
+            $line = '<br>';
+            $user_role_id = Session::get('user.account.user_role_id');
+        }
+
+        // 获取属性信息
+        $row = DB::query()
+            ->select([
+                'ur.*',
+            ])
+            ->from('user_role AS ur')
+            ->where('ur.id', '=', $user_role_id)
+            ->get()
+            ->first()
+        ;
+
+        $row->hp += isset($item->hp) ? (int)round($row->max_hp * ($item->hp / 100)) * $num : 0;
+        $row->mp += isset($item->mp) ? (int)round($row->max_mp * ($item->mp / 100)) * $num : 0;
+
+        $row->hp = $row->hp > $row->max_hp ? $row->max_hp : $row->hp;
+        $row->mp = $row->mp > $row->max_mp ? $row->max_mp : $row->mp;
+
+        DB::beginTransaction();
+
+        DB::table('user_role')
+            ->where('id', '=', $user_role_id)
+            ->update([
+                'hp' => $row->hp,
+                'mp' => $row->mp,
+            ])
+        ;
+
+        DB::table('user_knapsack')
+            ->where('user_role_id', '=', $user_role_id)
+            ->where('item_id', '=', $item->id)
+            ->update([
+                'item_num' => DB::raw('`item_num` - ' . $num),
+            ])
+        ;
+
+        DB::commit();
+
+        return '使用成功 ' . $line . '当前血量：' . $row->hp . $line . '当前蓝量：' . $row->mp;
+    }
 }

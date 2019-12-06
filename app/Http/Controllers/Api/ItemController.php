@@ -75,6 +75,10 @@ class ItemController extends Controller
                 $res .= Item::useDrugToQQ($item, $user_role_id, $query['num']);
             }
 
+            if ($row->type == 3) {
+                $res .= Item::useDrugBfb($item, $user_role_id, $query['num']);
+            }
+
             return Response::json([
                 'code'    => 200,
                 'message' => $res,
@@ -221,7 +225,11 @@ class ItemController extends Controller
                         $res .= '所需等级：' . $row->level . '\r\n';
                         $res .= '装备方式：' . Item::englishToChinese($v) . '\r\n';
                     }else {
-                        $res .= Item::englishToChinese($k) . '：' . $v . '\r\n';
+                        if ($row->type == 3) {
+                            $res .= Item::englishToChinese($k) . '：' . $v . '%\r\n';
+                        }else {
+                            $res .= Item::englishToChinese($k) . '：' . $v . '\r\n';
+                        }
                     }
                 }
             }

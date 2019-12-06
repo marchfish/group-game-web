@@ -63,6 +63,10 @@ class ItemController extends Controller
                 $res .= Item::useDrug($item);
             }
 
+            if ($row->type == 3) {
+                $res .= Item::useDrugBfb($item);
+            }
+
             return Response::json([
                 'code'    => 200,
                 'message' => $res,
@@ -253,7 +257,11 @@ class ItemController extends Controller
                         $res .= '所需等级：' . $row->level . '<br>';
                         $res .= '装备方式：' . Item::englishToChinese($v) . '<br>';
                     }else {
-                        $res .= Item::englishToChinese($k) . '：' . $v . '<br>';
+                        if ($row->type == 3){
+                            $res .= Item::englishToChinese($k) . '：' . $v . '%<br>';
+                        }else{
+                            $res .= Item::englishToChinese($k) . '：' . $v . '<br>';
+                        }
                     }
                 }
             }
@@ -319,6 +327,10 @@ class ItemController extends Controller
 
             if ($row->type == 1 || $row->type == 2) {
                 $res .= Item::useDrug($item);
+            }
+
+            if ($row->type == 3) {
+                $res .= Item::useDrugBfb($item);
             }
 
             return Response::json([

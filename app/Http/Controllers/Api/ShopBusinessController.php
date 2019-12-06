@@ -133,6 +133,10 @@ class ShopBusinessController extends Controller
                 throw new InvalidArgumentException('没有足够的物品数量', 400);
             }
 
+            if ($row->recycle_coin <= 0) {
+                throw new InvalidArgumentException('该物品不能出售', 400);
+            }
+
             $res = '出售成功：' . $row->name . '*' . $query['num'];
 
             DB::beginTransaction();

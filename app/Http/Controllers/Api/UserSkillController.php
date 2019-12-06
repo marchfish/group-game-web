@@ -240,11 +240,11 @@ class UserSkillController extends Controller
 
                 if ($user_date){
                     if ($user_date->attack_at) {
-                        $now_at = strtotime('now');
-                        $attack_at = strtotime($user_date->attack_at);
+//                        $now_at = strtotime('now');
+//                        $attack_at = strtotime($user_date->attack_at);
 
-                        if($now_at - $attack_at < 3) {
-                            $res = '';
+//                        if($now_at - $attack_at < 3) {
+//                            $res = '';
                             $user_vip = DB::query()
                                 ->select([
                                     'uv.*',
@@ -256,7 +256,7 @@ class UserSkillController extends Controller
                             ;
 
                             if (!$user_vip || time() > strtotime($user_vip->expired_at)) {
-                                $res = '';
+//                                $res = '';
                             }else {
                                 $user_Role1 = DB::query()
                                     ->select([
@@ -288,7 +288,7 @@ class UserSkillController extends Controller
                                     ;
 
                                     if (!$row) {
-                                        $res = '您的血瓶没有了!';
+                                        $res .= '您的血瓶没有了!';
                                     }else {
                                         $item = json_decode($row->content)[0];
                                         $item->id = $row->id;
@@ -297,7 +297,7 @@ class UserSkillController extends Controller
                                     }
                                 }
                             };
-                        };
+//                        };
                     }
                 }
             }

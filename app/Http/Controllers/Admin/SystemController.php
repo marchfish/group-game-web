@@ -39,8 +39,25 @@ class SystemController extends Controller
             ->get()
         ;
 
+        $drugs = DB::query()
+            ->select([
+                'i.*',
+            ])
+            ->from('user_knapsack AS uk')
+            ->join('item AS i', function ($join) {
+                $join
+                    ->on('i.id', '=', 'uk.item_id')
+                ;
+            })
+            ->where('uk.user_role_id', '=', $user_role_id)
+            ->where('uk.item_num', '>', 0)
+            ->whereIn('i.type', [1, 2, 3])
+            ->get()
+        ;
+
         return Response::view('admin/test/index', [
             'rows' => $rows,
+            'drugs' => $drugs,
         ]);
     }
 
@@ -599,8 +616,8 @@ class SystemController extends Controller
             DB::table('user_role')
                 ->where('id', '=', 1)
                 ->update([
-                    'hp'  => 100000,
-                    'mp'  => 100000,
+                    'hp'  => 1000000,
+                    'mp'  => 1000000,
 //                    'max_hp'  => 600,
 //                    'max_mp'  => 600,
                     'attack'  => 1950,
@@ -608,7 +625,7 @@ class SystemController extends Controller
 //                    'crit'    => 14,
 //                    'dodge'   => 14,
                     'defense' => 1600,
-                    'map_id'  => 163,
+                    'map_id'  => 112,
 //                      'level'   => 200
                 ])
             ;

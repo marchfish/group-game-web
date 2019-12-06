@@ -22,10 +22,11 @@ class Rank
         while ($pk_bool) {
             // 1
             $user_Role1_hurt = $user_Role1->attack - $user_Role2->defense;
+
             if (is_success($user_Role2->dodge)) {
 
             }elseif ($user_Role1_hurt <= 0) {
-
+                return false;
             }else {
                 $user_Role1_hurt_wave = mt_rand(0, round($user_Role1_hurt * 0.5));
 

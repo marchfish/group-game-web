@@ -386,7 +386,7 @@ class Skill
                 }
 
                 if (is_array($certain_items)) {
-                    $res .= '获得物品:' . UserKnapsack::addItems($certain_items) . $line;
+                    $res .= '获得物品:' . UserKnapsack::addItems($certain_items, $user_role_id) . $line;
                 }
 
                 $is_up = UserRole::is_upgrade($user_role->id);

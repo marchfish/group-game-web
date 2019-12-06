@@ -561,7 +561,7 @@ class UserRole
                     }
 
                     if (is_array($certain_items)) {
-                        $res .= '获得物品:' . UserKnapsack::addItems($certain_items) . '\r\n';
+                        $res .= '获得物品:' . UserKnapsack::addItems($certain_items, $user_role_id) . '\r\n';
                     }
 
                     $is_up = self::isUpgradeToQQ($user_role_id);

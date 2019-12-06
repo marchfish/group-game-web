@@ -520,7 +520,6 @@ class GameController extends Controller
 
                     break;
                 case 3:
-
                     $rows2 = DB::query()
                         ->select([
                             'ur.*'
@@ -536,6 +535,25 @@ class GameController extends Controller
 
                     foreach ($rows2 as $row2) {
                         $res .= '\r\n' . $row2->name . ' ：' . $row2->defense;
+                    };
+
+                    break;
+                case 4:
+                    $rows3 = DB::query()
+                        ->select([
+                            'ur.*'
+                        ])
+                        ->from('user_role AS ur')
+                        ->where('id', '<>', 1)
+                        ->limit(10)
+                        ->orderBy('magic', 'desc')
+                        ->get()
+                    ;
+
+                    $res .= '魔力排行前10';
+
+                    foreach ($rows3 as $row3) {
+                        $res .= '\r\n' . $row3->name . ' ：' . $row3->magic;
                     };
 
                     break;
