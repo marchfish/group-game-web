@@ -26,10 +26,6 @@ class Skill
             ->first()
         ;
 
-        if ($userSkill->count >= 8) {
-            return '您已经学了8个技能！';
-        }
-
         $skill = DB::query()
             ->select([
                 's.*',
@@ -42,6 +38,10 @@ class Skill
 
         if (!$skill) {
             return '该技能暂时无法学习！';
+        }
+
+        if ($userSkill->count >= 8 && $skill->parent_skill_id == 0) {
+            return '您已经学了8个技能！';
         }
 
         if ($skill->parent_skill_id == 0) {

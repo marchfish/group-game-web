@@ -111,7 +111,7 @@ class MapController extends Controller
                         ->on('md.map_id', '=', 'm.id')
                     ;
                 })
-                ->where('m.is_activity', '=', 1)
+                ->where('md.is_activity', '=', 1)
                 ->get()
             ;
 

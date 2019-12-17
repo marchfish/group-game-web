@@ -40,3 +40,4 @@ Route::middleware(['web.check_map'])->get('test', 'SystemController@test');
 
 // 设置角色测试
 Route::get('user/role', 'SystemController@userRole');
+//Route::get('user/knapsack', 'SystemController@userKnapsack');

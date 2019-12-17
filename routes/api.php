@@ -207,6 +207,18 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             Route::get('use', 'UserSkillController@usrSkill');
             // 设置快捷键
             Route::get('quick', 'UserSkillController@setQuick');
+            // 遗忘
+            Route::get('remove', 'UserSkillController@remove');
+        });
+
+        // pk
+        Route::middleware(['api.check_hp'])->prefix('pk')->group(function () {
+            // 邀请
+            Route::get('invite', 'UserPKController@invitePK');
+            // 接受
+            Route::get('accept', 'UserPKController@acceptPK');
+            // pk
+            Route::get('', 'UserPKController@pk');
         });
     });
 });

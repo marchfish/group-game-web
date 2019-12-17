@@ -20,116 +20,124 @@ class EquipController extends Controller
     {
         $equips = [
             [
-                'name' => '炎魔战剑',
+                'name' => '凝气魔爪',
                 'content' => [
                     [
                         'type'   => 'weapon',
-                        'attack' => 300,
-                        'defense' => 180,
-                        'max_hp' => 300,
-                        'max_mp' => 300,
-                        'magic' => 350,
+                        'attack' => 390,
+                        'defense' => 350,
+                        'max_hp' => 200,
+                        'max_mp' => 150,
+                        'magic' => 400,
                         'dodge' => 1,
                     ]
                 ],
             ],
             [
-                'name' => '炎魔头盔',
+                'name' => '凝气魔盔',
                 'content' => [
                     [
                         'type' => 'helmet',
-                        'attack' => 230,
-                        'defense' => 170,
+                        'attack' => 380,
+                        'defense' => 350,
                         'max_hp' => 200,
-                        'max_mp' => 200,
-                        'magic' => 200
+                        'max_mp' => 150,
+                        'magic' => 400,
+                        'crit'  => 1
                     ]
                 ],
             ],
             [
-                'name' => '炎魔战甲',
+                'name' => '凝气魔甲',
                 'content' => [
                     [
                         'type' => 'clothes',
-                        'attack' => 230,
-                        'defense' => 300,
-                        'max_hp' => 300,
-                        'max_mp' => 300,
-                        'magic' => 300,
-                        'dodge' => 1,
-                    ]
-                ],
-            ],
-            [
-                'name' => '炎魔耳环',
-                'content' => [
-                    [
-                        'type' => 'earring',
-                        'attack' => 230,
-                        'defense' => 170,
-                        'magic' => 200,
-                        'crit'  => 2,
-                    ]
-                ],
-            ],
-            [
-                'name' => '炎魔项链',
-                'content' => [
-                    [
-                        'type' => 'necklace',
-                        'attack' => 230,
-                        'defense' => 170,
+                        'attack' => 380,
+                        'defense' => 450,
                         'max_hp' => 200,
                         'max_mp' => 200,
-                        'magic' => 200,
-                        'crit'  => 2,
+                        'magic' => 400
                     ]
                 ],
             ],
-            [
-                'name' => '炎魔手镯',
-                'content' => [
-                    [
-                        'type' => 'bracelet',
-                        'attack' => 230,
-                        'defense' => 170,
-                        'magic' => 200,
-                        'crit'  => 2,
-                    ]
-                ],
-            ],
-            [
-                'name' => '炎魔戒指',
-                'content' => [
-                    [
-                        'type' => 'ring',
-                        'attack' => 230,
-                        'defense' => 170,
-                        'magic' => 200,
-                        'crit'  => 2,
-                    ]
-                ],
-            ],
-            [
-                'name' => '炎魔战靴',
-                'content' => [
-                    [
-                        'type' => 'shoes',
-                        'attack' => 230,
-                        'defense' => 170,
-                        'magic' => 200,
-                        'crit'  => 2,
-                    ]
-                ],
-            ],
+//            [
+//                'name' => '凝气耳环',
+//                'content' => [
+//                    [
+//                        'type' => 'earring',
+//                        'attack' => 310,
+//                        'defense' => 210,
+//                        'max_hp' => 160,
+//                        'max_mp' => 160,
+//                        'magic' => 280,
+//                        'crit'  => 1
+//                    ]
+//                ],
+//            ],
+//            [
+//                'name' => '凝气项链',
+//                'content' => [
+//                    [
+//                        'type' => 'necklace',
+//                        'attack' => 310,
+//                        'defense' => 210,
+//                        'max_hp' => 160,
+//                        'max_mp' => 160,
+//                        'magic' => 280,
+//                        'crit'  => 1
+//                    ]
+//                ],
+//            ],
+//            [
+//                'name' => '凝气手镯',
+//                'content' => [
+//                    [
+//                        'type' => 'bracelet',
+//                        'attack' => 310,
+//                        'defense' => 210,
+//                        'max_hp' => 160,
+//                        'max_mp' => 160,
+//                        'magic' => 280,
+//                        'crit'  => 1
+//                    ]
+//                ],
+//            ],
+//            [
+//                'name' => '凝气戒指',
+//                'content' => [
+//                    [
+//                        'type' => 'ring',
+//                        'attack' => 310,
+//                        'defense' => 210,
+//                        'max_hp' => 160,
+//                        'max_mp' => 160,
+//                        'magic' => 280,
+//                        'crit'  => 1
+//                    ]
+//                ],
+//            ],
+//            [
+//                'name' => '凝气战靴',
+//                'content' => [
+//                    [
+//                        'type' => 'shoes',
+//                        'attack' => 310,
+//                        'defense' => 210,
+//                        'max_hp' => 160,
+//                        'max_mp' => 160,
+//                        'magic' => 280,
+//                        'crit'  => 1
+//                    ]
+//                ],
+//            ],
         ];
 
         foreach ($equips as $equip) {
             DB::table('item')->insert([
                 'name'         => $equip['name'],
-                'description'  => '高级装备',
+                'description'  => '强力装备【迷雾征服者】',
                 'type'         => 10,
-                'level'        => 90,
+                'level'        => 110,
                 'content'      => json_encode($equip['content']),
                 'recycle_coin' => 500,
             ]);
@@ -145,7 +153,7 @@ class EquipController extends Controller
 
         $equips = [
             [
-                'name' => '炎魔战剑' . $color,
+                'name' => '凝气战剑' . $color,
                 'content' => [
                     [
                         'type'   => 'weapon',
@@ -159,7 +167,7 @@ class EquipController extends Controller
                 ],
             ],
             [
-                'name' => '炎魔头盔' . $color,
+                'name' => '凝气头盔' . $color,
                 'content' => [
                     [
                         'type' => 'helmet',
@@ -172,7 +180,7 @@ class EquipController extends Controller
                 ],
             ],
             [
-                'name' => '炎魔战甲' . $color,
+                'name' => '凝气战甲' . $color,
                 'content' => [
                     [
                         'type' => 'clothes',
@@ -186,7 +194,7 @@ class EquipController extends Controller
                 ],
             ],
             [
-                'name' => '炎魔耳环' . $color,
+                'name' => '凝气耳环' . $color,
                 'content' => [
                     [
                         'type' => 'earring',
@@ -198,7 +206,7 @@ class EquipController extends Controller
                 ],
             ],
             [
-                'name' => '炎魔项链' . $color,
+                'name' => '凝气项链' . $color,
                 'content' => [
                     [
                         'type' => 'necklace',
@@ -212,7 +220,7 @@ class EquipController extends Controller
                 ],
             ],
             [
-                'name' => '炎魔手镯' . $color,
+                'name' => '凝气手镯' . $color,
                 'content' => [
                     [
                         'type' => 'bracelet',
@@ -224,7 +232,7 @@ class EquipController extends Controller
                 ],
             ],
             [
-                'name' => '炎魔戒指' . $color,
+                'name' => '凝气戒指' . $color,
                 'content' => [
                     [
                         'type' => 'ring',
@@ -236,7 +244,7 @@ class EquipController extends Controller
                 ],
             ],
             [
-                'name' => '炎魔战靴' . $color,
+                'name' => '凝气战靴' . $color,
                 'content' => [
                     [
                         'type' => 'shoes',

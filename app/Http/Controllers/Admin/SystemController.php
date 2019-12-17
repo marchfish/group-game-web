@@ -171,18 +171,18 @@ class SystemController extends Controller
         ];
 
         DB::table('enemy')->insert([
-            'name'          => '花妖【野外BOSS】',
-            'hp'            => 1000,
-            'attack'        => 1200,
-            'defense'       => 1050,
-            'level'         => 40,
-            'exp'           => 40,
-            'coin'          => 40,
+            'name'          => '迷雾血魔',
+            'hp'            => 6160,
+            'attack'        => 3680,
+            'defense'       => 2860,
+            'level'         => 94,
+            'exp'           => 30,
+            'coin'          => 30,
             'items'         => json_encode($date['items']),
 //            'certain_items' => json_encode($date['certain_items']),
-            'probability'   => 15,
+            'probability'   => 1,
             'description'   => '',
-            'type'          => 10,
+            'type'          => 0,
             'move_map_id'   => 0
         ]);
 
@@ -620,15 +620,61 @@ class SystemController extends Controller
                     'mp'  => 1000000,
 //                    'max_hp'  => 600,
 //                    'max_mp'  => 600,
-                    'attack'  => 1950,
-                    'magic'   => 1400,
+                    'attack'  => 3198,
+                    'magic'   => 2800,
 //                    'crit'    => 14,
 //                    'dodge'   => 14,
-                    'defense' => 1600,
-                    'map_id'  => 112,
+                    'defense' => 2728,
+                    'map_id'  => 279,
 //                      'level'   => 200
                 ])
             ;
+
+            dd('完成：' . date('Y-m-d H:i:s', time()));
+
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function userKnapsack()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'name' => ['required'],
+            ], [
+                'name.required' => '物品名称不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $res = DB::query()
+                ->select([
+                    'i.*',
+                ])
+                ->from('item AS i')
+                ->where('name', '=', $query['name'])
+                ->get()
+                ->first()
+            ;
+
+            if (!$res) {
+                throw new InvalidArgumentException('没有找到该物品', 400);
+            }
+
+            $data[0] = $res;
+
+            $data[0]->id = $res->id;
+            $data[0]->num = 10;
+
+            UserKnapsack::addItems($data, 1);
 
             dd('完成：' . date('Y-m-d H:i:s', time()));
 
