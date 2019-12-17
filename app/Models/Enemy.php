@@ -146,7 +146,7 @@ class Enemy
                     ;
 
                    if($fight && $enemySkill->type == 'recovery-hp') {
-                       $skill_hp = (int)round($enemy->hp * ($skill_content->max_hp / 100));
+                       $skill_hp = (int)round($enemy->max_hp * ($skill_content->max_hp / 100));
 
                        $hp = $skill_hp + $fight->enemy_hp;
 
@@ -181,6 +181,10 @@ class Enemy
 
                        $res = '[' . $enemy->name . '] 使用：' . $enemySkill->name . '，您被禁止攻击：' . $skill_content->num . '回合' . $line ;
                    }
+
+                   if ($enemySkill->type == 'attack') {
+                       $res = self::attacSkillToUserRole($user_role, $enemy, $enemySkill, $skill_content);
+                   }
                 }
             }
         }
@@ -200,5 +204,56 @@ class Enemy
                 ])
             ;
         }
+    }
+
+    public static function attacSkillToUserRole($user_role, $enemy, $enemySkill, $skill_content)
+    {
+        $enemy_skill = 0;
+
+        if (isset($skill_content->attack)) {
+            $enemy_skill += (int)round($enemy->attack * ($skill_content->attack / 100));
+        };
+
+        if (isset($skill_content->magic)) {
+            $enemy_skill += (int)round($enemy->magic * ($skill_content->magic / 100));
+        };
+
+        $enemy_hurt = $enemy_skill - $user_role->defense;
+
+        if ($enemy_hurt <= 0) {
+            return '怪物无法破防';
+        }
+
+        $hurt_wave = mt_rand(0, round($enemy_hurt * 0.5));
+
+        $rand_num = mt_rand(0, 100);
+
+        if ($rand_num >= 50 || is_success($enemy->crit)) {
+            $enemy_hurt += $hurt_wave;
+        }else {
+            $enemy_hurt -= $hurt_wave;
+        }
+
+        $user_role->hp -= $enemy_hurt;
+
+        DB::table('user_role')
+            ->where('id', '=', $user_role->id)
+            ->update([
+                'hp' => $user_role->hp < 0 ? 0 : $user_role->hp,
+            ])
+        ;
+
+        if ($user_role->hp <= 0) {
+            DB::table('fight')
+                ->where('user_role_id', '=', $user_role->id)
+                ->update([
+                    'enemy_hp' => 0,
+                ])
+            ;
+
+            return '[' . $enemy->name . '] 使用：' . $enemySkill->name . '，' . '您被击败了，请复活后继续...';
+        }
+
+        return '[' . $enemy->name . '] 使用：' . $enemySkill->name . '，' . $user_role->name . '-' . $enemy_hurt . ' 血量：' . $user_role->hp;
     }
 }

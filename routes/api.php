@@ -84,7 +84,7 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             // 显示
             Route::get('', 'RankController@show');
     //        // 查看奖励
-    //        Route::get('reward', 'RankController@reward');
+            Route::get('reward', 'RankController@reward');
             // 挑战
             Route::get('challenge', 'RankController@challenge');
         });
@@ -166,8 +166,18 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             Route::get('create', 'SynthesisController@create');
         });
 
+        //更换
+        Route::prefix('change')->group(function () {
+            // 显示列表
+            Route::get('', 'ChangeController@showAll')->middleware(['format_paginate']);
+            // 显示详情
+            Route::get('show', 'ChangeController@show');
+            // 更换
+            Route::get('create', 'ChangeController@create');
+        });
+
         // 地图
-        Route::prefix('map')->group(function () {
+        Route::middleware(['api.check_hp'])->prefix('map')->group(function () {
             // 传送
             Route::get('transfer', 'MapController@transfer');
             // 活动地图
@@ -188,7 +198,7 @@ Route::middleware(['api.check_token_qq'])->group(function () {
         });
 
         // 技能
-        Route::prefix('skill')->group(function () {
+        Route::middleware(['api.check_hp', 'api.check_map'])->prefix('skill')->group(function () {
             // 显示
             Route::get('', 'UserSkillController@show');
             // 学习
@@ -197,6 +207,18 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             Route::get('use', 'UserSkillController@usrSkill');
             // 设置快捷键
             Route::get('quick', 'UserSkillController@setQuick');
+            // 遗忘
+            Route::get('remove', 'UserSkillController@remove');
+        });
+
+        // pk
+        Route::middleware(['api.check_hp'])->prefix('pk')->group(function () {
+            // 邀请
+            Route::get('invite', 'UserPKController@invitePK');
+            // 接受
+            Route::get('accept', 'UserPKController@acceptPK');
+            // pk
+            Route::get('', 'UserPKController@pk');
         });
     });
 });

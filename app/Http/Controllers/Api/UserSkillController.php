@@ -134,8 +134,8 @@ class UserSkillController extends Controller
                 'quick_key'  => ['integer', 'min:1', 'max:8', 'required_without_all:skill_name'],
                 'skill_name' => ['required_without_all:quick_key'],
             ], [
-                'quick_key'  => '技能快捷键不能为空',
-                'skill_name' => '技能名称不能为空',
+                'quick_key.required'  => '技能快捷键不能为空',
+                'skill_name.required' => '技能名称不能为空',
             ]);
 
             if ($validator->fails()) {
@@ -170,6 +170,7 @@ class UserSkillController extends Controller
             $userSkill = DB::query()
                 ->select([
                     's.*',
+                    'us.expired_at AS expired_at',
                 ])
                 ->from('skill AS s')
                 ->join('user_skill AS us', function ($join) {
@@ -239,11 +240,11 @@ class UserSkillController extends Controller
 
                 if ($user_date){
                     if ($user_date->attack_at) {
-                        $now_at = strtotime('now');
-                        $attack_at = strtotime($user_date->attack_at);
+//                        $now_at = strtotime('now');
+//                        $attack_at = strtotime($user_date->attack_at);
 
-                        if($now_at - $attack_at < 3) {
-                            $res = '';
+//                        if($now_at - $attack_at < 3) {
+//                            $res = '';
                             $user_vip = DB::query()
                                 ->select([
                                     'uv.*',
@@ -255,7 +256,7 @@ class UserSkillController extends Controller
                             ;
 
                             if (!$user_vip || time() > strtotime($user_vip->expired_at)) {
-                                $res = '';
+//                                $res = '';
                             }else {
                                 $user_Role1 = DB::query()
                                     ->select([
@@ -287,7 +288,7 @@ class UserSkillController extends Controller
                                     ;
 
                                     if (!$row) {
-                                        $res = '您的血瓶没有了!';
+                                        $res .= '您的血瓶没有了!';
                                     }else {
                                         $item = json_decode($row->content)[0];
                                         $item->id = $row->id;
@@ -296,7 +297,7 @@ class UserSkillController extends Controller
                                     }
                                 }
                             };
-                        };
+//                        };
                     }
                 }
             }
@@ -380,6 +381,65 @@ class UserSkillController extends Controller
             return Response::json([
                 'code'    => 200,
                 'message' => '设置成功',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 遗忘
+    public function remove()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'skill_name' => ['required'],
+            ], [
+                'skill_name.required' => '技能名称不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            // 判断是否存在物品
+            $row = DB::query()
+                ->select([
+                    'us.*',
+                ])
+                ->from('user_skill AS us')
+                ->join('skill AS s', function ($join) {
+                    $join
+                        ->on('s.id', '=', 'us.skill_id')
+                    ;
+                })
+                ->where('us.user_role_id', '=', $user_role_id)
+                ->where('s.name', '=', $query['skill_name'])
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('您没有学习该技能！', 400);
+            }
+
+            DB::table('user_skill')
+                ->where('user_role_id', '=', $user_role_id)
+                ->where('id', '=', $row->id)
+                ->delete()
+            ;
+
+            return Response::json([
+                'code'    => 200,
+                'message' => '成功遗忘技能：' . $query['skill_name'],
             ]);
         } catch (InvalidArgumentException $e) {
             return Response::json([

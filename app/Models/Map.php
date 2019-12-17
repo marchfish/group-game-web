@@ -29,6 +29,10 @@ class Map
                 $data .= ' <input type="button" class="action" data-url="' . URL::to('refine') . "?npc_id=" . '0' . '" value="提炼" />';
             }
 
+            if ($row->npc_type == 40){
+                $data .= ' <input type="button" class="action" data-url="' . URL::to('change') . "?npc_id=" . '0' . '" value="转换" />';
+            }
+
             $data .= '<br>';
         }
 
@@ -100,6 +104,10 @@ class Map
 
             if ($row->npc_type == 30){
                 $data .= ' -- (提炼)';
+            }
+
+            if ($row->npc_type == 40){
+                $data .= ' -- (转换)';
             }
 
             $data .= '\r\n';

@@ -13,7 +13,7 @@ use InvalidArgumentException;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
-class SynthesisController extends Controller
+class ChangeController extends Controller
 {
     public function showAll()
     {
@@ -26,19 +26,19 @@ class SynthesisController extends Controller
 
             $rows = DB::query()
                 ->select([
-                    's.*',
+                    'c.*',
                     'i.name AS item_name',
                     'i.level AS item_level',
                 ])
-                ->from('synthesis AS s')
+                ->from('change AS c')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 's.item_id')
+                        ->on('i.id', '=', 'c.item_id')
                     ;
                 })
                 ->join('map AS m', function ($join) {
                     $join
-                        ->on('m.npc_id', '=', 's.npc_id')
+                        ->on('m.npc_id', '=', 'c.npc_id')
                     ;
                 })
                 ->join('user_role AS ur', function ($join) {
@@ -51,18 +51,18 @@ class SynthesisController extends Controller
             ;
 
             if (count($rows->items()) <= 0) {
-                throw new InvalidArgumentException('当前位置并没有合成店或没有该页!', 400);
+                throw new InvalidArgumentException('当前位置并没有转换店或没有该页!', 400);
             }
 
-            $res = '[合成] 共：' . $rows->lastPage() . '页' . '(' . $rows->currentPage() . ')'. '\r\n';
+            $res = '[转换] 共：' . $rows->lastPage() . '页' . '(' . $rows->currentPage() . ')'. '\r\n';
 
             foreach ($rows as $row) {
                 $res .= $row->item_name . '（' . $row->item_level . '级）-- 成功率：' . $row->success_rate . '\r\n';
             }
 
-            $res .= '输入：查看合成 物品名称\r\n';
+            $res .= '输入：查看转换 物品名称\r\n';
 
-            $res .= '输入：合成 物品名称';
+            $res .= '输入：转换 物品名称';
 
             return Response::json([
                 'code'    => 200,
@@ -83,8 +83,10 @@ class SynthesisController extends Controller
 
             $validator = Validator::make($query, [
                 'item_name' => ['required'],
+                'change_item_name' => ['required'],
             ], [
                 'item_name.required' => '物品名称不能为空',
+                'change_item_name.required' => '用于转换的物品名称不能为空',
             ]);
 
             if ($validator->fails()) {
@@ -93,22 +95,28 @@ class SynthesisController extends Controller
 
             $row = DB::query()
                 ->select([
-                    's.*',
+                    'c.*',
                     'i.name AS item_name',
                 ])
-                ->from('synthesis AS s')
+                ->from('change AS c')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 's.item_id')
+                        ->on('i.id', '=', 'c.item_id')
+                    ;
+                })
+                ->join('item AS i2', function ($join) {
+                    $join
+                        ->on('i2.id', '=', 'c.change_item_id')
                     ;
                 })
                 ->where('i.name', '=', $query['item_name'])
+                ->where('i2.name', '=', $query['change_item_name'])
                 ->get()
                 ->first()
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('找不到该合成', 400);
+                throw new InvalidArgumentException('找不到该转换', 400);
             }
 
             $res = '[' . $row->item_name . ']\r\n';
@@ -156,7 +164,7 @@ class SynthesisController extends Controller
 
             $res .= '成功机率=' . $row->success_rate . '%\r\n';
 
-            $res .= '输入：合成 物品名称';
+            $res .= '输入：转换 物品名称 用于转换的物品名称';
 
             return Response::json([
                 'code'    => 200,
@@ -177,8 +185,10 @@ class SynthesisController extends Controller
 
             $validator = Validator::make($query, [
                 'item_name' => ['required'],
+                'change_item_name' => ['required'],
             ], [
                 'item_name.required' => '物品名称不能为空',
+                'change_item_name.required' => '用于转换的物品名称不能为空',
             ]);
 
             if ($validator->fails()) {
@@ -191,22 +201,28 @@ class SynthesisController extends Controller
 
             $row = DB::query()
                 ->select([
-                    's.*',
+                    'c.*',
                     'i.name AS item_name',
                 ])
-                ->from('synthesis AS s')
+                ->from('change AS c')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 's.item_id')
+                        ->on('i.id', '=', 'c.item_id')
+                    ;
+                })
+                ->join('item AS i2', function ($join) {
+                    $join
+                        ->on('i2.id', '=', 'c.change_item_id')
                     ;
                 })
                 ->where('i.name', '=', $query['item_name'])
+                ->where('i2.name', '=', $query['change_item_name'])
                 ->get()
                 ->first()
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('没有找到该合成', 400);
+                throw new InvalidArgumentException('没有找到该转换', 400);
             }
 
             $user_vip = DB::query()
@@ -250,7 +266,7 @@ class SynthesisController extends Controller
                 }
 
                 UserKnapsack::useItems($requirements, $user_role_id);
-                throw new InvalidArgumentException('合成失败！', 400);
+                throw new InvalidArgumentException('转换失败！', 400);
             }
 
             DB::beginTransaction();
@@ -268,7 +284,7 @@ class SynthesisController extends Controller
 
             DB::commit();
 
-            $res = '恭喜您！成功合成：' . $row->item_name;
+            $res = '恭喜您！成功转换：' . $row->item_name;
 
             return Response::json([
                 'code'    => 200,

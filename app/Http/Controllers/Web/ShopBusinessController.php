@@ -121,6 +121,7 @@ class ShopBusinessController extends Controller
                 })
                 ->where('uk.user_role_id', '=', $user_role_id)
                 ->where('uk.item_num', '>', 0)
+                ->where('i.recycle_coin', '>', 0)
                 ->get()
             ;
 
@@ -202,6 +203,10 @@ class ShopBusinessController extends Controller
 
             if (!$row) {
                 throw new InvalidArgumentException('没有足够的物品数量', 400);
+            }
+
+            if ($row->recycle_coin <= 0) {
+                throw new InvalidArgumentException('该物品不能出售', 400);
             }
 
             $res = '出售成功：' . $row->name . '*' . $query['var_data'];

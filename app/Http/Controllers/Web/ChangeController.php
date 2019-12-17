@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserKnapsack;
@@ -13,32 +13,28 @@ use InvalidArgumentException;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
-class SynthesisController extends Controller
+class ChangeController extends Controller
 {
     public function showAll()
     {
         try {
-            $query = Request::all();
-
-            $user_role = $query['user_role'];
-
-            $user_role_id = $user_role->id;
+            $user_role_id = Session::get('user.account.user_role_id');
 
             $rows = DB::query()
                 ->select([
-                    's.*',
+                    'c.*',
                     'i.name AS item_name',
                     'i.level AS item_level',
                 ])
-                ->from('synthesis AS s')
+                ->from('change AS c')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 's.item_id')
+                        ->on('i.id', '=', 'c.item_id')
                     ;
                 })
                 ->join('map AS m', function ($join) {
                     $join
-                        ->on('m.npc_id', '=', 's.npc_id')
+                        ->on('m.npc_id', '=', 'c.npc_id')
                     ;
                 })
                 ->join('user_role AS ur', function ($join) {
@@ -47,22 +43,20 @@ class SynthesisController extends Controller
                     ;
                 })
                 ->where('ur.id', '=', $user_role_id)
-                ->paginate($query['size'])
+                ->get()
             ;
 
-            if (count($rows->items()) <= 0) {
-                throw new InvalidArgumentException('当前位置并没有合成店或没有该页!', 400);
-            }
-
-            $res = '[合成] 共：' . $rows->lastPage() . '页' . '(' . $rows->currentPage() . ')'. '\r\n';
+            $res = '';
 
             foreach ($rows as $row) {
-                $res .= $row->item_name . '（' . $row->item_level . '级）-- 成功率：' . $row->success_rate . '\r\n';
+                $res .= $row->item_name . '（' . $row->item_level . '级）-- 成功率：' . $row->success_rate . '<br>';
+
+                $res .= '<input type="button" class="action" data-url="' . URL::to('change/show') . "?change_id=" . $row->id . '" value="查看材料" /> ';
+
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('item/check') . "?item_id=" . $row->item_id . '" value="查看属性" /> ';
+
+                $res .= ' <input type="button" class="action" data-url="' . URL::to('change/create') . "?change_id=" . $row->id . '" value="转换" />' . '<br>';
             }
-
-            $res .= '输入：查看合成 物品名称\r\n';
-
-            $res .= '输入：合成 物品名称';
 
             return Response::json([
                 'code'    => 200,
@@ -82,36 +76,38 @@ class SynthesisController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'item_name' => ['required'],
+                'change_id' => ['required'],
             ], [
-                'item_name.required' => '物品名称不能为空',
+                'change_id.required' => 'change_id不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
+            $user_role_id = Session::get('user.account.user_role_id');
+
             $row = DB::query()
                 ->select([
-                    's.*',
+                    'c.*',
                     'i.name AS item_name',
                 ])
-                ->from('synthesis AS s')
+                ->from('change AS c')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 's.item_id')
+                        ->on('i.id', '=', 'c.item_id')
                     ;
                 })
-                ->where('i.name', '=', $query['item_name'])
+                ->where('c.id', '=', $query['change_id'])
                 ->get()
                 ->first()
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('找不到该合成', 400);
+                throw new InvalidArgumentException('找不到该转换', 400);
             }
 
-            $res = '[' . $row->item_name . ']\r\n';
+            $res = '[' . $row->item_name . ']' . '<br>';
 
             $res .= '所需物品=';
 
@@ -130,7 +126,7 @@ class SynthesisController extends Controller
                 $res .= $requirement->name . '*' . $requirement->num . '，';
             }
 
-            $res = rtrim($res, "，") . '\r\n';
+            $res = rtrim($res, "，") . '<br>';
 
             // 失败保留
             if ($row->retains != '') {
@@ -148,15 +144,15 @@ class SynthesisController extends Controller
                     $res .= $retain->name . '*' . $retain->num . '，';
                 }
 
-                $res = rtrim($res, "，") . '\r\n';
+                $res = rtrim($res, "，") . '<br>';
 
             }else {
-                $res .= '失败保留物品=无\r\n';
+                $res .= '失败保留物品=无<br>';
             }
 
-            $res .= '成功机率=' . $row->success_rate . '%\r\n';
+            $res .= '成功机率=' . $row->success_rate . '% <br>';
 
-            $res .= '输入：合成 物品名称';
+            $res .= '<input type="button" class="action" data-url="' . URL::to('change/create') . "?change_id=" . $row->id . '" value="转换" />' . '<br>';
 
             return Response::json([
                 'code'    => 200,
@@ -176,37 +172,36 @@ class SynthesisController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'item_name' => ['required'],
+                'change_id' => ['required'],
             ], [
-                'item_name.required' => '物品名称不能为空',
+                'change_id.required' => 'change_id不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $user_role = $query['user_role'];
+            $user_role_id = Session::get('user.account.user_role_id');
 
-            $user_role_id = $user_role->id;
-
+            // 判断合成是否存在
             $row = DB::query()
                 ->select([
-                    's.*',
+                    'c.*',
                     'i.name AS item_name',
                 ])
-                ->from('synthesis AS s')
+                ->from('change AS c')
                 ->join('item AS i', function ($join) {
                     $join
-                        ->on('i.id', '=', 's.item_id')
+                        ->on('i.id', '=', 'c.item_id')
                     ;
                 })
-                ->where('i.name', '=', $query['item_name'])
+                ->where('c.id', '=', $query['change_id'])
                 ->get()
                 ->first()
             ;
 
             if (!$row) {
-                throw new InvalidArgumentException('没有找到该合成', 400);
+                throw new InvalidArgumentException('没有找到该转换', 400);
             }
 
             $user_vip = DB::query()
@@ -249,13 +244,13 @@ class SynthesisController extends Controller
                     }
                 }
 
-                UserKnapsack::useItems($requirements, $user_role_id);
-                throw new InvalidArgumentException('合成失败！', 400);
+                UserKnapsack::useItems($requirements);
+                throw new InvalidArgumentException('转换失败！', 400);
             }
 
             DB::beginTransaction();
 
-            UserKnapsack::useItems($requirements, $user_role_id);
+            UserKnapsack::useItems($requirements);
 
             $user_vip->id = $row->item_id;
             $user_vip->num = 1;
@@ -264,11 +259,11 @@ class SynthesisController extends Controller
                 $user_vip
             ];
 
-            UserKnapsack::addItems($data, $user_role_id);
+            UserKnapsack::addItems($data);
 
             DB::commit();
 
-            $res = '恭喜您！成功合成：' . $row->item_name;
+            $res = '恭喜您！成功转换：' . $row->item_name . '<br>';
 
             return Response::json([
                 'code'    => 200,

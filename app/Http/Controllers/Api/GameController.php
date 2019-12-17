@@ -506,6 +506,7 @@ class GameController extends Controller
                             'ur.*'
                         ])
                         ->from('user_role AS ur')
+                        ->where('id', '<>', 1)
                         ->limit(10)
                         ->orderBy('attack', 'desc')
                         ->get()
@@ -519,12 +520,12 @@ class GameController extends Controller
 
                     break;
                 case 3:
-
                     $rows2 = DB::query()
                         ->select([
                             'ur.*'
                         ])
                         ->from('user_role AS ur')
+                        ->where('id', '<>', 1)
                         ->limit(10)
                         ->orderBy('defense', 'desc')
                         ->get()
@@ -537,6 +538,25 @@ class GameController extends Controller
                     };
 
                     break;
+                case 4:
+                    $rows3 = DB::query()
+                        ->select([
+                            'ur.*'
+                        ])
+                        ->from('user_role AS ur')
+                        ->where('id', '<>', 1)
+                        ->limit(10)
+                        ->orderBy('magic', 'desc')
+                        ->get()
+                    ;
+
+                    $res .= '魔力排行前10';
+
+                    foreach ($rows3 as $row3) {
+                        $res .= '\r\n' . $row3->name . ' ：' . $row3->magic;
+                    };
+
+                    break;
                 default:
 
                     $res = '等级排行前10';
@@ -546,6 +566,7 @@ class GameController extends Controller
                             'ur.*'
                         ])
                         ->from('user_role AS ur')
+                        ->where('id', '<>', 1)
                         ->limit(10)
                         ->orderBy('level', 'desc')
                         ->get()

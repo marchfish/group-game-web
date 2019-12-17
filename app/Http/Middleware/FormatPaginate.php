@@ -31,8 +31,8 @@ class FormatPaginate
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $page = (int) ($query['page'] ?? 1);
-            $size = (int) ($query['size'] ?? 10);
+            $page = (int)($query['page'] ?? 1);
+            $size = (int)($query['size'] ?? 10);
 
             $request->merge([
                 'page'   => $page,

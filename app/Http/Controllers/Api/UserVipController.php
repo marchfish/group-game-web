@@ -227,8 +227,7 @@ class UserVipController extends Controller
 
             DB::beginTransaction();
 
-            if (!$row || time() > strtotime($row->expired_at)) {
-
+            if (!$row) {
                 $expired_at = date('Y-m-d H:i:s', strtotime('+31 day'));
 
                 DB::table('user_vip')
@@ -244,7 +243,12 @@ class UserVipController extends Controller
                     ])
                 ;
             }else {
+
                 $expired_at = date('Y-m-d H:i:s', strtotime('+31 day', strtotime($row->expired_at)));
+
+                if(time() > strtotime($row->expired_at)){
+                    $expired_at = date('Y-m-d H:i:s', strtotime('+31 day'));
+                }
 
                 DB::table('user_vip')
                     ->where('user_role_id', '=', $user_role_id)

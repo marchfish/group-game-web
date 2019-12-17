@@ -116,7 +116,7 @@ Route::namespace('Web')->group(function () {
                 });
             });
             // 地图
-            Route::prefix('map')->group(function () {
+            Route::middleware(['web.check_hp'])->prefix('map')->group(function () {
                 // 传送
                 Route::get('transfer', 'MapController@transfer');
                 // 活动地图
@@ -143,7 +143,7 @@ Route::namespace('Web')->group(function () {
                     // 挂机
                     Route::get('on-hook', 'UserVipController@onHook');
                     // 自动攻击
-                    Route::middleware(['web.check_hp'])->get('auto-attack', 'GameController@attack');
+                    Route::middleware(['web.check_hp', 'web.check_map'])->get('auto-attack', 'GameController@attack');
                     // 存入物品
                     Route::get('warehouse-save', 'UserWarehouseController@create');
                     // 设置血量保护
@@ -180,6 +180,15 @@ Route::namespace('Web')->group(function () {
                 // 合成
                 Route::get('create', 'SynthesisController@create');
             });
+            //更换
+            Route::prefix('change')->group(function () {
+                // 显示列表
+                Route::get('', 'ChangeController@showAll');
+                // 显示详情
+                Route::get('show', 'ChangeController@show');
+                // 更换
+                Route::get('create', 'ChangeController@create');
+            });
             // 商店
             Route::prefix('shop')->group(function () {
                 // 显示
@@ -206,7 +215,7 @@ Route::namespace('Web')->group(function () {
                 Route::get('create', 'RefineController@create');
             });
             // 技能
-            Route::prefix('skill')->group(function () {
+            Route::middleware(['web.check_hp', 'web.check_map'])->prefix('skill')->group(function () {
                 // 显示
                 Route::get('', 'UserSkillController@show');
                 // 学习

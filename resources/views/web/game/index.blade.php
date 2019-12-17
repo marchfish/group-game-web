@@ -36,6 +36,7 @@
     }
 </style>
 <body>
+<div  style="height: 100%; margin:0 auto; max-width:600px;">
 <div class="row" style="height: 100%">
     <div class="xianshiquyu">
         欢迎来到开荒之路~<br>
@@ -54,12 +55,13 @@
         <p> <input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="左" /> 　　<input type="button" class="action" data-url="{!! URL::to('game/move') !!}" value="右" />
             <input type="button" class="action" data-url="{!! URL::to('game/location') !!}" value="位置">
             <select id="drugs" class="skill-select" name="item_id">
-                <option value="3">小血瓶</option>
-                <option value="4">大血瓶</option>
-                <option value="7">超级血瓶</option>
-                <option value="5">小蓝瓶</option>
-                <option value="6">大蓝瓶</option>
-                <option value="8">超级蓝瓶</option>
+                @if(count($drugs) > 0)
+                    @foreach($drugs as $drug)
+                        <option value="{!! $drug->id !!}">{!! $drug->name !!}</option>
+                    @endforeach
+                @else
+                    <option value="3">小血瓶</option>
+                @endif
             </select>
             <input type="button" class="action" data-url="{!! URL::to('item/use-drugs') !!}" value="使用药品"/>
         </p>
@@ -101,11 +103,13 @@
         其它：
         <p>
             <input type="button" class="action" data-url="{!! URL::to('lottery') !!}" value="搏一搏"/>
+            <input type="button" class="action" data-url="{!! URL::to('map/activity') !!}" value="活动地图"/>
         </p>
     </div>
     <div class="row">
         <a class="btn btn-default" href="{!! URL::to('logout') !!}">退出</a>
     </div>
+</div>
 </div>
 </body>
 <script>

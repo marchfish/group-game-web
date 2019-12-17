@@ -39,241 +39,52 @@ class SystemController extends Controller
             ->get()
         ;
 
+        $drugs = DB::query()
+            ->select([
+                'i.*',
+            ])
+            ->from('user_knapsack AS uk')
+            ->join('item AS i', function ($join) {
+                $join
+                    ->on('i.id', '=', 'uk.item_id')
+                ;
+            })
+            ->where('uk.user_role_id', '=', $user_role_id)
+            ->where('uk.item_num', '>', 0)
+            ->whereIn('i.type', [1, 2, 3])
+            ->get()
+        ;
+
         return Response::view('admin/test/index', [
             'rows' => $rows,
+            'drugs' => $drugs,
         ]);
-    }
-
-    // 插入装备数据
-    public function equip()
-    {
-        $equips = [
-            [
-                'name' => '冰封战剑',
-                'content' => [
-                    [
-                        'type'   => 'weapon',
-                        'attack' => 120,
-                        'max_hp' => 10,
-                        'max_mp' => 10
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封头盔',
-                'content' => [
-                    [
-                        'type' => 'helmet',
-                        'attack' => 110,
-                        'defense' => 110
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封战甲',
-                'content' => [
-                    [
-                        'type' => 'clothes',
-                        'defense' => 120,
-                        'max_hp' => 10,
-                        'max_mp' => 10
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封耳环',
-                'content' => [
-                    [
-                        'type' => 'earring',
-                        'attack' => 110
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封项链',
-                'content' => [
-                    [
-                        'type' => 'necklace',
-                        'attack' => 110,
-                        'defense' => 110
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封手镯',
-                'content' => [
-                    [
-                        'type' => 'bracelet',
-                        'attack' => 110
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封戒指',
-                'content' => [
-                    [
-                        'type' => 'ring',
-                        'attack' => 110
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封战靴',
-                'content' => [
-                    [
-                        'type' => 'shoes',
-                        'attack' => 110,
-                        'defense' => 110
-                    ]
-                ],
-            ],
-        ];
-
-        foreach ($equips as $equip) {
-            DB::table('item')->insert([
-                'name'         => $equip['name'],
-                'description'  => '中级装备',
-                'type'         => 10,
-                'level'        => 35,
-                'content'      => json_encode($equip['content']),
-                'recycle_coin' => 500,
-            ]);
-        }
-
-        dd('完成：' . date('Y-m-d H:i:s', time()));
-    }
-
-    public function colorEquip()
-    {
-        $color = '【橙】';
-//        $quality = 'blue';
-
-        $equips = [
-            [
-                'name' => '冰封战剑' . $color,
-                'content' => [
-                    [
-                        'type'    => 'weapon',
-                        'attack'  => 180,
-                        'max_hp' => 40,
-                        'max_mp' => 40,
-                        'magic'  => 10,
-                        'crit'    => 1,
-                        'dodge'   => 1
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封头盔' . $color,
-                'content' => [
-                    [
-                        'type' => 'helmet',
-                        'attack' => 170,
-                        'defense' => 170
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封战甲' . $color,
-                'content' => [
-                    [
-                        'type' => 'clothes',
-                        'defense' => 180,
-                        'max_hp' => 40,
-                        'max_mp' => 40,
-                        'magic'  => 10,
-                        'crit'    => 1,
-                        'dodge'   => 1
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封耳环' . $color,
-                'content' => [
-                    [
-                        'type' => 'earring',
-                        'attack' => 170
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封项链' . $color,
-                'content' => [
-                    [
-                        'type' => 'necklace',
-                        'attack' => 170,
-                        'defense' => 170
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封手镯' . $color,
-                'content' => [
-                    [
-                        'type' => 'bracelet',
-                        'attack' => 170
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封戒指' . $color,
-                'content' => [
-                    [
-                        'type' => 'ring',
-                        'attack' => 170
-                    ]
-                ],
-            ],
-            [
-                'name' => '冰封战靴' . $color,
-                'content' => [
-                    [
-                        'type' => 'shoes',
-                        'attack' => 170,
-                        'defense' => 170
-                    ]
-                ],
-            ],
-        ];
-
-        foreach ($equips as $equip) {
-            DB::table('item')->insert([
-                'name'         => $equip['name'],
-                'description'  => '特级装备，品质：' . $color,
-                'type'         => 10,
-                'level'        => 35,
-                'content'      => json_encode($equip['content']),
-                'recycle_coin' => 1000,
-            ]);
-        }
-
-        dd('完成：' . date('Y-m-d H:i:s', time()));
     }
 
     // 法宝设置
     public function magicWeapon()
     {
         $date =  [
-            'name' => '冰封寒盾',
+            'name' => '炎魔披风',
             'content' => [
                 [
                     'type'    => 'magic_weapon',
-                    'max_hp'  => 10,
-                    'max_mp'  => 10,
-                    'attack'  => 30,
-                    'magic'   => 30,
-                    'crit'    => 14,
-                    'dodge'   => 14,
-                    'defense' => 30,
+                    'max_hp'  => 300,
+                    'max_mp'  => 300,
+                    'attack'  => 300,
+                    'magic'   => 300,
+                    'crit'    => 16,
+                    'dodge'   => 16,
+                    'defense' => 300,
                 ]
             ]
         ];
 
         DB::table('item')->insert([
             'name'         => $date['name'],
-            'description'  => '中级法宝',
+            'description'  => '高级法宝',
             'type'         => 10,
-            'level'        => 20,
+            'level'        => 60,
             'content'      => json_encode($date['content']),
             'recycle_coin' => 1000,
         ]);
@@ -285,82 +96,93 @@ class SystemController extends Controller
     public function enemy()
     {
         $date =  [
-//            'name' => '藤蔓怪人',
             'items' => [
                 [
-                    'id'   => 111,
+                    'id'   => 122,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 112,
+                    'id'   => 122,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 113,
+                    'id'   => 122,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 114,
+                    'id'   => 122,
                     'num'  => 1,
                 ],
                 [
-                    'id'   => 115,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 116,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 117,
-                    'num'  => 1,
-                ],
-                [
-                    'id'   => 118,
+                    'id'   => 122,
                     'num'  => 1,
                 ],
 //                [
-//                    'id'   => 118,
+//                    'id'   => 301,
 //                    'num'  => 1,
 //                ],
 //                [
-//                    'id'   => 126,
+//                    'id'   => 302,
 //                    'num'  => 1,
 //                ],
 //                [
-//                    'id'   => 129,
+//                    'id'   => 303,
 //                    'num'  => 1,
 //                ],
 //                [
-//                    'id'   => 104,
+//                    'id'   => 304,
 //                    'num'  => 1,
 //                ],
 //                [
-//                    'id'   => 128,
+//                    'id'   => 305,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 306,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 307,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 308,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 309,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 310,
+//                    'num'  => 1,
+//                ],
+//                [
+//                    'id'   => 311,
 //                    'num'  => 1,
 //                ]
             ],
             'certain_items' => [
                 [
-                    'id'    => 2,
+                    'id'   => 312,
                     'num'  => 1,
                 ]
             ]
         ];
 
         DB::table('enemy')->insert([
-            'name'          => '冰封魔王【BOSS】',
-            'hp'            => 400,
-            'attack'        => 800,
-            'defense'       => 800,
-            'level'         => 30,
+            'name'          => '迷雾血魔',
+            'hp'            => 6160,
+            'attack'        => 3680,
+            'defense'       => 2860,
+            'level'         => 94,
             'exp'           => 30,
             'coin'          => 30,
             'items'         => json_encode($date['items']),
 //            'certain_items' => json_encode($date['certain_items']),
-            'probability'   => 6,
+            'probability'   => 1,
             'description'   => '',
-            'type'          => 10,
+            'type'          => 0,
             'move_map_id'   => 0
         ]);
 
@@ -407,7 +229,7 @@ class SystemController extends Controller
             'hp'            => 120,
             'attack'        => 75,
             'defense'       => 45,
-            'level'         => 5,
+            'level'         => 15,
             'exp'           => 5,
             'coin'          => 25,
             'items'         => json_encode($date['items']),
@@ -424,10 +246,10 @@ class SystemController extends Controller
     // 设置提炼
     public function refine()
     {
-        $npc_id = 17;
+        $npc_id = 30;
         $count = 0;
-        $item = 237;
-        $item2 = 229;
+        $item = 375;
+        $item2 = 367;
         $success_rate = 10;
 
         while ($count < 8){
@@ -778,6 +600,84 @@ class SystemController extends Controller
                 'code'    => 200,
                 'message' => $res,
             ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 设置角色测试
+    public function userRole()
+    {
+        try {
+
+            DB::table('user_role')
+                ->where('id', '=', 1)
+                ->update([
+                    'hp'  => 1000000,
+                    'mp'  => 1000000,
+//                    'max_hp'  => 600,
+//                    'max_mp'  => 600,
+                    'attack'  => 3198,
+                    'magic'   => 2800,
+//                    'crit'    => 14,
+//                    'dodge'   => 14,
+                    'defense' => 2728,
+                    'map_id'  => 279,
+//                      'level'   => 200
+                ])
+            ;
+
+            dd('完成：' . date('Y-m-d H:i:s', time()));
+
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function userKnapsack()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'name' => ['required'],
+            ], [
+                'name.required' => '物品名称不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $res = DB::query()
+                ->select([
+                    'i.*',
+                ])
+                ->from('item AS i')
+                ->where('name', '=', $query['name'])
+                ->get()
+                ->first()
+            ;
+
+            if (!$res) {
+                throw new InvalidArgumentException('没有找到该物品', 400);
+            }
+
+            $data[0] = $res;
+
+            $data[0]->id = $res->id;
+            $data[0]->num = 10;
+
+            UserKnapsack::addItems($data, 1);
+
+            dd('完成：' . date('Y-m-d H:i:s', time()));
+
         } catch (InvalidArgumentException $e) {
             return Response::json([
                 'code'    => $e->getCode(),

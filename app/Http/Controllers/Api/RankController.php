@@ -71,14 +71,12 @@ class RankController extends Controller
             $validator = Validator::make($query, [
                 'rank_id' => ['required'],
             ], [
-                'rank_id.required' => 'rank_id不能为空',
+                'rank_id.required' => '查看的名次不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
-
-            $user_role_id = Session::get('user.account.user_role_id');
 
             $row = DB::query()
                 ->select([
@@ -94,9 +92,9 @@ class RankController extends Controller
                 throw new InvalidArgumentException('找不到该奖励', 400);
             }
 
-            $res = '[第' . $row->num . '名奖励]' . '<br>';
+            $res = '[第' . $row->num . '名奖励]\r\n';
 
-            $res .= '奖励金币=' . $row->coin . '<br>';
+            $res .= '奖励金币=' . $row->coin . '\r\n';
 
             $res .= '奖励物品=';
 
@@ -116,9 +114,7 @@ class RankController extends Controller
                 $res .= $rew->name . '*' . $rew->num . '，';
             }
 
-            $res = rtrim($res, "，") . '<br>';
-
-            $res .= ' <input type="button" class="action" data-url="' . URL::to('rank/challenge') . "?rank_id=" . 1 . '" value="挑战" />' . '<br>';
+            $res = rtrim($res, "，");
 
             return Response::json([
                 'code'    => 200,

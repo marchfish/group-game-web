@@ -63,6 +63,10 @@ class ItemController extends Controller
                 $res .= Item::useDrug($item);
             }
 
+            if ($row->type == 3) {
+                $res .= Item::useDrugBfb($item);
+            }
+
             return Response::json([
                 'code'    => 200,
                 'message' => $res,
@@ -173,6 +177,10 @@ class ItemController extends Controller
                 throw new InvalidArgumentException('没有足够的物品数量', 400);
             }
 
+            if ($row->recycle_coin <= 0) {
+                throw new InvalidArgumentException('该物品不能回收', 400);
+            }
+
             $recycle_coin = $row->recycle_coin * $query['var_data'];
 
             $res = '回收：' . $row->name . '' . $query['var_data'] . '个' . '<br>获得金币：' . $recycle_coin;
@@ -249,7 +257,11 @@ class ItemController extends Controller
                         $res .= '所需等级：' . $row->level . '<br>';
                         $res .= '装备方式：' . Item::englishToChinese($v) . '<br>';
                     }else {
-                        $res .= Item::englishToChinese($k) . '：' . $v . '<br>';
+                        if ($row->type == 3){
+                            $res .= Item::englishToChinese($k) . '：' . $v . '%<br>';
+                        }else{
+                            $res .= Item::englishToChinese($k) . '：' . $v . '<br>';
+                        }
                     }
                 }
             }
@@ -315,6 +327,10 @@ class ItemController extends Controller
 
             if ($row->type == 1 || $row->type == 2) {
                 $res .= Item::useDrug($item);
+            }
+
+            if ($row->type == 3) {
+                $res .= Item::useDrugBfb($item);
             }
 
             return Response::json([

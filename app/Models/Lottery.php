@@ -74,7 +74,7 @@ class Lottery
                 DB::table('sys_coin')
                     ->where('id', '=', 1)
                     ->update([
-                        'lottery_coin' => 5000000,
+                        'lottery_coin' => 10000000,
                     ])
                 ;
             }
@@ -90,6 +90,13 @@ class Lottery
         DB::table('lottery')
             ->insert([
                 'stage'  => $lottery->stage + 1,
+            ])
+        ;
+
+        DB::table('sys_coin')
+            ->where('id', '=', 1)
+            ->update([
+                'lottery_coin' => DB::raw('`lottery_coin` + ' . 1000),
             ])
         ;
 

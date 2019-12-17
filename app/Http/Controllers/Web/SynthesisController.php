@@ -49,7 +49,7 @@ class SynthesisController extends Controller
             $res = '';
 
             foreach ($rows as $row) {
-                $res .= $row->item_name . '（' . $row->item_level . '级装备）-- 成功率：' . $row->success_rate . '<br>';
+                $res .= $row->item_name . '（' . $row->item_level . '级）-- 成功率：' . $row->success_rate . '<br>';
 
                 $res .= '<input type="button" class="action" data-url="' . URL::to('synthesis/show') . "?synthesis_id=" . $row->id . '" value="查看材料" /> ';
 

@@ -36,8 +36,25 @@ class GameController extends Controller
             ->get()
         ;
 
+        $drugs = DB::query()
+            ->select([
+                'i.*',
+            ])
+            ->from('user_knapsack AS uk')
+            ->join('item AS i', function ($join) {
+                $join
+                    ->on('i.id', '=', 'uk.item_id')
+                ;
+            })
+            ->where('uk.user_role_id', '=', $user_role_id)
+            ->where('uk.item_num', '>', 0)
+            ->whereIn('i.type', [1, 2, 3])
+            ->get()
+        ;
+
         return Response::view('web/game/index', [
             'rows' => $rows,
+            'drugs' => $drugs,
         ]);
     }
 
@@ -492,6 +509,7 @@ class GameController extends Controller
                     'ur.*'
                 ])
                 ->from('user_role AS ur')
+                ->where('id', '<>', 1)
                 ->limit(10)
                 ->orderBy('level', 'desc')
                 ->get()
@@ -506,6 +524,7 @@ class GameController extends Controller
                     'ur.*'
                 ])
                 ->from('user_role AS ur')
+                ->where('id', '<>', 1)
                 ->limit(10)
                 ->orderBy('attack', 'desc')
                 ->get()
@@ -522,6 +541,7 @@ class GameController extends Controller
                     'ur.*'
                 ])
                 ->from('user_role AS ur')
+                ->where('id', '<>', 1)
                 ->limit(10)
                 ->orderBy('defense', 'desc')
                 ->get()
