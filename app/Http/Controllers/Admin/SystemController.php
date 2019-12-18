@@ -618,13 +618,13 @@ class SystemController extends Controller
                 ->update([
                     'hp'  => 1000000,
                     'mp'  => 1000000,
-//                    'max_hp'  => 600,
-//                    'max_mp'  => 600,
-                    'attack'  => 3198,
-                    'magic'   => 2800,
+                    'max_hp'  => 1400,
+                    'max_mp'  => 1400,
+                    'attack'  => 2008,
+                    'magic'   => 1580,
 //                    'crit'    => 14,
 //                    'dodge'   => 14,
-                    'defense' => 2728,
+                    'defense' => 1753,
                     'map_id'  => 279,
 //                      'level'   => 200
                 ])

@@ -214,11 +214,23 @@ Route::middleware(['api.check_token_qq'])->group(function () {
         // pk
         Route::middleware(['api.check_hp'])->prefix('pk')->group(function () {
             // 邀请
-            Route::get('invite', 'UserPKController@invitePK');
+            Route::get('invite', 'UserPKController@invite');
             // 接受
-            Route::get('accept', 'UserPKController@acceptPK');
+            Route::get('accept', 'UserPKController@accept');
             // pk
             Route::get('', 'UserPKController@pk');
+            // 拒绝
+            Route::get('refuse', 'UserPKController@refuse');
+            // 认输
+            Route::get('surrender', 'UserPKController@surrender');
+        });
+
+        // 告示
+        Route::prefix('notice')->group(function () {
+            // 显示
+            Route::get('', 'NoticeController@show')->middleware(['format_paginate']);
+            // 创建
+            Route::get('create', 'NoticeController@create');
         });
     });
 });
