@@ -20,6 +20,7 @@ class UserPKController extends Controller
 
             $validator = Validator::make($query, [
                 'role_qq' => ['required'],
+                'coin'    => ['nullable', 'integer'],
             ], [
                 'role_qq.required' => '请邀请pk',
             ]);
@@ -79,12 +80,37 @@ class UserPKController extends Controller
                 throw new InvalidArgumentException('对方还有未结束的pk，请结束后再试!', 400);
             }
 
+            $coin = 0;
+
+            DB::beginTransaction();
+
+            if (isset($query['coin'])) {
+                $coin = $query['coin'];
+
+                if ($coin < 10) {
+                    throw new InvalidArgumentException('不能小于10金币！', 400);
+                }
+
+                if ($user_role->coin < $coin) {
+                    throw new InvalidArgumentException('您的金币数量不足：' . $coin, 400);
+                }
+
+                DB::table('user_role')
+                    ->where('id', '=', $user_role_id)
+                    ->update([
+                        'coin' => DB::raw('`coin` - ' . $coin),
+                    ])
+                ;
+            }
 
             DB::table('user_pk')->insert([
                 'a_user_role_id' => $user_role_id,
                 'b_user_role_id' => $row->id,
                 'content'        => '',
+                'coin'           => $coin,
             ]);
+
+            DB::commit();
 
             return Response::json([
                 'code'    => 200,
@@ -160,6 +186,22 @@ class UserPKController extends Controller
                 $roleA, $roleB,
             ];
 
+            DB::beginTransaction();
+
+            if ($userPK->coin > 0) {
+
+                if ($user_role->coin < $userPK->coin) {
+                    throw new InvalidArgumentException('您的金币数量不足：' . $userPK->coin, 400);
+                }
+
+                DB::table('user_role')
+                    ->where('id', '=', $user_role_id)
+                    ->update([
+                        'coin' => DB::raw('`coin` - ' . $userPK->coin),
+                    ])
+                ;
+            }
+
             DB::table('user_pk')
                 ->where('id', '=', $userPK->id)
                 ->update([
@@ -167,9 +209,12 @@ class UserPKController extends Controller
                     'handle_user_role_id' => $bool ? $user_role_id : $userPK->a_user_role_id,
                     'wait_user_role_id'   => $bool ? $userPK->a_user_role_id : $user_role_id,
                     'expired_at'          => date('Y-m-d H:i:s', strtotime('+2 minutes')),
+                    'coin'                => DB::raw('`coin` + ' . $userPK->coin),
                     'status'  => 150,
                 ])
             ;
+
+            DB::commit();
 
             $name = $bool ? $roleB->name : $roleA->name;
 
@@ -219,10 +264,23 @@ class UserPKController extends Controller
                 throw new InvalidArgumentException('您已接受了邀请！可认输', 400);
             }
 
+            DB::beginTransaction();
+
+            if ($userPK->coin > 0) {
+                DB::table('user_role')
+                    ->where('id', '=', $userPK->a_user_role_id)
+                    ->update([
+                        'coin' => DB::raw('`coin` + ' . $userPK->coin),
+                    ])
+                ;
+            }
+
             DB::table('user_pk')
                 ->where('id', '=', $userPK->id)
                 ->delete()
             ;
+
+            DB::commit();
 
             return Response::json([
                 'code'    => 200,
@@ -277,10 +335,25 @@ class UserPKController extends Controller
                 throw new InvalidArgumentException('您还没有接受邀请，可拒绝pk', 400);
             }
 
+            $user_id = $userPK->a_user_role_id == $user_role_id ? $userPK->b_user_role_id : $userPK->a_user_role_id;
+
+            DB::beginTransaction();
+
+            if ($userPK->coin > 0) {
+                DB::table('user_role')
+                    ->where('id', '=', $user_id)
+                    ->update([
+                        'coin' => DB::raw('`coin` + ' . (int)round($userPK->coin * 0.9)),
+                    ])
+                ;
+            }
+
             DB::table('user_pk')
                 ->where('id', '=', $userPK->id)
                 ->delete()
             ;
+
+            DB::commit();
 
             return Response::json([
                 'code'    => 200,
@@ -347,6 +420,64 @@ class UserPKController extends Controller
             return Response::json([
                 'code'    => 200,
                 'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 取消
+    public function cancel()
+    {
+        try {
+            $query = Request::all();
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            $userPK = DB::query()
+                ->select([
+                    'up.*',
+                ])
+                ->from('user_pk AS up')
+                ->where('up.a_user_role_id', '=' , $user_role_id)
+                ->get()
+                ->first()
+            ;
+
+            if (!$userPK) {
+                throw new InvalidArgumentException('您并没有邀请pk！', 400);
+            }
+
+            if ($userPK->status == 150) {
+                throw new InvalidArgumentException('pk已经开始！可认输', 400);
+            }
+
+            DB::beginTransaction();
+
+            if ($userPK->coin > 0) {
+                DB::table('user_role')
+                    ->where('id', '=', $user_role_id)
+                    ->update([
+                        'coin' => DB::raw('`coin` + ' . $userPK->coin),
+                    ])
+                ;
+            }
+
+            DB::table('user_pk')
+                ->where('id', '=', $userPK->id)
+                ->delete()
+            ;
+
+            DB::commit();
+
+            return Response::json([
+                'code'    => 200,
+                'message' => '您取消了pk邀请！',
             ]);
         } catch (InvalidArgumentException $e) {
             return Response::json([

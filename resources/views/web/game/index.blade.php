@@ -83,6 +83,7 @@
             <input type="button" class="action" data-url="{!! URL::to('shop-business') !!}" value="拍卖行" />
             <input type="button" class="action" data-url="{!! URL::to('rank') !!}" value="排位" />
             <input type="button" class="action" data-url="{!! URL::to('revive') !!}" value="复活"/>
+            <input type="button" class="action" data-url="{!! URL::to('notice') !!}" value="告示"/>
         </p>
     </div>
     <div class="row">

@@ -816,4 +816,90 @@ class GameController extends Controller
             ]);
         }
     }
+
+    // 改名
+    public function rename()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'nickname' => ['required'],
+            ], [
+                'nickname.required' => '请输入正确的昵称',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            if (mb_strlen($query['nickname'],'utf8') > 10) {
+                throw new InvalidArgumentException('游戏名字不能大于10个字', 400);
+            }
+
+            // 查看是否有改名卡
+            $row = DB::query()
+                ->select([
+                    'uk.*',
+                ])
+                ->from('user_knapsack AS uk')
+                ->where('uk.user_role_id', '=', $user_role_id)
+                ->where('uk.item_id', '=', 147)
+                ->where('uk.item_num', '>=', 1)
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('改名失败，您没有改名卡！', 400);
+            }
+
+            $row1 = DB::query()
+                ->select(['id'])
+                ->from('user_role')
+                ->where('name', '=', $query['nickname'])
+                ->limit(1)
+                ->get()
+                ->first()
+            ;
+
+            if ($row1) {
+                throw new InvalidArgumentException('该昵称已存在', 400);
+            }
+
+            DB::beginTransaction();
+
+            DB::table('user_role')
+                ->where('id', '=', $user_role_id)
+                ->update([
+                    'name' => $query['nickname'],
+                ])
+            ;
+
+            DB::table('user_knapsack')
+                ->where('user_role_id', '=', $user_role_id)
+                ->where('item_id', '=', 147)
+                ->update([
+                    'item_num' => DB::raw('`item_num` - ' . 1),
+                ])
+            ;
+
+            DB::commit();
+
+            return Response::json([
+                'code'    => 200,
+                'message' => '恭喜您成功改名为：[' . $query['nickname'] . ']',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
 }

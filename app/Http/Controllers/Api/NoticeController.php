@@ -114,5 +114,54 @@ class NoticeController extends Controller
         }
     }
 
+    public function remove()
+    {
+        try {
+            $query = Request::all();
 
+            $validator = Validator::make($query, [
+                'content' => ['required', 'max:15'],
+            ], [
+                'content.required' => '内容不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            $row = DB::query()
+                ->select([
+                    'n.*',
+                ])
+                ->from('notice AS n')
+                ->where('n.content', 'like', '%' . $query['content'] . '%')
+                ->where('n.user_role_id', '=', $user_role_id)
+                ->get()
+                ->first()
+            ;
+
+            if (!$row) {
+                throw new InvalidArgumentException('没有找到相关告示!', 400);
+            }
+
+            DB::table('notice')
+                ->where('id', '=', $row->id)
+                ->delete()
+            ;
+
+            return Response::json([
+                'code'    => 200,
+                'message' => '删除成功！',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }

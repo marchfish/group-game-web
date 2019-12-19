@@ -23,8 +23,6 @@ class UserPK
         $my = $userPK->a_user_role_id == $user_role_id ? 0 : 1;
         $enemy = $userPK->a_user_role_id == $user_role_id ? 1 : 0;
 
-        $res = '';
-
         if ($key == 0) {
             $user_hurt = $roles[$my]->attack - $roles[$enemy]->defense;
 
@@ -66,10 +64,23 @@ class UserPK
 
         if ($roles[$enemy]->hp <= 0) {
 
+            DB::beginTransaction();
+
+            if ($userPK->coin > 0) {
+                DB::table('user_role')
+                    ->where('id', '=', $user_role_id)
+                    ->update([
+                        'coin' => DB::raw('`coin` + ' . (int)round($userPK->coin * 0.9)),
+                    ])
+                ;
+            }
+
             DB::table('user_pk')
                 ->where('id', '=', $userPK->id)
                 ->delete()
             ;
+
+            DB::commit();
 
             throw new InvalidArgumentException('对方被您击败了，恭喜 ['. $roles[$my]->name .'] 获得胜利！', 200);
         }
@@ -157,6 +168,7 @@ class UserPK
     }
 
     public static function damageCalculation($roleA, $roleB, int $user_hurt) {
+        $roleA->num++;
 
         if (is_success($roleB->dodge)) {
             return 0;
@@ -177,7 +189,6 @@ class UserPK
         }
 
         $roleB->hp -= $user_hurt;
-        $roleA->num++;
 
         return $user_hurt;
     }
