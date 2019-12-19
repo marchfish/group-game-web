@@ -132,6 +132,8 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             Route::get('move', 'GameController@move');
             // 攻击
             Route::get('attack', 'GameController@attack');
+            // 改名
+            Route::get('rename', 'GameController@rename');
         });
 
         // 任务
@@ -214,11 +216,27 @@ Route::middleware(['api.check_token_qq'])->group(function () {
         // pk
         Route::middleware(['api.check_hp'])->prefix('pk')->group(function () {
             // 邀请
-            Route::get('invite', 'UserPKController@invitePK');
+            Route::get('invite', 'UserPKController@invite');
             // 接受
-            Route::get('accept', 'UserPKController@acceptPK');
+            Route::get('accept', 'UserPKController@accept');
             // pk
             Route::get('', 'UserPKController@pk');
+            // 拒绝
+            Route::get('refuse', 'UserPKController@refuse');
+            // 认输
+            Route::get('surrender', 'UserPKController@surrender');
+            // 取消
+            Route::get('cancel', 'UserPKController@cancel');
+        });
+
+        // 告示
+        Route::prefix('notice')->group(function () {
+            // 显示
+            Route::get('', 'NoticeController@show')->middleware(['format_paginate']);
+            // 创建
+            Route::get('create', 'NoticeController@create');
+            // 删除
+            Route::get('remove', 'NoticeController@remove');
         });
     });
 });

@@ -225,6 +225,11 @@ Route::namespace('Web')->group(function () {
                 // 设置快捷键
                 Route::get('quick', 'UserSkillController@setQuick');
             });
+            // 告示
+            Route::prefix('notice')->group(function () {
+                // 显示
+                Route::get('', 'NoticeController@show');
+            });
         });
     });
 });

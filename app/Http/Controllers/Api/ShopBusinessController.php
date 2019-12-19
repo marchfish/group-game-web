@@ -48,6 +48,7 @@ class ShopBusinessController extends Controller
                     'ur.name AS user_name',
                     'i.name AS item_name',
                 ])
+                ->from('shop_business AS sb')
                 ->join('user_role AS ur', function ($join) {
                     $join
                         ->on('ur.id', '=', 'sb.user_role_id')
@@ -58,7 +59,6 @@ class ShopBusinessController extends Controller
                         ->on('i.id', '=', 'sb.item_id')
                     ;
                 })
-                ->from('shop_business AS sb')
                 ->where('sb.num', '>', 0)
                 ->orderBy('sb.created_at', 'desc')
                 ->paginate($query['size'])
