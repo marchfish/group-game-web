@@ -299,13 +299,17 @@ class SystemController extends Controller
     public function test()
     {
         try {
-            $user_role_id = Session::get('user.account.user_role_id');
+            $probability = (int)round((1000 - 100)/1000 * 100);
 
-            $res = '';
+            if (!is_success(50) || !is_success($probability)) {
+                dd('失败');
+            }
+
+
 
             return Response::json([
                 'code'    => 200,
-                'message' => '成功卸下：',
+                'message' => '成功',
             ]);
         } catch (InvalidArgumentException $e) {
             return Response::json([
@@ -618,14 +622,14 @@ class SystemController extends Controller
                 ->update([
                     'hp'  => 1000000,
                     'mp'  => 1000000,
-                    'max_hp'  => 1400,
-                    'max_mp'  => 1400,
-                    'attack'  => 2008,
-                    'magic'   => 1580,
+                    'max_hp'  => 2095,
+                    'max_mp'  => 2095,
+                    'attack'  => 3198,
+                    'magic'   => 2800,
 //                    'crit'    => 14,
 //                    'dodge'   => 14,
-                    'defense' => 1753,
-                    'map_id'  => 279,
+                    'defense' => 2728,
+                    'map_id'  => 186,
 //                      'level'   => 200
                 ])
             ;

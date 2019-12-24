@@ -44,7 +44,7 @@ class UserRole
         return $row;
     }
 
-    public static function attackToEnemy($user_Role, $enemy)
+    public static function attackToEnemy($user_Role, $enemy, $user_pets = null)
     {
         $user_role_id = Session::get('user.account.user_role_id');
 
@@ -82,6 +82,9 @@ class UserRole
                 }
             }
         }
+
+        // 宠物信息
+        $pets_res = '';
 
         if ($is_restrict) {
             $restrict_num -= 1;
@@ -125,6 +128,13 @@ class UserRole
                 }
 
                 $enemy->hp -= $user_hurt;
+
+                // 判断是否有宠物
+                if ($user_pets) {
+                    $enemy->hp -= $user_pets->attack;
+
+                    $pets_res = ' ' . $user_pets->name . '攻击-' . $user_pets->attack;
+                }
 
                 // 存入数据
                 DB::table('fight')->updateOrInsert([
@@ -193,7 +203,7 @@ class UserRole
                     return $res;
                 }
 
-                $res = $enemy->name . '-' . $user_hurt . ' 血量：' . $enemy->hp . '<br>' . $res;
+                $res = '[' . $user_Role->name . ']' . '攻击' . $enemy->name . '-' . $user_hurt . $pets_res . ' 怪物血量：' . $enemy->hp . '<br>' . $res;
             }
 
         }
@@ -437,7 +447,7 @@ class UserRole
 
     }
 
-    public static function attackToEnemyToQQ($user_Role, $enemy)
+    public static function attackToEnemyToQQ($user_Role, $enemy, $user_pets = null)
     {
         $user_role_id = $user_Role->id;
 
@@ -476,16 +486,19 @@ class UserRole
             }
         }
 
+        // 宠物信息
+        $pets_res = '';
+
         if ($is_restrict) {
             $restrict_num -= 1;
             foreach ($fight_contents as $k => $v) {
                 if (isset($v->skill_type) && $v->skill_type == 'restrict-attack') {
                     if ($restrict_num <= 0) {
                         unset($fight_contents[$k]);
-                        $res .= '[' . $user_Role->name . '] 禁止攻击已解除！<br>';
+                        $res .= '[' . $user_Role->name . '] 禁止攻击已解除！\r\n';
                     }else {
                         $v->num = $restrict_num;
-                        $res .= '[' . $user_Role->name . '] 被禁止攻击，' . $restrict_num . '回合后解除！<br>';
+                        $res .= '[' . $user_Role->name . '] 被禁止攻击，' . $restrict_num . '回合后解除！\r\n';
                     }
                 }
             }
@@ -506,7 +519,6 @@ class UserRole
             } elseif ($user_hurt <= 0) {
                 $res .= '您无法破防\r\n';
             } else {
-
                 $hurt_wave = mt_rand(0, round($user_hurt * 0.5));
 
                 $rand_num = mt_rand(0, 100);
@@ -518,6 +530,13 @@ class UserRole
                 }
 
                 $enemy->hp -= $user_hurt;
+
+                // 判断是否有宠物
+                if ($user_pets) {
+                    $enemy->hp -= $user_pets->attack;
+
+                    $pets_res = ' ' . $user_pets->name . '攻击-' . $user_pets->attack;
+                }
 
                 // 存入数据
                 DB::table('fight')->updateOrInsert([
@@ -586,7 +605,7 @@ class UserRole
                     return $res;
                 }
 
-                $res = $enemy->name . '-' . $user_hurt . ' 血量：' . $enemy->hp . '\r\n' . $res;
+                $res = '[' . $user_Role->name . ']' . '攻击' . $enemy->name . '-' . $user_hurt . $pets_res . ' 怪物血量：' . $enemy->hp . '\r\n' . $res;
             }
         }
 

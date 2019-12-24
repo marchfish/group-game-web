@@ -19,6 +19,10 @@ class Rank
         $user_Role1->hp = $user_Role1->max_hp;
         $user_Role2->hp = $user_Role2->max_hp;
 
+        // 设置攻击
+        $user_Role1->attack = $user_Role1->attack > $user_Role1->magic ? $user_Role1->attack : $user_Role1->magic;
+        $user_Role2->attack = $user_Role2->attack > $user_Role2->magic ? $user_Role2->attack : $user_Role2->magic;
+
         while ($pk_bool) {
             // 1
             $user_Role1_hurt = $user_Role1->attack - $user_Role2->defense;

@@ -137,7 +137,27 @@ class PublicController extends Controller
 
         DB::commit();
 
-        echo '完成';
+        dd('完成：' . date('Y-m-d H:i:s', time()));
+    }
+
+    // 设置level
+    public function levelPets()
+    {
+        DB::beginTransaction();
+
+        $count = 1000;
+
+        for ($i = 1; $i <= 150; $i++) {
+            DB::table('sys_pets')->insert([
+                'level'   => $i,
+                'exp'     => $i * $count,
+                'attack'  => 2
+            ]);
+        }
+
+        DB::commit();
+
+        dd('完成：' . date('Y-m-d H:i:s', time()));
     }
 
     // 插入装备数据

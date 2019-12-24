@@ -19,7 +19,6 @@ class ShopMallController extends Controller
     public function show()
     {
         try {
-            // 获取装备信息
             $rows = DB::query()
                 ->select([
                     'sm.*',

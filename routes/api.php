@@ -238,6 +238,18 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             // 删除
             Route::get('remove', 'NoticeController@remove');
         });
+
+        // 宠物
+        Route::prefix('pets')->group(function () {
+            // 显示
+            Route::get('', 'UserPetsController@show');
+            // 出战
+            Route::get('fight', 'UserPetsController@fight');
+            // 喂食
+            Route::get('feed', 'UserPetsController@feed');
+            // 放生
+            Route::get('remove', 'UserPetsController@remove');
+        });
     });
 });
 

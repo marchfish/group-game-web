@@ -47,7 +47,7 @@ class Map
                         $data .= '<img style="width:40px" src="'. upload_url($row->enemy_img) .'" alt="" >';
                     }
 
-                    $data .= '<span class="wr-color-E53E27">怪物=' . $row->enemy_name . '：' . $row->enemy_level . '级</span><br> ';
+                    $data .= '<span class="wr-color-E53E27">怪物=' . $row->enemy_name . ($row->enemy_type == 20 ? '(可捕捉)' : '') . '：' . $row->enemy_level . '级</span><br> ';
                 }
             }
         }
@@ -120,7 +120,7 @@ class Map
                 if ($row->enemy_refresh_at != '' &&  time() < strtotime($row->enemy_refresh_at)) {
                     $data .= '怪物刷新时间：' . date('H:i:s', strtotime($row->enemy_refresh_at)) . '\r\n';
                 }else {
-                    $data .= '怪物=' . $row->enemy_name . '：' . $row->enemy_level . '级\r\n';
+                    $data .= '怪物=' . $row->enemy_name . ($row->enemy_type == 20 ? '(可捕捉)' : '') . '：' . $row->enemy_level . '级\r\n';
                 }
             }
         }
