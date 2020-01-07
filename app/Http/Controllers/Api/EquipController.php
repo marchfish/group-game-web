@@ -203,6 +203,17 @@ class EquipController extends Controller
 
             DB::beginTransaction();
 
+            if ($equip != 0) {
+                Equip::unEquipToQQ($equip, $user_role_id);
+            }
+
+            $data = $row;
+            $data->num = 1;
+
+            UserKnapsack::useItems([
+                0 => $data
+            ], $user_role_id);
+
             DB::table('user_role')
                 ->where('id', '=', $user_role_id)
                 ->update([
@@ -215,17 +226,6 @@ class EquipController extends Controller
                     'defense' => DB::raw('`defense` + ' . ($item->defense ?? 0)),
                 ])
             ;
-
-            $data = $row;
-            $data->num = 1;
-
-            UserKnapsack::useItems([
-                0 => $data
-            ], $user_role_id);
-
-            if ($equip != 0) {
-                Equip::unEquipToQQ($equip, $user_role_id);
-            }
 
             DB::table('user_equip')
                 ->where('user_role_id', '=', $user_role_id)

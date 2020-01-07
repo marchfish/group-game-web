@@ -54,7 +54,11 @@ class Pets
 
             if(!$sysPets) {
                 break ;
-            };
+            }
+
+            if ($sysPets->level > $userPets->max_level) {
+                break ;
+            }
 
             if ($userPets->exp >= $sysPets->exp) {
                 DB::table('user_pets')

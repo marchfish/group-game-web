@@ -65,26 +65,26 @@ class SystemController extends Controller
     public function magicWeapon()
     {
         $date =  [
-            'name' => '炎魔披风',
+            'name' => '凝气披风',
             'content' => [
                 [
                     'type'    => 'magic_weapon',
-                    'max_hp'  => 300,
-                    'max_mp'  => 300,
-                    'attack'  => 300,
-                    'magic'   => 300,
-                    'crit'    => 16,
+                    'max_hp'  => 600,
+                    'max_mp'  => 600,
+                    'attack'  => 600,
+                    'magic'   => 600,
+                    'crit'    => 17,
                     'dodge'   => 16,
-                    'defense' => 300,
+                    'defense' => 600,
                 ]
             ]
         ];
 
         DB::table('item')->insert([
             'name'         => $date['name'],
-            'description'  => '高级法宝',
+            'description'  => '强力法宝',
             'type'         => 10,
-            'level'        => 60,
+            'level'        => 100,
             'content'      => json_encode($date['content']),
             'recycle_coin' => 1000,
         ]);
@@ -299,13 +299,18 @@ class SystemController extends Controller
     public function test()
     {
         try {
-            $probability = (int)round((1000 - 100)/1000 * 100);
+            $user_pets->attack;
 
-            if (!is_success(50) || !is_success($probability)) {
-                dd('失败');
+            $pets_hurt_wave = mt_rand(0, (int)round($user_pets->attack * 0.5));
+
+            if (is_success(50)) {
+                $user_pets->attack += $pets_hurt_wave;
+            } else {
+                $user_pets->attack -= $pets_hurt_wave;
+                if ($user_pets->attack <= 0) {
+                    $user_pets->attack = 1;
+                }
             }
-
-
 
             return Response::json([
                 'code'    => 200,
@@ -676,7 +681,7 @@ class SystemController extends Controller
             $data[0] = $res;
 
             $data[0]->id = $res->id;
-            $data[0]->num = 10;
+            $data[0]->num = $query['num'] ?? 10;
 
             UserKnapsack::addItems($data, 1);
 

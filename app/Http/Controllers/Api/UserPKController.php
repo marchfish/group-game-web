@@ -343,7 +343,7 @@ class UserPKController extends Controller
                 DB::table('user_role')
                     ->where('id', '=', $user_id)
                     ->update([
-                        'coin' => DB::raw('`coin` + ' . (int)round($userPK->coin * 0.9)),
+                        'coin' => DB::raw('`coin` + ' . (int)round($userPK->coin * 0.95)),
                     ])
                 ;
             }

@@ -230,6 +230,13 @@ Route::namespace('Web')->group(function () {
                 // 显示
                 Route::get('', 'NoticeController@show');
             });
+            // 镇妖塔
+            Route::prefix('tower')->group(function () {
+                // 显示
+                Route::get('', 'TowerController@show');
+                // 进入
+                Route::get('into', 'TowerController@into');
+            });
         });
     });
 });

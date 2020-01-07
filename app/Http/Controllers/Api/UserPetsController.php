@@ -36,11 +36,11 @@ class UserPetsController extends Controller
             $res = '['. $user_role->name .']的宠物\r\n';
 
             foreach ($rows as $row) {
-                $res .= $row->name . '：' . $row->level . '级，经验：' . $row->exp . '（最高:' . $row->max_level . '级）-- ' . ($row->is_fight ? '出战' : '休息') . '\r\n';
+                $res .= '【'. $row->name . '】：' . $row->level . '级，经验：' . $row->exp . '（最高:' . $row->max_level . '级）-- ' . ($row->is_fight ? '出战' : '休息') . '\r\n';
             }
 
             $res .= '出战：宠物名称\r\n';
-            $res .= '喂食：装备名称(默认只喂食出战宠物,装备后面可以加上指定喂养宠物)';
+            $res .= '喂养：装备名称(默认只喂养出战宠物,装备后面可以加上指定喂养宠物)';
 
             return Response::json([
                 'code'    => 200,
@@ -124,7 +124,7 @@ class UserPetsController extends Controller
         }
     }
 
-    // 喂食
+    // 喂养
     public function feed()
     {
         try {
@@ -168,6 +168,10 @@ class UserPetsController extends Controller
                 throw new InvalidArgumentException('您没有找到要喂养的宠物，请先设置出战或指定宠物喂养！', 400);
             }
 
+            if ($userPets->level >= $userPets->max_level) {
+                throw new InvalidArgumentException('您的宠物达到了最高等级，无需喂养！', 400);
+            }
+
             $item_num = 1;
 
             if (isset($query['num'])) {
@@ -198,7 +202,7 @@ class UserPetsController extends Controller
             }
 
             if ($item->type != 10) {
-                throw new InvalidArgumentException('请喂食装备！', 400);
+                throw new InvalidArgumentException('请喂养装备！', 400);
             }
 
             if ($item->level - $userPets->level < -10 || $item->level - $userPets->level > 10 ) {
@@ -231,9 +235,105 @@ class UserPetsController extends Controller
 
             DB::commit();
 
-            $res = $userPets->name . ' 喂食成功，获得经验：' . $exp;
+            $res = $userPets->name . ' 喂养成功，获得经验：' . $exp;
 
             $is_upgrade = Pets::is_upgrade($userPets->id, $user_role_id);
+
+            if ($is_upgrade) {
+                $res .= $is_upgrade;
+            }
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $res,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    // 融合
+    public function fuse()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'feed_pets_name' => ['required'],
+                'fuse_pets_name' => ['required'],
+            ], [
+                'feed_pets_name.required' => '需喂养的宠物名称不能为空',
+                'fuse_pets_name.required' => '用于喂养的宠物名称不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            $user_role = $query['user_role'];
+
+            $user_role_id = $user_role->id;
+
+            $feedPets = DB::query()
+                ->select([
+                    'up.*',
+                ])
+                ->from('user_pets AS up')
+                ->where('up.user_role_id', '=', $user_role_id)
+                ->where('up.name', '=', $query['feed_pets_name'])
+                ->get()
+                ->first();
+            ;
+
+            if (!$feedPets) {
+                throw new InvalidArgumentException('您并没有该宠物：' . $query['feed_pets_name'] . '!', 400);
+            }
+
+            $fusePets = DB::query()
+                ->select([
+                    'up.*',
+                ])
+                ->from('user_pets AS up')
+                ->where('up.user_role_id', '=', $user_role_id)
+                ->where('up.name', '=', $query['fuse_pets_name'])
+                ->get()
+                ->first();
+            ;
+
+            if (!$fusePets) {
+                throw new InvalidArgumentException('您并没有该宠物：' . $query['fuse_pets_name'] . '!', 400);
+            }
+
+            if ($fusePets->level < 2) {
+                throw new InvalidArgumentException('您的宠物：' . $query['fuse_pets_name'] . '等级不足2级，无法用于融合!', 400);
+            }
+
+            if ($feedPets->level > $fusePets->level) {
+                throw new InvalidArgumentException('用于融合的宠物等级低于喂养的宠物无法进行融合！', 400);
+            }
+
+            DB::beginTransaction();
+
+            DB::table('user_pets')
+                ->where('id', '=', $feedPets->id)
+                ->update([
+                   'exp' => DB::raw('`exp` + ' . (int)round($fusePets->exp * 0.8)),
+                ])
+            ;
+
+            DB::table('user_pets')
+                ->where('id', '=', $fusePets->id)
+                ->delete()
+            ;
+
+            DB::commit();
+
+            $res = '融合成功！';
+
+            $is_upgrade = Pets::is_upgrade($feedPets->id, $user_role_id);
 
             if ($is_upgrade) {
                 $res .= $is_upgrade;

@@ -245,10 +245,20 @@ Route::middleware(['api.check_token_qq'])->group(function () {
             Route::get('', 'UserPetsController@show');
             // 出战
             Route::get('fight', 'UserPetsController@fight');
-            // 喂食
+            // 喂养
             Route::get('feed', 'UserPetsController@feed');
+            // 融合
+            Route::get('fuse', 'UserPetsController@fuse');
             // 放生
             Route::get('remove', 'UserPetsController@remove');
+        });
+
+        // 镇妖塔
+        Route::prefix('tower')->group(function () {
+            // 显示
+            Route::get('', 'TowerController@show')->middleware(['format_paginate']);
+            // 进入
+            Route::get('into', 'TowerController@into');
         });
     });
 });

@@ -105,6 +105,7 @@
         <p>
             <input type="button" class="action" data-url="{!! URL::to('lottery') !!}" value="搏一搏"/>
             <input type="button" class="action" data-url="{!! URL::to('map/activity') !!}" value="活动地图"/>
+            <input type="button" class="action" data-url="{!! URL::to('tower') !!}" value="镇妖塔"/>
         </p>
     </div>
     <div class="row">
@@ -256,6 +257,15 @@
             $numInput.val($numInput.val().replace('+86', '').replace('-', '').replace(/[^0-9]/g, '').substring(0, 11));
         });
     })
+
+
+    // function sleep(n) {
+    //
+    //   var start = new Date().getTime();
+    //
+    //   while(true)  if(new Date().getTime()-start > n) break;
+    //
+    // }
 </script>
 </html>
 {{--var token ="{!! csrf_token() !!}";--}}

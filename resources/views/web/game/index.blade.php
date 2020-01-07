@@ -105,6 +105,7 @@
         <p>
             <input type="button" class="action" data-url="{!! URL::to('lottery') !!}" value="搏一搏"/>
             <input type="button" class="action" data-url="{!! URL::to('map/activity') !!}" value="活动地图"/>
+            <input type="button" class="action" data-url="{!! URL::to('tower') !!}" value="镇妖塔"/>
         </p>
     </div>
     <div class="row">

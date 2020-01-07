@@ -33,6 +33,7 @@ class GameController extends Controller
                 ;
             })
             ->where('us.user_role_id', '=', $user_role_id)
+            ->orderBy('us.quick_key', 'asc')
             ->get()
         ;
 

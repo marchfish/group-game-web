@@ -395,6 +395,17 @@ class Skill
 
             // 判断是否有宠物
             if ($user_pets) {
+                $pets_hurt_wave = mt_rand(0, (int)round($user_pets->attack * 0.5));
+
+                if (is_success(50)) {
+                    $user_pets->attack += $pets_hurt_wave;
+                } else {
+                    $user_pets->attack -= $pets_hurt_wave;
+                    if ($user_pets->attack <= 0) {
+                        $user_pets->attack = 1;
+                    }
+                }
+
                 $enemy->hp -= $user_pets->attack;
 
                 $pets_res = ' ' . $user_pets->name . '攻击-' . $user_pets->attack;
