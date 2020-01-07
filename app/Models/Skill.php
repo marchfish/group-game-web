@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 class Skill
 {
-    // 使用学习
+    // 学习
     public static function study($item, int $user_role_id = 0)
     {
         if ($user_role_id == 0) {
@@ -133,6 +133,37 @@ class Skill
 
             if ($user_role->mp < $skill_content->use_mp) {
                 throw new InvalidArgumentException('无法使用技能，您的蓝量不足' . $skill_content->use_mp, 400);
+            }
+
+            $userState = DB::query()
+                ->select([
+                    'us.*'
+                ])
+                ->from('user_state AS us')
+                ->where('us.user_role_id', '=', $user_role->id)
+                ->get()
+                ->first()
+            ;
+
+            if ($userState && $userState->content) {
+                $state = json_decode($userState->content);
+
+                if (isset($state->restrictRecovery)) {
+                    $now_at = date('Y-m-d H:i:s',time());
+
+                    $expired_time = time_difference($now_at, $state->restrictRecovery, 'second');
+
+                    if ($expired_time > 0) {
+                        throw new InvalidArgumentException('您处于虚弱状态，无法使用治愈技能！剩余：' . $expired_time . 's', 400);
+                    }
+
+                    DB::table('user_state')
+                        ->where('user_role_id', '=', $user_role->id)
+                        ->update([
+                            'content' => '',
+                        ])
+                    ;
+                }
             }
 
             $skill_hp = (int)round($user_role->max_hp * ($skill_content->max_hp / 100));
@@ -279,6 +310,11 @@ class Skill
             ])
         ;
 
+        // 捕捉技能
+        if ($skill->type == 'capture') {
+            $res .= self::capture($user_role, $skill, $skill_content, $enemy, $user_role_id);
+        }
+
         if ($user_role_id != 0) {
             if ($enemy->skill_probability != 0 && is_success($enemy->skill_probability)) {
                 $res .= Enemy::skillToUserRole($user_role, $enemy, $user_role_id);
@@ -301,6 +337,7 @@ class Skill
         $line = '<br>';
 
         $res = '';
+        $pets_res = '';
         $success_bool = true;
 
         if ($user_role_id != 0) {
@@ -343,6 +380,36 @@ class Skill
             }
 
             $enemy->hp -= $user_hurt;
+
+            // 获取宠物信息
+            $user_pets = DB::query()
+                ->select([
+                    'up.*',
+                ])
+                ->from('user_pets AS up')
+                ->where('up.user_role_id', '=', $user_role->id)
+                ->where('up.is_fight', '=', 1)
+                ->get()
+                ->first()
+            ;
+
+            // 判断是否有宠物
+            if ($user_pets) {
+                $pets_hurt_wave = mt_rand(0, (int)round($user_pets->attack * 0.5));
+
+                if (is_success(50)) {
+                    $user_pets->attack += $pets_hurt_wave;
+                } else {
+                    $user_pets->attack -= $pets_hurt_wave;
+                    if ($user_pets->attack <= 0) {
+                        $user_pets->attack = 1;
+                    }
+                }
+
+                $enemy->hp -= $user_pets->attack;
+
+                $pets_res = ' ' . $user_pets->name . '攻击-' . $user_pets->attack;
+            }
 
             // 存入数据
             DB::table('fight')->updateOrInsert([
@@ -411,9 +478,85 @@ class Skill
                 throw new InvalidArgumentException($res, 400);
             }
 
-            $res = '[' . $user_role->name . '] 使用：' . $skill->name . '，' . $enemy->name . '-' . $user_hurt . ' 血量：' . $enemy->hp . $line . $res;
+            $res = '[' . $user_role->name . '] 使用：' . $skill->name . '，' . $enemy->name . '-' . $user_hurt . $pets_res . ' 怪物血量：' . $enemy->hp . $line . $res;
         }
 
         return $res;
+    }
+
+    // 捕捉技能
+    public static function capture($user_role, $skill, $skill_content, $enemy, int $user_role_id = 0){
+        $line = '<br>';
+
+        $res = '';
+
+        if ($user_role_id != 0) {
+            $line = '\r\n';
+        }
+
+        if ($enemy->type != 20) {
+            return '该怪物不可捕捉！' . $line;
+        }
+
+        $userPets = DB::query()
+            ->select([
+                DB::raw('COUNT(`up`.`id`) AS `count`'),
+            ])
+            ->from('user_pets AS up')
+            ->where('up.user_role_id', '=', $user_role->id)
+            ->get()
+            ->first()
+        ;
+
+        if ($userPets->count >= 3) {
+            return '您的宠物数量已满，如需捕捉请先放生！' . $line;
+        }
+
+        $userPets1 = DB::query()
+            ->select([
+               'up.*',
+            ])
+            ->from('user_pets AS up')
+            ->where('up.user_role_id', '=', $user_role->id)
+            ->where('up.name', '=', $enemy->name)
+            ->get()
+            ->first()
+        ;
+
+        if ($userPets1) {
+            return '您已经拥有一只[' . $enemy->name . ']了！' . $line;
+        }
+
+        if (isset($skill_content->probability)) {
+            if (!is_success($skill_content->probability)){
+
+                Enemy::refresh($enemy);
+
+                throw new InvalidArgumentException('捕捉失败，怪物逃跑了！', 400);
+            }
+        }
+
+        $probability = (int)round(($enemy->max_hp - $enemy->hp)/$enemy->max_hp * 100);
+
+        if (!is_success($probability)) {
+
+            Enemy::refresh($enemy);
+
+            throw new InvalidArgumentException('捕捉失败，怪物逃跑了！', 400);
+        }
+
+        $max_level = mt_rand($enemy->level - 10 >=1 ? $enemy->level - 10 : 1, $enemy->level + 10);
+
+        DB::table('user_pets')
+            ->insert([
+                'user_role_id' => $user_role->id,
+                'name'         => $enemy->name,
+                'max_level'    => $max_level,
+            ])
+        ;
+
+        Enemy::refresh($enemy);
+
+        throw new InvalidArgumentException('成功捕捉：' . $enemy->name, 400);
     }
 }

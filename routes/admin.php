@@ -23,6 +23,8 @@ Route::middleware(['web.check_map'])->get('test', 'SystemController@test');
 
 // 设置level
 //Route::get('level', 'PublicController@level');
+// 设置宠物level
+//Route::get('level', 'PublicController@levelPets');
 
 // 设置装备
 //Route::get('equip', 'PublicController@equip');

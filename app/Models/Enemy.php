@@ -182,6 +182,29 @@ class Enemy
                        $res = '[' . $enemy->name . '] 使用：' . $enemySkill->name . '，您被禁止攻击：' . $skill_content->num . '回合' . $line ;
                    }
 
+                    // 禁止恢复
+                    if ($enemySkill->type == 'restrict-recovery') {
+
+                        $data = [];
+                        $minutes = 0;
+
+                        if(isset($skill_content->minutes)){
+                            $data = [
+                                'restrictRecovery' => date('Y-m-d H:i:s', strtotime('+' . $skill_content->minutes . ' minutes'))
+                            ];
+
+                            $minutes = $skill_content->minutes;
+                        }
+
+                        DB::table('user_state')->updateOrInsert([
+                            'user_role_id' => $user_role->id,
+                        ], [
+                            'content' => json_encode($data),
+                        ]);
+
+                        $res = '[' . $enemy->name . '] 使用：' . $enemySkill->name . '，您被限制使用治愈技能 ' . $minutes . '分钟！' . $line ;
+                    }
+
                    if ($enemySkill->type == 'attack') {
                        $res = self::attacSkillToUserRole($user_role, $enemy, $enemySkill, $skill_content);
                    }

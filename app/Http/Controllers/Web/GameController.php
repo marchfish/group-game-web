@@ -33,6 +33,7 @@ class GameController extends Controller
                 ;
             })
             ->where('us.user_role_id', '=', $user_role_id)
+            ->orderBy('us.quick_key', 'asc')
             ->get()
         ;
 
@@ -72,6 +73,7 @@ class GameController extends Controller
                     DB::raw('IFNULL(`e`.`name`, "") AS `enemy_name`'),
                     DB::raw('IFNULL(`e`.`img`, "") AS `enemy_img`'),
                     DB::raw('IFNULL(`e`.`level`, 0) AS `enemy_level`'),
+                    DB::raw('IFNULL(`e`.`type`, 0) AS `enemy_type`'),
                     DB::raw('IFNULL(`mforward`.`name`, "") AS `forward_name`'),
                     DB::raw('IFNULL(`mbehind`.`name`, "") AS `behind_name`'),
                     DB::raw('IFNULL(`mup`.`name`, "") AS `up_name`'),
@@ -221,6 +223,7 @@ class GameController extends Controller
                     DB::raw('IFNULL(`e`.`name`, "") AS `enemy_name`'),
                     DB::raw('IFNULL(`e`.`img`, "") AS `enemy_img`'),
                     DB::raw('IFNULL(`e`.`level`, 0) AS `enemy_level`'),
+                    DB::raw('IFNULL(`e`.`type`, 0) AS `enemy_type`'),
                     DB::raw('IFNULL(`mforward`.`name`, "") AS `forward_name`'),
                     DB::raw('IFNULL(`mbehind`.`name`, "") AS `behind_name`'),
                     DB::raw('IFNULL(`mup`.`name`, "") AS `up_name`'),
@@ -327,7 +330,8 @@ class GameController extends Controller
                     ->where('user_role_id', '=', $user_role_id)
                     ->update([
                         'attack_at' => date('Y-m-d H:i:s', time()),
-                    ]);
+                    ])
+                ;
             }
 
             // 获取角色信息
@@ -379,7 +383,22 @@ class GameController extends Controller
 
             $enemy->max_hp = $enemy->hp;
 
-            $res =  UserRole::attackToEnemy($user_Role, $enemy);
+            // 设置攻击
+            $user_Role->attack = $user_Role->attack > $user_Role->magic ? $user_Role->attack : $user_Role->magic;
+
+            // 获取宠物信息
+            $user_pets = DB::query()
+                ->select([
+                    'up.*',
+                ])
+                ->from('user_pets AS up')
+                ->where('up.user_role_id', '=', $user_role_id)
+                ->where('up.is_fight', '=', 1)
+                ->get()
+                ->first()
+            ;
+
+            $res =  UserRole::attackToEnemy($user_Role, $enemy, $user_pets);
 
             $user_vip = DB::query()
                 ->select([

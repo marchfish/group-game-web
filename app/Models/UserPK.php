@@ -24,6 +24,9 @@ class UserPK
         $enemy = $userPK->a_user_role_id == $user_role_id ? 1 : 0;
 
         if ($key == 0) {
+            // 设置攻击
+            $roles[$my]->attack = $roles[$my]->attack > $roles[$my]->magic ? $roles[$my]->attack : $roles[$my]->magic;
+
             $user_hurt = $roles[$my]->attack - $roles[$enemy]->defense;
 
             $user_hurt = self::damageCalculation($roles[$my], $roles[$enemy], $user_hurt);
@@ -70,7 +73,7 @@ class UserPK
                 DB::table('user_role')
                     ->where('id', '=', $user_role_id)
                     ->update([
-                        'coin' => DB::raw('`coin` + ' . (int)round($userPK->coin * 0.9)),
+                        'coin' => DB::raw('`coin` + ' . (int)round($userPK->coin * 0.95)),
                     ])
                 ;
             }
@@ -130,6 +133,8 @@ class UserPK
         $roleA->skills[$userSkill->id] = $roleA->num + 1;
 
         if ($userSkill->type == 'recovery-hp') {
+            $roleA->num++;
+
             $skill_hp = (int)round($roleA->max_hp * ($skill_content->max_hp / 100));
 
             $hp = $skill_hp + $roleA->hp;

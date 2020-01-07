@@ -58,6 +58,14 @@ class Equip
 
         DB::beginTransaction();
 
+        $data = $equip;
+        $data->num = 1;
+        $data->id = $item_id;
+
+        UserKnapsack::addItems([
+            0 => $data
+        ]);
+
         DB::table('user_role')
             ->where('id', '=', $user_role_id)
             ->update([
@@ -85,14 +93,6 @@ class Equip
                 'magic_weapon' => $item->type == 'magic_weapon' ?  0 : $equip->magic_weapon,
             ])
         ;
-
-        $data = $equip;
-        $data->num = 1;
-        $data->id = $item_id;
-
-        UserKnapsack::addItems([
-            0 => $data
-        ]);
 
         DB::commit();
 
@@ -145,6 +145,13 @@ class Equip
         }
 
         DB::beginTransaction();
+        $data = $equip;
+        $data->num = 1;
+        $data->id = $item_id;
+
+        UserKnapsack::addItems([
+            0 => $data
+        ], $user_role_id);
 
         DB::table('user_role')
             ->where('id', '=', $user_role_id)
@@ -173,14 +180,6 @@ class Equip
                 'magic_weapon' => $item->type == 'magic_weapon' ?  0 : $equip->magic_weapon,
             ])
         ;
-
-        $data = $equip;
-        $data->num = 1;
-        $data->id = $item_id;
-
-        UserKnapsack::addItems([
-            0 => $data
-        ], $user_role_id);
 
         DB::commit();
 
