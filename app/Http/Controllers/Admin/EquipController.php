@@ -20,7 +20,7 @@ class EquipController extends Controller
     {
         $equips = [
             [
-                'name' => '凝气魔爪',
+                'name' => '炼狱魔爪',
                 'content' => [
                     [
                         'type'   => 'weapon',
@@ -34,7 +34,7 @@ class EquipController extends Controller
                 ],
             ],
             [
-                'name' => '凝气魔盔',
+                'name' => '炼狱魔盔',
                 'content' => [
                     [
                         'type' => 'helmet',
@@ -48,7 +48,7 @@ class EquipController extends Controller
                 ],
             ],
             [
-                'name' => '凝气魔甲',
+                'name' => '炼狱魔甲',
                 'content' => [
                     [
                         'type' => 'clothes',
@@ -61,7 +61,7 @@ class EquipController extends Controller
                 ],
             ],
 //            [
-//                'name' => '凝气耳环',
+//                'name' => '炼狱耳环',
 //                'content' => [
 //                    [
 //                        'type' => 'earring',
@@ -75,7 +75,7 @@ class EquipController extends Controller
 //                ],
 //            ],
 //            [
-//                'name' => '凝气项链',
+//                'name' => '炼狱项链',
 //                'content' => [
 //                    [
 //                        'type' => 'necklace',
@@ -89,7 +89,7 @@ class EquipController extends Controller
 //                ],
 //            ],
 //            [
-//                'name' => '凝气手镯',
+//                'name' => '炼狱手镯',
 //                'content' => [
 //                    [
 //                        'type' => 'bracelet',
@@ -103,7 +103,7 @@ class EquipController extends Controller
 //                ],
 //            ],
 //            [
-//                'name' => '凝气戒指',
+//                'name' => '炼狱戒指',
 //                'content' => [
 //                    [
 //                        'type' => 'ring',
@@ -117,7 +117,7 @@ class EquipController extends Controller
 //                ],
 //            ],
 //            [
-//                'name' => '凝气战靴',
+//                'name' => '炼狱战靴',
 //                'content' => [
 //                    [
 //                        'type' => 'shoes',
@@ -148,110 +148,200 @@ class EquipController extends Controller
 
     public function colorEquip()
     {
-        $color = '【橙】';
+        $color = '(红)';
 //        $quality = 'blue';
 
         $equips = [
             [
-                'name' => '凝气战剑' . $color,
+                'name' => '炼狱战剑' . $color,
                 'content' => [
                     [
                         'type'   => 'weapon',
-                        'attack' => 370,
-                        'defense' => 250,
-                        'max_hp' => 370,
-                        'max_mp' => 370,
-                        'magic' => 420,
-                        'dodge' => 3,
+                        'attack' => 430,
+                        'defense' => 330,
+                        'max_hp' => 230,
+                        'max_mp' => 180,
+                        'magic' => 350
+//                        'dodge' => 3,
                     ]
                 ],
             ],
             [
-                'name' => '凝气头盔' . $color,
+                'name' => '炼狱头盔' . $color,
                 'content' => [
                     [
                         'type' => 'helmet',
-                        'attack' => 300,
-                        'defense' => 240,
-                        'max_hp' => 270,
-                        'max_mp' => 270,
-                        'magic' => 270
+                        'attack' => 430,
+                        'defense' => 330,
+                        'max_hp' => 180,
+                        'max_mp' => 180,
+                        'magic' => 340
                     ]
                 ],
             ],
             [
-                'name' => '凝气战甲' . $color,
+                'name' => '炼狱战甲' . $color,
                 'content' => [
                     [
                         'type' => 'clothes',
-                        'attack' => 300,
-                        'defense' => 370,
-                        'max_hp' => 370,
-                        'max_mp' => 370,
-                        'magic' => 370,
-                        'dodge' => 3,
+                        'attack' => 430,
+                        'defense' => 430,
+                        'max_hp' => 230,
+                        'max_mp' => 230,
+                        'magic' => 350
+//                        'dodge' => 3,
                     ]
                 ],
             ],
             [
-                'name' => '凝气耳环' . $color,
+                'name' => '炼狱利刃' . $color,
+                'content' => [
+                    [
+                        'type'   => 'weapon',
+                        'attack' => 380,
+                        'defense' => 390,
+                        'max_hp' => 230,
+                        'max_mp' => 180,
+                        'magic' => 350
+//                        'dodge' => 3,
+                    ]
+                ],
+            ],
+            [
+                'name' => '炼狱妖盔' . $color,
+                'content' => [
+                    [
+                        'type' => 'helmet',
+                        'attack' => 330,
+                        'defense' => 390,
+                        'max_hp' => 180,
+                        'max_mp' => 180,
+                        'magic' => 340
+                    ]
+                ],
+            ],
+            [
+                'name' => '炼狱妖甲' . $color,
+                'content' => [
+                    [
+                        'type' => 'clothes',
+                        'attack' => 380,
+                        'defense' => 510,
+                        'max_hp' => 230,
+                        'max_mp' => 230,
+                        'magic' => 350
+//                        'dodge' => 3,
+                    ]
+                ],
+            ],
+            [
+                'name' => '炼狱魔杖' . $color,
+                'content' => [
+                    [
+                        'type'   => 'weapon',
+                        'attack' => 380,
+                        'defense' => 330,
+                        'max_hp' => 230,
+                        'max_mp' => 180,
+                        'magic' => 430
+//                        'dodge' => 3,
+                    ]
+                ],
+            ],
+            [
+                'name' => '炼狱魔盔' . $color,
+                'content' => [
+                    [
+                        'type' => 'helmet',
+                        'attack' => 330,
+                        'defense' => 330,
+                        'max_hp' => 180,
+                        'max_mp' => 180,
+                        'magic' => 380
+                    ]
+                ],
+            ],
+            [
+                'name' => '炼狱魔袍' . $color,
+                'content' => [
+                    [
+                        'type' => 'clothes',
+                        'attack' => 380,
+                        'defense' => 430,
+                        'max_hp' => 230,
+                        'max_mp' => 230,
+                        'magic' => 430
+//                        'dodge' => 3,
+                    ]
+                ],
+            ],
+            [
+                'name' => '炼狱耳环' . $color,
                 'content' => [
                     [
                         'type' => 'earring',
-                        'attack' => 300,
-                        'defense' => 240,
-                        'magic' => 270,
-                        'crit'  => 4,
+                        'attack' => 330,
+                        'defense' => 230,
+                        'max_hp' => 180,
+                        'max_mp' => 180,
+                        'magic' => 300,
+                        'crit'  => 1,
                     ]
                 ],
             ],
             [
-                'name' => '凝气项链' . $color,
+                'name' => '炼狱项链' . $color,
                 'content' => [
                     [
                         'type' => 'necklace',
-                        'attack' => 300,
-                        'defense' => 240,
-                        'max_hp' => 270,
-                        'max_mp' => 270,
-                        'magic' => 270,
-                        'crit'  => 4,
+                        'attack' => 330,
+                        'defense' => 230,
+                        'max_hp' => 180,
+                        'max_mp' => 180,
+                        'magic' => 300,
+                        'crit'  => 1,
                     ]
                 ],
             ],
             [
-                'name' => '凝气手镯' . $color,
+                'name' => '炼狱手镯' . $color,
                 'content' => [
                     [
                         'type' => 'bracelet',
-                        'attack' => 300,
-                        'defense' => 240,
-                        'magic' => 270,
-                        'crit'  => 4,
+                        'attack' => 330,
+                        'defense' => 230,
+                        'max_hp' => 180,
+                        'max_mp' => 180,
+                        'magic' => 300,
+                        'crit'  => 1,
                     ]
                 ],
             ],
             [
-                'name' => '凝气戒指' . $color,
+                'name' => '炼狱戒指' . $color,
                 'content' => [
                     [
                         'type' => 'ring',
-                        'attack' => 300,
-                        'defense' => 240,
-                        'magic' => 270,
-                        'crit'  => 4,
+                        'attack' => 330,
+                        'defense' => 230,
+                        'max_hp' => 180,
+                        'max_mp' => 180,
+                        'magic' => 300,
+                        'crit'  => 1,
                     ]
                 ],
             ],
             [
-                'name' => '凝气战靴' . $color,
+                'name' => '炼狱战靴' . $color,
                 'content' => [
                     [
                         'type' => 'shoes',
-                        'attack' => 300,
-                        'defense' => 240,
-                        'magic' => 270,
-                        'crit'  => 4,
+                        'attack' => 330,
+                        'defense' => 230,
+                        'max_hp' => 180,
+                        'max_mp' => 180,
+                        'magic' => 300,
+                        'crit'  => 1,
                     ]
                 ],
             ],
@@ -260,11 +350,11 @@ class EquipController extends Controller
         foreach ($equips as $equip) {
             DB::table('item')->insert([
                 'name'         => $equip['name'],
-                'description'  => '强力装备【魔已无所畏惧】，品质：' . $color,
+                'description'  => '强力装备【迷雾挑战者】，品质：' . $color,
                 'type'         => 10,
-                'level'        => 90,
+                'level'        => 100,
                 'content'      => json_encode($equip['content']),
-                'recycle_coin' => 1000,
+                'recycle_coin' => 800,
             ]);
         }
 

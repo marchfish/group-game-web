@@ -9,6 +9,7 @@ use App\Models\Item;
 use App\Models\Lottery;
 use App\Models\Enemy;
 use App\Support\Facades\Captcha;
+use GatewayClient\Gateway;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
@@ -20,6 +21,92 @@ use Illuminate\Support\Facades\DB;
 
 class SystemController extends Controller
 {
+    public function __construct()
+    {
+        Gateway::$registerAddress = '127.0.0.1:1238';
+    }
+
+    // 测试
+    public function test()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'client_id' => ['required'],
+            ], [
+                'client_id.required' => 'client_id不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            Gateway::bindUid($query['client_id'], 1);
+
+            Gateway::sendToAll(json_encode
+                ([
+                    'type'=>'test',
+                    'message'=>'测试呀！'
+                ])
+            );
+//            $query['client_id'];
+
+            return Response::json([
+                'code'    => 200,
+                'message' => '成功',
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function test1()
+    {
+        try {
+            $query = Request::all();
+
+            $validator = Validator::make($query, [
+                'synthesis_id' => ['required'],
+            ], [
+                'synthesis_id.required' => 'synthesis_id不能为空',
+            ]);
+
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
+
+            Gateway::sendToAll(json_encode
+                ([
+                    'type'=>'',
+                    'message'=>$query['synthesis_id']
+                ])
+            );
+
+            $client_id  = Gateway::getClientIdByUid('1');
+
+            Gateway::closeClient($client_id[0], json_encode
+                ([
+                    'type'=>'',
+                    'message'=>"对不起，您以下线!"
+                ])
+            );
+
+            return Response::json([
+                'code'    => 200,
+                'message' => $client_id,
+            ]);
+        } catch (InvalidArgumentException $e) {
+            return Response::json([
+                'code'    => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
     public function index()
     {
         $user_role_id = Session::get('user.account.user_role_id');
@@ -55,7 +142,12 @@ class SystemController extends Controller
             ->get()
         ;
 
-        return Response::view('admin/test/index', [
+//        return Response::view('admin/test/web/index', [
+//            'rows' => $rows,
+//            'drugs' => $drugs,
+//        ]);
+
+        return Response::view('admin/test/test', [
             'rows' => $rows,
             'drugs' => $drugs,
         ]);
@@ -246,26 +338,26 @@ class SystemController extends Controller
     // 设置提炼
     public function refine()
     {
-        $npc_id = 30;
+        $npc_id = 46;
         $count = 0;
-        $item = 375;
-        $item2 = 367;
-        $success_rate = 10;
+        $item = 485;
+        $item2 = 471;
+        $success_rate = 30;
 
-        while ($count < 8){
+        while ($count < 14){
             $date =  [
                 'requirements' => [
                     [
-                        'id'   => 130,
-                        'num'  => 10,
+                        'id'   => 128,
+                        'num'  => 20,
                     ],
                     [
-                        'id'   => 135,
-                        'num'  => 10,
+                        'id'   => 133,
+                        'num'  => 20,
                     ],
                     [
                         'id'   => 156,
-                        'num'  => 10,
+                        'num'  => 8,
                     ],
                     [
                         'id'   => $item2,
@@ -284,7 +376,7 @@ class SystemController extends Controller
                 'npc_id'        => $npc_id,
                 'item_id'       => $item,
                 'requirements'  => json_encode($date['requirements']),
-//                'retains'       => json_encode($date['retains']),
+                'retains'       => json_encode($date['retains']),
                 'success_rate'  => $success_rate
             ]);
             $count++;
@@ -293,124 +385,6 @@ class SystemController extends Controller
         }
 
         dd('完成：' . date('Y-m-d H:i:s', time()));
-    }
-
-    // 测试
-    public function test()
-    {
-        try {
-            $user_pets->attack;
-
-            $pets_hurt_wave = mt_rand(0, (int)round($user_pets->attack * 0.5));
-
-            if (is_success(50)) {
-                $user_pets->attack += $pets_hurt_wave;
-            } else {
-                $user_pets->attack -= $pets_hurt_wave;
-                if ($user_pets->attack <= 0) {
-                    $user_pets->attack = 1;
-                }
-            }
-
-            return Response::json([
-                'code'    => 200,
-                'message' => '成功',
-            ]);
-        } catch (InvalidArgumentException $e) {
-            return Response::json([
-                'code'    => $e->getCode(),
-                'message' => $e->getMessage(),
-            ]);
-        }
-    }
-
-    public function test1()
-    {
-        try {
-            $query = Request::all();
-
-            $validator = Validator::make($query, [
-                'synthesis_id' => ['required'],
-            ], [
-                'synthesis_id.required' => 'synthesis_id不能为空',
-            ]);
-
-            if ($validator->fails()) {
-                throw new InvalidArgumentException($validator->errors()->first(), 400);
-            }
-
-            $user_role_id = Session::get('user.account.user_role_id');
-
-            $row = DB::query()
-                ->select([
-                    's.*',
-                    'i.name AS item_name',
-                ])
-                ->from('synthesis AS s')
-                ->join('item AS i', function ($join) {
-                    $join
-                        ->on('i.id', '=', 's.item_id')
-                    ;
-                })
-                ->where('s.id', '=', $query['synthesis_id'])
-                ->get()
-                ->first()
-            ;
-
-            if (!$row) {
-                throw new InvalidArgumentException('找不到该合成', 400);
-            }
-
-            $res = '[' . $row->item_name . ']' . '<br>';
-
-            $res .= '所需物品=';
-
-            // 所需物品
-            $requirements = json_decode($row->requirements);
-
-            $ids = array_column($requirements,'id');
-
-            $items = Item::getItems($ids);
-
-            $items = array_column(obj2arr($items), 'name','id');
-
-            foreach ($requirements as $requirement) {
-                $requirement->name = $items[$requirement->id] ?? '？？？';
-
-                $res .= $requirement->name . '*' . $requirement->num . '，';
-            }
-
-            $res = rtrim($res, "，") . '<br>';
-
-            // 失败保留
-            $retains = json_decode($row->retains);
-
-            $ids = array_column($retains,'id');
-
-            $items = Item::getItems($ids);
-
-            $items = array_column(obj2arr($items), 'name','id');
-            $res .= '失败保留物品=';
-
-            foreach ($retains as $retain) {
-                $retain->name = $items[$retain->id] ?? '？？？';
-                $res .= $retain->name . '*' . $retain->num . '，';
-            }
-
-            $res = rtrim($res, "，") . '<br>';
-
-            $res .= '成功机率=' . $row->success_rate . '% <br>';
-
-            return Response::json([
-                'code'    => 200,
-                'message' => $res,
-            ]);
-        } catch (InvalidArgumentException $e) {
-            return Response::json([
-                'code'    => $e->getCode(),
-                'message' => $e->getMessage(),
-            ]);
-        }
     }
 
     public function test2()

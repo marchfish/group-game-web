@@ -14,6 +14,7 @@
 // 后台
 Route::prefix('admin')->namespace('Admin')->group(base_path('routes/admin.php'));
 Route::prefix('api')->namespace('Api')->group(base_path('routes/api.php'));
+Route::prefix('api/road2d')->namespace('Api\Road2D')->group(base_path('routes/road2d.php'));
 
 Route::namespace('Web')->group(function () {
     // 显示登录
