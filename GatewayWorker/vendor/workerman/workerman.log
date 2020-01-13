@@ -1,0 +1,298 @@
+2020-01-08 07:07:44 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:07:45 pid:1 Worker process terminated
+2020-01-08 07:07:45 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:07:46 pid:1 Worker process terminated
+2020-01-08 07:07:47 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:07:48 pid:1 Worker process terminated
+2020-01-08 07:07:49 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:07:50 pid:1 Worker process terminated
+2020-01-08 07:07:54 pid:1 Register auth timeout (127.0.0.1). See http://doc2.workerman.net/register-auth-timeout.html
+2020-01-08 07:07:55 pid:1 Register auth timeout (127.0.0.1). See http://doc2.workerman.net/register-auth-timeout.html
+2020-01-08 07:07:57 pid:1 Register auth timeout (127.0.0.1). See http://doc2.workerman.net/register-auth-timeout.html
+2020-01-08 07:07:59 pid:1 Register auth timeout (127.0.0.1). See http://doc2.workerman.net/register-auth-timeout.html
+2020-01-08 07:08:38 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:08:39 pid:1 Worker process terminated
+2020-01-08 07:08:40 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:08:41 pid:1 Worker process terminated
+2020-01-08 07:08:42 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:08:43 pid:1 Worker process terminated
+2020-01-08 07:08:44 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:08:45 pid:1 Worker process terminated
+2020-01-08 07:08:46 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:08:47 pid:1 Worker process terminated
+2020-01-08 07:08:48 pid:1 Register auth timeout (127.0.0.1). See http://doc2.workerman.net/register-auth-timeout.html
+2020-01-08 07:08:48 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:08:49 pid:1 Worker process terminated
+2020-01-08 07:08:50 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:08:50 pid:1 Register auth timeout (127.0.0.1). See http://doc2.workerman.net/register-auth-timeout.html
+2020-01-08 07:08:51 pid:1 Worker process terminated
+2020-01-08 07:08:52 pid:1 Register auth timeout (127.0.0.1). See http://doc2.workerman.net/register-auth-timeout.html
+2020-01-08 07:08:52 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:08:53 pid:1 Worker process terminated
+2020-01-08 07:08:54 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:08:58 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:08:59 pid:1 Worker process terminated
+2020-01-08 07:09:00 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:16:29 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:16:30 pid:1 Worker process terminated
+2020-01-08 07:16:31 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:16:32 pid:1 Worker process terminated
+2020-01-08 07:16:33 pid:1 ParseError: syntax error, unexpected '$data' (T_VARIABLE), expecting function (T_FUNCTION) or const (T_CONST) in C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\Events.php:38
+Stack trace:
+#0 [internal function]: Workerman\Autoloader::loadByNamespace('Events')
+#1 [internal function]: spl_autoload_call('Events')
+#2 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(222): is_callable('Events::onWorke...')
+#3 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(2384): GatewayWorker\BusinessWorker->onWorkerStart(Object(GatewayWorker\BusinessWorker))
+#4 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\gateway-worker\src\BusinessWorker.php(197): Workerman\Worker->run()
+#5 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1397): GatewayWorker\BusinessWorker->run()
+#6 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(1340): Workerman\Worker::forkWorkersForWindows()
+#7 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\vendor\workerman\workerman\Worker.php(539): Workerman\Worker::forkWorkers()
+#8 C:\Users\Administrator\Desktop\GatewayWorker (1)\GatewayWorker\Applications\YourApp\start_businessworker.php(35): Workerman\Worker::runAll()
+#9 {main}
+2020-01-08 07:16:34 pid:1 Worker process terminated
+2020-01-09 07:30:06 pid:65118 Workerman[start.php] start in DEBUG mode
+2020-01-09 07:30:12 pid:65118 Workerman[start.php] stopping ...
+2020-01-09 07:30:12 pid:65118 Workerman[start.php] has been stopped
+2020-01-09 07:31:59 pid:65547 Workerman[start.php] start in DEBUG mode
+2020-01-09 07:39:16 pid:65547 Workerman[start.php] stopping ...
+2020-01-09 07:39:18 pid:65547 worker[YourAppBusinessWorker:65550] exit with status 9
+2020-01-09 07:39:18 pid:65547 worker[Register:65556] exit with status 9
+2020-01-09 07:39:18 pid:65547 worker[YourAppBusinessWorker:65549] exit with status 9
+2020-01-09 07:39:18 pid:65547 worker[YourAppGateway:65555] exit with status 9
+2020-01-09 07:39:18 pid:65547 worker[YourAppBusinessWorker:65548] exit with status 9
+2020-01-09 07:39:18 pid:65547 worker[YourAppGateway:65554] exit with status 9
+2020-01-09 07:39:18 pid:65547 worker[YourAppGateway:65552] exit with status 9
+2020-01-09 07:39:18 pid:65547 worker[YourAppGateway:65553] exit with status 9
+2020-01-09 07:39:18 pid:65547 worker[YourAppBusinessWorker:65551] exit with status 9
+2020-01-09 07:39:18 pid:65547 Workerman[start.php] has been stopped
+2020-01-09 08:59:48 pid:88777 Workerman[start.php] start in DEBUG mode
+2020-01-10 01:27:58 pid:4377 Workerman[start.php] start in DEBUG mode
+2020-01-10 06:58:42 pid:4377 Workerman[start.php] stopping ...
+2020-01-10 06:58:43 pid:4377 Workerman[start.php] has been stopped
+2020-01-10 06:59:01 pid:85102 Workerman[start.php] stop 
+2020-01-10 06:59:01 pid:85102 Workerman[start.php] not run
+2020-01-10 06:59:14 pid:85172 Workerman[start.php] start in DAEMON mode
+2020-01-10 07:00:04 pid:85406 Workerman[start.php] stop 
+2020-01-10 07:00:04 pid:85406 Workerman[start.php] is stopping ...
+2020-01-10 07:00:04 pid:85175 Workerman[start.php] stopping ...
+2020-01-10 07:00:04 pid:85175 Workerman[start.php] has been stopped
+2020-01-10 07:00:04 pid:85406 Workerman[start.php] stop success
+2020-01-10 08:59:49 pid:118355 Workerman[start.php] start in DEBUG mode
+2020-01-10 09:15:17 pid:118355 Workerman[start.php] stopping ...
+2020-01-10 09:15:17 pid:118355 Workerman[start.php] has been stopped
+2020-01-10 09:15:50 pid:123155 Workerman[start.php] start in DEBUG mode
+2020-01-10 09:15:58 pid:123155 Workerman[start.php] stopping ...
+2020-01-10 09:15:58 pid:123155 Workerman[start.php] has been stopped
+2020-01-10 09:16:56 pid:123442 Workerman[start.php] start in DEBUG mode
+2020-01-10 09:17:02 pid:123449 SendBufferToWorker fail. The connections between Gateway and BusinessWorker are not ready. See http://doc2.workerman.net/send-buffer-to-worker-fail.html
+2020-01-10 09:17:02 pid:123449 SendBufferToWorker fail. The connections between Gateway and BusinessWorker are not ready. See http://doc2.workerman.net/send-buffer-to-worker-fail.html
+2020-01-10 09:17:23 pid:123447 SendBufferToWorker fail. The connections between Gateway and BusinessWorker are not ready. See http://doc2.workerman.net/send-buffer-to-worker-fail.html
+2020-01-10 09:17:23 pid:123447 SendBufferToWorker fail. The connections between Gateway and BusinessWorker are not ready. See http://doc2.workerman.net/send-buffer-to-worker-fail.html
+2020-01-10 09:18:43 pid:123964 Workerman[start.php] start in DEBUG mode
+2020-01-10 09:18:43 pid:123964 Workerman[start.php] already running
+2020-01-10 09:18:58 pid:124015 Workerman[start.php] start in DEBUG mode
+2020-01-10 09:18:58 pid:124015 Workerman[start.php] already running
+2020-01-10 09:19:07 pid:124058 Workerman[start.php] stop 
+2020-01-10 09:19:07 pid:124058 Workerman[start.php] is stopping ...
+2020-01-10 09:19:12 pid:124058 Workerman[start.php] stop fail
+2020-01-10 09:20:41 pid:124593 Workerman[start.php] start in DEBUG mode
+2020-01-10 09:20:56 pid:124593 Workerman[start.php] stopping ...
+2020-01-10 09:20:57 pid:124593 Workerman[start.php] has been stopped
+2020-01-13 01:40:48 pid:8566 Workerman[start.php] start in DEBUG mode
+2020-01-13 01:58:09 pid:8566 Workerman[start.php] stopping ...
+2020-01-13 01:58:09 pid:8566 Workerman[start.php] has been stopped
+2020-01-13 01:59:09 pid:12769 Workerman[start.php] start in DEBUG mode
+2020-01-13 01:59:23 pid:12776 SendBufferToWorker fail. The connections between Gateway and BusinessWorker are not ready. See http://doc2.workerman.net/send-buffer-to-worker-fail.html
+2020-01-13 01:59:23 pid:12776 SendBufferToWorker fail. The connections between Gateway and BusinessWorker are not ready. See http://doc2.workerman.net/send-buffer-to-worker-fail.html
+2020-01-13 02:00:15 pid:12769 Workerman[start.php] stopping ...
+2020-01-13 02:00:15 pid:12769 Workerman[start.php] has been stopped
+2020-01-13 02:00:46 pid:13118 Workerman[start.php] start in DEBUG mode
+2020-01-13 09:04:12 pid:13118 Workerman[start.php] stopping ...
+2020-01-13 09:04:13 pid:13118 Workerman[start.php] has been stopped
