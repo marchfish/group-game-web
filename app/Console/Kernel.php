@@ -24,7 +24,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('order:finish')->everyMinute();
-        $schedule->command('order:refund')->everyMinute();
     }
 
     /**
