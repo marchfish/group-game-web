@@ -11,7 +11,7 @@
     "bootstrap": "~3",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "font-awesome": "~4",
-    "jquery": "~2",
+    "jquery": "~3",
     "lodash": "~4",
     "moment": "^2.24.0",
     "pace-progress": "^1.0.2",
