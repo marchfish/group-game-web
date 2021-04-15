@@ -44,6 +44,21 @@ class UserRole
         return $row;
     }
 
+    public static function getUserRoleByUid($uid)
+    {
+        $user_role = DB::query()
+            ->select([
+                '*',
+            ])
+            ->from('user_role AS ur')
+            ->where('ur.id', '=', $uid)
+            ->limit(1)
+            ->get()
+            ->first()
+        ;
+        return $user_role;
+    }
+
     public static function attackToEnemy($user_Role, $enemy, $user_pets = null)
     {
         $user_role_id = Session::get('user.account.user_role_id');

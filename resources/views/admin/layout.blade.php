@@ -6,17 +6,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="csrf-token" content="{!! csrf_token() !!}">
-  <title>找跑跑 | 后台管理</title>
+  <title>KHZL | 后台管理</title>
+  <link rel="stylesheet" type="text/css" href="{{ URL::asset('forestage/public/layer-3.1.1/layer.css') }}">
   <link rel="stylesheet" href="{!! URL::asset('backstage/css/vendor.css?v=000') !!}">
+  <link rel="stylesheet" href="{!! URL::asset('forestage/public/wr-1.0.0/css/wr-css.css?v=000') !!}">
   <script src="{!! URL::asset('backstage/js/vendor_hd.js?v=000') !!}"></script>
+  <script type="text/javascript" src="{{ URL::asset('forestage/public/layer-3.1.1/layer.js') }}"></script>
+  <script type="text/javascript" src="{{ URL::asset('forestage/public/vue-bundle-2.6.10/vue-bundle.js') }}"></script>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
     <header class="main-header">
       <a href="javascript:;" class="logo">
-        <span class="logo-mini">找跑跑</span>
-        <span class="logo-lg"><b>找跑跑</b> 后台管理</span>
+        <span class="logo-mini">KHZL</span>
+        <span class="logo-lg"><b>KHZL</b> 后台管理</span>
       </a>
       <nav class="navbar navbar-static-top">
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"></a>

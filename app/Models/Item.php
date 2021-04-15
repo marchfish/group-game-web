@@ -202,4 +202,38 @@ class Item
 
         return '使用成功 ' . $line . '当前血量：' . $row->hp . $line . '当前蓝量：' . $row->mp;
     }
+
+    // 获取物品名字并加入config
+    public static function getItemsNameById($item_id)
+    {
+        $items = config('items');
+
+        if (!isset($items[$item_id])) {
+
+            $item = DB::query()
+                ->select([
+                    'i.name'
+                ])
+                ->from('item AS i')
+                ->where('i.id', '=', $item_id)
+                ->limit(1)
+                ->get()
+                ->first()
+            ;
+
+            $items[$item_id] = $item->name ?? '';
+
+            ob_start();
+            var_export($items);
+            $arrStr = ob_get_contents();
+            ob_end_clean();
+
+            $config = '<?php'.PHP_EOL.'return ' . $arrStr . ';';
+            file_put_contents(config_path('items.php'), $config);
+
+            return $items[$item_id];
+        }
+
+        return $items[$item_id];
+    }
 }

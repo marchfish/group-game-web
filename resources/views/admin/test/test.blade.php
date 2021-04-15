@@ -21,13 +21,14 @@
 
 <script>
   $(function() {
-    var ws = new WebSocket("ws://10.0.0.131:8282");
+    var ws = new WebSocket("ws://10.0.0.120:19926");
 
     var app9 = new Vue({
       el: '#app-9',
       data: {
         messages: [],
         content: "",
+        client_id: "",
       },
       created: function(){
         ws.onmessage = function(e) {
@@ -40,8 +41,11 @@
               axios.post('/api/road2d/login',{
                   client_id: res.client_id,
               }).then(function(res){
-
+                app9.client_id = res.data.client_id;
               });
+              break;
+            case 'logout':
+              console.log(res);
               break;
             default :
               this.messages.push(res.message);
@@ -52,6 +56,7 @@
         sendMessage: function() {
           axios.post('/api/road2d/message',{
             message: this.content,
+            client_id: this.client_id
           }).then(function(res){
             console.log(res.data);
           })

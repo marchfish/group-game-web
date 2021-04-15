@@ -109,7 +109,7 @@ class SystemController extends Controller
 
     public function index()
     {
-        $user_role_id = Session::get('user.account.user_role_id');
+        $user_role_id = Session::get('userRole.name');
 
         $rows = DB::query()
             ->select([

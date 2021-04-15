@@ -53,9 +53,33 @@ class GameController extends Controller
             ->get()
         ;
 
+        $messages = DB::query()
+            ->select([
+                'm.*',
+                'ur.name',
+            ])
+            ->from('message AS m')
+            ->join('user_role AS ur', function ($join) {
+                $join
+                    ->on('ur.id', '=', 'm.role_id')
+                ;
+            })
+            ->where('m.status', '=', 200)
+            ->orderBy('m.id', 'desc')
+            ->limit(10)
+            ->get()
+            ->reverse()
+        ;
+
+        $content = '';
+        foreach ($messages as $message) {
+            $content .=  $message->name . '：' . $message->content . '@A@';
+        }
+
         return Response::view('web/game/index', [
-            'rows' => $rows,
-            'drugs' => $drugs,
+            'rows'    => $rows,
+            'drugs'   => $drugs,
+            'message' => $content
         ]);
     }
 

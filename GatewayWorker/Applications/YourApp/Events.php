@@ -31,7 +31,7 @@ class Events
     /**
      * 当客户端连接时触发
      * 如果业务不需此回调可以删除onConnect
-     * 
+     *
      * @param int $client_id 连接id
      */
 
@@ -42,7 +42,7 @@ class Events
             'client_id' => $client_id
         )));
     }
-    
+
    /**
     * 当客户端发来消息时触发
     * @param int $client_id 连接id
@@ -52,13 +52,18 @@ class Events
    {
 
    }
-   
+
    /**
     * 当用户断开连接时触发
     * @param int $client_id 连接id
     */
    public static function onClose($client_id)
    {
+       $data = [
+           'type'    => 'logout',
+           'client_id' => $client_id,
+       ];
 
+       Gateway::sendToAll(json_encode($data), null, null);
    }
 }
