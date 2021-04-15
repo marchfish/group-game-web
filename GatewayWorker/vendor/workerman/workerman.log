@@ -296,3 +296,238 @@ Stack trace:
 2020-01-13 02:00:46 pid:13118 Workerman[start.php] start in DEBUG mode
 2020-01-13 09:04:12 pid:13118 Workerman[start.php] stopping ...
 2020-01-13 09:04:13 pid:13118 Workerman[start.php] has been stopped
+2021-04-13 13:48:54 pid:60959 Workerman[start.php] start in DEBUG mode
+2021-04-13 13:53:59 pid:61344 Workerman[start.php] start in DEBUG mode
+2021-04-13 13:53:59 pid:61344 Workerman[start.php] already running
+2021-04-13 13:54:48 pid:61478 Workerman[start.php] status 
+2021-04-13 13:55:38 pid:61543 Workerman[start.php] status 
+2021-04-13 13:55:47 pid:61548 Workerman[start.php] stop 
+2021-04-13 13:55:47 pid:61548 Workerman[start.php] is stopping ...
+2021-04-13 13:55:52 pid:61548 Workerman[start.php] stop fail
+2021-04-13 13:56:03 pid:61556 Workerman[start.php] start in DEBUG mode
+2021-04-13 13:56:03 pid:61556 Workerman[start.php] already running
+2021-04-13 14:46:27 pid:64762 Workerman[start.php] restart 
+2021-04-13 14:46:27 pid:64762 Workerman[start.php] is stopping ...
+2021-04-13 14:46:32 pid:64762 Workerman[start.php] stop fail
+2021-04-13 14:47:53 pid:60959 Workerman[start.php] stopping ...
+2021-04-13 14:47:53 pid:60969 Bad request for Register service. Request info(IP:10.0.0.102, Request Buffer:df). See http://doc2.workerman.net/register-auth-timeout.html
+2021-04-13 14:47:53 pid:60959 worker[YourAppBusinessWorker:60961] exit with status 5247
+2021-04-13 14:47:54 pid:60959 Workerman[start.php] has been stopped
+2021-04-13 14:50:15 pid:64859 Workerman[start.php] start in DEBUG mode
+2021-04-13 15:58:50 pid:64859 Workerman[start.php] stopping ...
+2021-04-13 15:58:50 pid:64859 Workerman[start.php] has been stopped
+2021-04-13 15:58:55 pid:68712 Workerman[start.php] start in DEBUG mode
+2021-04-13 16:36:25 pid:68712 Workerman[start.php] stopping ...
+2021-04-13 16:36:25 pid:68712 Workerman[start.php] has been stopped
+2021-04-13 16:36:29 pid:71053 Workerman[start.php] start in DEBUG mode
+2021-04-13 16:36:36 pid:71057 Error: Class 'App\Models\GatewayWorker' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:40
+Stack trace:
+#0 [internal function]: Events::onConnect()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(398): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(539): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#11 {main}
+2021-04-13 16:36:36 pid:71057 Worker[71057] process terminated
+2021-04-13 16:36:36 pid:71053 worker[YourAppBusinessWorker:71057] exit with status 64000
+2021-04-13 16:36:42 pid:71093 Error: Class 'App\Models\GatewayWorker' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:40
+Stack trace:
+#0 [internal function]: Events::onConnect()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(398): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1668): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1617): Workerman\Worker::monitorWorkersForLinux()
+#11 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(541): Workerman\Worker::monitorWorkers()
+#12 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#13 {main}
+2021-04-13 16:36:42 pid:71093 Worker[71093] process terminated
+2021-04-13 16:36:42 pid:71053 worker[YourAppBusinessWorker:71093] exit with status 64000
+2021-04-13 16:38:17 pid:71109 Error: Class 'App\Models\GatewayWorker' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:59
+Stack trace:
+#0 [internal function]: Events::onClose()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(409): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1668): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1617): Workerman\Worker::monitorWorkersForLinux()
+#11 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(541): Workerman\Worker::monitorWorkers()
+#12 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#13 {main}
+2021-04-13 16:38:17 pid:71109 Worker[71109] process terminated
+2021-04-13 16:38:17 pid:71053 worker[YourAppBusinessWorker:71109] exit with status 64000
+2021-04-13 16:38:17 pid:71238 Error: Class 'Illuminate\Support\Facades\Log' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:41
+Stack trace:
+#0 [internal function]: Events::onConnect()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(398): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1668): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1617): Workerman\Worker::monitorWorkersForLinux()
+#11 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(541): Workerman\Worker::monitorWorkers()
+#12 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#13 {main}
+2021-04-13 16:38:17 pid:71238 Worker[71238] process terminated
+2021-04-13 16:38:17 pid:71053 worker[YourAppBusinessWorker:71238] exit with status 64000
+2021-04-13 16:38:46 pid:71239 Error: Class 'App\Models\GatewayWorker' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:61
+Stack trace:
+#0 [internal function]: Events::onClose()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(409): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1668): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1617): Workerman\Worker::monitorWorkersForLinux()
+#11 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(541): Workerman\Worker::monitorWorkers()
+#12 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#13 {main}
+2021-04-13 16:38:46 pid:71239 Worker[71239] process terminated
+2021-04-13 16:38:46 pid:71053 worker[YourAppBusinessWorker:71239] exit with status 64000
+2021-04-13 16:38:46 pid:71056 Error: Class 'App\Models\GatewayWorker' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:40
+Stack trace:
+#0 [internal function]: Events::onConnect()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(398): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(539): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#11 {main}
+2021-04-13 16:38:46 pid:71056 Worker[71056] process terminated
+2021-04-13 16:38:46 pid:71053 worker[YourAppBusinessWorker:71056] exit with status 64000
+2021-04-13 16:40:57 pid:71053 Workerman[start.php] stopping ...
+2021-04-13 16:40:57 pid:71055 Error: Class 'App\Models\GatewayWorker' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:59
+Stack trace:
+#0 [internal function]: Events::onClose()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(409): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(539): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#11 {main}
+2021-04-13 16:40:57 pid:71055 Worker[71055] process terminated
+2021-04-13 16:40:57 pid:71053 worker[YourAppBusinessWorker:71055] exit with status 64000
+2021-04-13 16:40:57 pid:71053 Workerman[start.php] has been stopped
+2021-04-13 16:40:59 pid:71753 Workerman[start.php] start in DEBUG mode
+2021-04-13 16:41:05 pid:71758 Error: Class 'App\Models\GatewayWorker' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:40
+Stack trace:
+#0 [internal function]: Events::onConnect()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(398): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(539): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#11 {main}
+2021-04-13 16:41:05 pid:71758 Worker[71758] process terminated
+2021-04-13 16:41:05 pid:71753 worker[YourAppBusinessWorker:71758] exit with status 64000
+2021-04-13 16:43:32 pid:71753 Workerman[start.php] stopping ...
+2021-04-13 16:43:32 pid:71753 Workerman[start.php] has been stopped
+2021-04-13 16:43:34 pid:71844 Workerman[start.php] start in DEBUG mode
+2021-04-13 16:43:39 pid:71847 Error: Class 'App\Support\Facades\Captcha' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:40
+Stack trace:
+#0 [internal function]: Events::onConnect()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(398): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(539): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#11 {main}
+2021-04-13 16:43:39 pid:71847 Worker[71847] process terminated
+2021-04-13 16:43:39 pid:71844 worker[YourAppBusinessWorker:71847] exit with status 64000
+2021-04-13 16:48:19 pid:71844 Workerman[start.php] stopping ...
+2021-04-13 16:48:19 pid:71849 Error: Class 'GatewayWorker' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:61
+Stack trace:
+#0 [internal function]: Events::onClose()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(409): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(539): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#11 {main}
+2021-04-13 16:48:19 pid:71849 Worker[71849] process terminated
+2021-04-13 16:48:19 pid:71844 worker[YourAppBusinessWorker:71849] exit with status 64000
+2021-04-13 16:48:19 pid:71844 Workerman[start.php] has been stopped
+2021-04-13 16:48:20 pid:72144 Workerman[start.php] start in DEBUG mode
+2021-04-13 16:49:21 pid:72144 Workerman[start.php] stopping ...
+2021-04-13 16:49:21 pid:72144 Workerman[start.php] has been stopped
+2021-04-13 16:49:23 pid:72199 Workerman[start.php] start in DEBUG mode
+2021-04-13 16:49:36 pid:72202 Error: Class 'App\Models\UserRole' not found in /mnt/hgfs/www/khzl/GatewayWorker/Applications/YourApp/Events.php:42
+Stack trace:
+#0 [internal function]: Events::onConnect()
+#1 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(398): call_user_func()
+#2 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Connection/TcpConnection.php(656): GatewayWorker\BusinessWorker->onGatewayMessage()
+#3 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Events/Select.php(292): Workerman\Connection\TcpConnection->baseRead()
+#4 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(2399): Workerman\Events\Select->loop()
+#5 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/gateway-worker/src/BusinessWorker.php(197): Workerman\Worker->run()
+#6 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1534): GatewayWorker\BusinessWorker->run()
+#7 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1364): Workerman\Worker::forkOneWorkerForLinux()
+#8 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(1338): Workerman\Worker::forkWorkersForLinux()
+#9 /mnt/hgfs/www/khzl/GatewayWorker/vendor/workerman/workerman/Worker.php(539): Workerman\Worker::forkWorkers()
+#10 /mnt/hgfs/www/khzl/GatewayWorker/start.php(37): Workerman\Worker::runAll()
+#11 {main}
+2021-04-13 16:49:36 pid:72202 Worker[72202] process terminated
+2021-04-13 16:49:36 pid:72199 worker[YourAppBusinessWorker:72202] exit with status 64000
+2021-04-13 16:53:57 pid:72199 Workerman[start.php] stopping ...
+2021-04-13 16:53:57 pid:72199 Workerman[start.php] has been stopped
+2021-04-13 16:53:59 pid:72533 Workerman[start.php] start in DEBUG mode
+2021-04-13 16:57:51 pid:72533 Workerman[start.php] stopping ...
+2021-04-13 16:57:51 pid:72533 Workerman[start.php] has been stopped
+2021-04-13 16:58:09 pid:72754 Workerman[start.php] start in DEBUG mode
+2021-04-13 17:21:38 pid:72754 Workerman[start.php] stopping ...
+2021-04-13 17:21:40 pid:72754 Workerman[start.php] has been stopped
+2021-04-14 10:56:13 pid:115225 Workerman[start.php] start in DEBUG mode
+2021-04-14 17:11:30 pid:115225 Workerman[start.php] stopping ...
+2021-04-14 17:11:30 pid:115225 Workerman[start.php] has been stopped
+2021-04-14 17:11:38 pid:132013 Workerman[start.php] start in DEBUG mode
+2021-04-14 17:13:16 pid:132013 Workerman[start.php] stopping ...
+2021-04-14 17:13:17 pid:132013 Workerman[start.php] has been stopped
+2021-04-14 17:24:14 pid:132878 Workerman[start.php] start in DAEMON mode

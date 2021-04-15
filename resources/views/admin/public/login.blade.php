@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="csrf-token" content="{!! csrf_token() !!}">
-  <title>找跑跑 | 后台管理</title>
+  <title>KHZL | 后台管理</title>
   <link rel="stylesheet" href="{!! URL::asset('backstage/css/vendor.css?v=000') !!}">
   <script src="{!! URL::asset('backstage/js/vendor_hd.js?v=000') !!}"></script>
 </head>
@@ -14,7 +14,7 @@
 <body class="hold-transition login-page">
   <div class="login-box">
     <div class="login-box-body">
-      <p class="login-box-msg"><b>找跑跑</b></p>
+      <p class="login-box-msg"><b>KHZL</b></p>
       <form id="js-form" action="{!! URL::to('admin/login') !!}">
         <div class="form-group has-feedback">
           <input type="text" name="username" class="form-control" placeholder="用户名">

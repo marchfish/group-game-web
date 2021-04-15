@@ -46,52 +46,35 @@ class PublicController extends Controller
             $query = Request::all();
 
             $validator = Validator::make($query, [
-                'username'  => ['required'],
-                'password'  => ['required'],
-                'captcha'   => ['required'],
                 'client_id' => ['required'],
             ], [
-                'username.required'  => '用户名不能为空',
-                'password.required'  => '密码不能为空',
-                'captcha.required'   => '验证码不能为空',
                 'client_id.required' => 'client_id不能为空',
             ]);
 
-//            if ($validator->fails()) {
-//                throw new InvalidArgumentException($validator->errors()->first(), 400);
-//            }
-//
-//            if (strtolower($query['captcha']) != Session::get('user.captcha')) {
-//                throw new InvalidArgumentException('验证码错误', 400);
-//            }
-//
-//            $account = User::getByName($query['username']);
-//
-//            if (!$account || !Hash::check($query['password'], $account->password)) {
-//                throw new InvalidArgumentException('用户名或密码错误', 400);
-//            }
-//
-//            Session::put('user', [
-//                'account' => obj2arr($account),
-//            ]);
-//
-//            $user_role = UserRole::getUserRole();
-//
-//            Session::put('userRole', obj2arr($user_role));
+            if ($validator->fails()) {
+                throw new InvalidArgumentException($validator->errors()->first(), 400);
+            }
 
-            $uid = rand(0, 1000);
+            $user_role = Session::get('userRole');
+
+            $uid = $user_role['id'];
 
             $old_client_id = Gateway::getClientIdByUid($uid);
 
             if($old_client_id && $old_client_id[0] != $query['client_id']){
-                Gateway::closeClient($old_client_id[0], '您的账号在别处登录！');
+                $data = [
+                    'type'=>'logout',
+                    'message'=>'您的账号在别处登录!'
+                ];
+
+                Gateway::closeClient($old_client_id[0], json_encode($data));
             }
 
             Gateway::bindUid($query['client_id'], $uid);
 
             $data = [
                 'type'=>'login',
-                'message'=>'登录成功！' . $query['client_id']
+                'message'=>$user_role['name'] . '：上线了！'
             ];
 
             Gateway::sendToAll(json_encode($data), null, [$query['client_id']]);
@@ -99,6 +82,7 @@ class PublicController extends Controller
             return Response::json([
                 'code'    => 200,
                 'message' => '成功',
+                'client_id' => $query['client_id'],
             ]);
         } catch (InvalidArgumentException $e) {
             return Response::json([
@@ -142,20 +126,32 @@ class PublicController extends Controller
 
             $validator = Validator::make($query, [
                 'message' => ['required'],
+                'client_id' => ['required'],
             ], [
                 'message.required' => 'message不能为空',
+                'client_id.required' => 'client_id不能为空',
             ]);
 
             if ($validator->fails()) {
                 throw new InvalidArgumentException($validator->errors()->first(), 400);
             }
 
-            $uid = rand(0, 1000);
+            if(!Gateway::isOnline($query['client_id'])) {
+                throw new InvalidArgumentException('您已离线！', 400);
+            }
+
+            $role_id   = Session::get('userRole.id');
+            $role_name = Session::get('userRole.name');
 
             $data = [
                 'type' => 'message',
-                'message' => $uid . 'say:' . $query['message']
+                'message' => $role_name . '：' . $query['message']
             ];
+
+            DB::table('message')->insert([
+                'role_id' => $role_id,
+                'content' => $query['message']
+            ]);
 
             Gateway::sendToAll(json_encode($data));
 

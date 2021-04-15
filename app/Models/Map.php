@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
 class Map
@@ -157,4 +158,16 @@ class Map
 
         return $data;
     }
+
+    // 获取区域
+//    public static function getAreaAll()
+//    {
+//        $area = DB::query()
+//            ->select([
+//                'ma.*',
+//            ])
+//            ->from('map_area AS ma')
+//            ->get()
+//        ;
+//    }
 }

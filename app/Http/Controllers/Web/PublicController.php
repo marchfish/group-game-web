@@ -310,7 +310,7 @@ class PublicController extends Controller
             Session::put('user', [
                 'account' => obj2arr($userRow),
             ]);
-            
+
             return Response::json([
                 'redirect_url' => URL::to('index'),
                 'code'    => 200,
